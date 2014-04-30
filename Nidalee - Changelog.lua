@@ -132,3 +132,7 @@ Changelog:
 - Bugfixes
 	a. Fixed a bug with Lichbane, now the script shouldn't crash completly if you buy it
 	b. Improved the scriptperformance a bit
+-- 1.13 --
+ - Bugfixes:
+	a. Improved W will now be used in the SBTW-Combo
+	b. Fixed an error with the Drawingfunction

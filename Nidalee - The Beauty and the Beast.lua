@@ -1,4 +1,4 @@
-local Version = "1.12"
+local Version = "1.13"
 local Author = "QQQ"
 if myHero.charName ~= "Nidalee" then return end
 local IsLoaded = "The Beauty and the Beast"
@@ -328,7 +328,7 @@ function AddMenu()
 	Menu.Draw:addParam("drawJumpspots", "Draw Jumpspots while pressing Key: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawPerJumpspots", "Draw Jumpspots always: ", SCRIPT_PARAM_ONOFF, false)
 	Menu.Draw:addParam("info", "", SCRIPT_PARAM_INFO, "")
-	Menu.Draw:addParam("drawTargetLine", "Draw line to enemy: ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Draw:addParam("drawTargetLine", "Draw line to enemy: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawKillText", "Draw killtext on enemy: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawCol", "Draw Collision: ", SCRIPT_PARAM_ONOFF, false)
 		-- LFC --
@@ -514,17 +514,11 @@ function OnDraw()
 	if myHero.dead then return end
 -- Draw SpellRanges only when our champ is alive and the spell is ready --
 	-- Draw Q --
-	if Menu.Draw.drawQ then
-		if QREADY and Menu.Draw.drawQ then DrawCircle(myHero.x, myHero.y, myHero.z, qRange, qColor) end
-	end
+	if QREADY and Menu.Draw.drawQ then DrawCircle(myHero.x, myHero.y, myHero.z, qRange, qColor) end
 	-- Draw W --
-	if Menu.Draw.drawW then
-		if WREADY and Menu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
-	end
+	if WREADY and Menu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
 	-- Draw E --
-	if Menu.Draw.drawE then
-		if EREADY and Menu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
-	end
+	if EREADY and Menu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
 	-- Draw Collission --
 	if Target and Menu.Draw.drawCol then QCol:DrawCollision(myHero, Target) end
 -- Draw Jump Spots --
@@ -835,7 +829,7 @@ end
 function sbtwCougar()
 	if HUMAN == true then CastSpell(_R) end
 	if COUGAR == true then
-			if Menu.SBTW.sbtwCW and GetDistance(Target) <= 400 then CastSpell(_W, Target.x, Target.z) end
+			if Menu.SBTW.sbtwCW and GetDistance(Target) <= 400 then CastTheCW(Target) end
 			if Menu.SBTW.sbtwCE and GetDistance(Target) <= 300 then CastTheCE(Target) end
 			if Menu.SBTW.sbtwCQ and Target.health < (Target.maxHealth*0.50) then CastTheCQ(Target) end
 	end
@@ -1453,8 +1447,6 @@ end
 function OnAbortRecall(hero)
 	if hero.networkID == player.networkID
 		then Recalling = false
-		
-		
 	end
 end
 function OnFinishRecall(hero)
