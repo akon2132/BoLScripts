@@ -1,4 +1,4 @@
-Nidalee - The Beauty and the Beast v.1.11 by QQQ
+Nidalee - The Beauty and the Beast v.1.12 by QQQ
 
 Changelog:
 -- 1.0 --
@@ -112,3 +112,23 @@ Changelog:
 	- Bugfixes:
 		a. Fixed SmartKillSteal - should! work correctly now
 		b. Fixed JumpSpotCircles - now will show even when LFC is enabled
+-- 1.12 --
+- Reworked menu for a better and cleaner look
+	a. Added a "KeyBinding"-menu to set all hotkeys on the same place
+	b. "Basic"-menu deleted (no longer needed)
+	c. Added an "Extra"-menu for extrastuff
+	d. Reordered some options and added some spaces for a more structured look
+	e. Added a new Permashow for the HealManager (enabled by default)
+- Changes to the "Draw"-menu
+	a. Added a new option to draw a line to your current target (enabled by default)
+- Added the new "AutoCougar after recall" feature
+	a. You can choose in the "Extra"-menu if you want to automatically switch to cougar after recalling
+	b. You will only switch to cougar if no enemys are in x range after recalling (choose via the slider - standard 2000)
+- Reworked Cougar-(W) function
+	a. Now should only cast if you are facing the enemy to prevent jumps in wrong directions
+	b. Now should jump more accurate and you shouldn't overjump your target
+	c. Won't jump into a tower anymore while SBTW
+	d. Improved JungleClear with Cougar-(W)
+- Bugfixes
+	a. Fixed a bug with Lichbane, now the script shouldn't crash completly if you buy it
+	b. Improved the scriptperformance a bit

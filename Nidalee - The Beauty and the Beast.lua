@@ -1,4 +1,5 @@
-local Version = "1.11"
+local Version = "1.12"
+local Author = "QQQ"
 if myHero.charName ~= "Nidalee" then return end
 local IsLoaded = "The Beauty and the Beast"
 local AUTOUPDATE = true
@@ -40,7 +41,8 @@ local REQUIRED_LIBS =
 	{
 		["VPrediction"] = "https://raw.github.com/honda7/BoL/master/Common/VPrediction.lua",
 		["Collision"] = "https://bitbucket.org/Klokje/public-klokjes-bol-scripts/raw/master/Common/Collision.lua",
-		["Prodiction"] = "https://bitbucket.org/Klokje/public-klokjes-bol-scripts/raw/master/Common/Prodiction.lua"
+		["Prodiction"] = "https://bitbucket.org/Klokje/public-klokjes-bol-scripts/raw/master/Common/Prodiction.lua",
+	--	["SOW"] = "https://raw.github.com/honda7/BoL/master/Common/SOW.lua"
 	}		
 local DOWNLOADING_LIBS = false
 local DOWNLOAD_COUNT = 0
@@ -81,9 +83,9 @@ if DOWNLOADING_LIBS then return end
 	local qCname, wCname, eCname = "Takedown", "Pounce", "Swipe"
 	local QREADY, WREADY, EREADY, RREADY
 	local ignite = nil
-	local qColor = ARGB(255,38,147, 0 )
-	local wColor = ARGB(255, 38, 201,170)
-	local eColor = ARGB(89, 179, 0,128)
+	local qColor = ARGB(100,217,0,163)
+	local wColor = ARGB(100,76,255,76)
+	local eColor = ARGB(100,153,229,255)
 -- Vars for VPrediction --
 	local VP = nil
 -- Vars for PROdiction --
@@ -97,7 +99,7 @@ if DOWNLOADING_LIBS then return end
 -- Vars for TargetSelector --
 	local ts
 	ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1500, DAMAGE_MAGIC, true)
-	ts.name = Nidalee
+	ts.name = "Nidalee: Target"
 	local Target = nil
 -- Vars for Jump Assistant --
 	local minRange = 100
@@ -186,7 +188,7 @@ function OnLoad()
     ProdQ = Prod:AddProdictionObject(_Q, qRange, qSpeed, qDelay, qWidth)
 	-- VIP Prediction --
 	qp = TargetPredictionVIP(qRange, qSpeed, qDelay, qWidth)
-	-- Colission --
+	-- Collision --
 	QCol = Collision(qRange, qSpeed, qDelay, qWidth)
 	-- CallBacks --
      for i = 1, heroManager.iCount do
@@ -211,51 +213,63 @@ function AddMenu()
 	Menu:addTS(ts)
 	
 	-- Create SubMenu --
-	Menu:addSubMenu(""..myHero.charName..": Basic Settings", "Basic")
-	Menu:addSubMenu(""..myHero.charName..": HealManager Settings", "HealManager")
-	Menu:addSubMenu(""..myHero.charName..": Combo Settings", "SBTW")
-	Menu:addSubMenu(""..myHero.charName..": KillSteal Settings", "KS")
-	Menu:addSubMenu(""..myHero.charName..": Farm Settings", "Farm")
-	Menu:addSubMenu(""..myHero.charName..": JungleClear Settings", "Jungle")
-	Menu:addSubMenu(""..myHero.charName..": Escape and Jump Settings", "Jump")
-	Menu:addSubMenu(""..myHero.charName..": Prediction Settings", "Prediction")
-	Menu:addSubMenu(""..myHero.charName..": Drawing Settings", "Draw")
+	Menu:addSubMenu(""..myHero.charName..": Key Bindings", "KeyBind")
+	Menu:addSubMenu(""..myHero.charName..": Extra", "Extra")
+	Menu:addSubMenu(""..myHero.charName..": HealManager", "HealManager")
+	Menu:addSubMenu(""..myHero.charName..": SBTW-Combo", "SBTW")
+	Menu:addSubMenu(""..myHero.charName..": KillSteal", "KS")
+	Menu:addSubMenu(""..myHero.charName..": LaneClear", "Farm")
+	Menu:addSubMenu(""..myHero.charName..": JungleClear", "Jungle")
+	Menu:addSubMenu(""..myHero.charName..": Escape and JumpManager", "Jump")
+	Menu:addSubMenu(""..myHero.charName..": Prediction", "Prediction")
+	Menu:addSubMenu(""..myHero.charName..": Drawings", "Draw")
 	
-	-- Basics -- 
-	Menu.Basic:addParam("aimQ", "Throw a predicted Spear: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
---	Menu.Basic:addParam("Test", "Cast Test W: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("K"))
-	Menu.Basic:addParam("aimQtoggle", "Auto throw a predicted Spear: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("U"))
-	Menu.Basic:addParam("aimWbehind", "Throw a Trap: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
-	Menu.Basic:addParam("aimWdistance", "Distance trap is casted behind: ", SCRIPT_PARAM_SLICE, 100, 0, 250, -1)
-	Menu.Basic:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QEQW - R>Q>E>W", "WEQQ - R>Q>E>W", "EQQW - R>Q>E>W", "EQEWE- R>Q>E>W"})
+	-- Key Bindings --
+	Menu.KeyBind:addParam("SpearKey", "Throw a predicted Spear: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+	Menu.KeyBind:addParam("SpearToggle", "Auto throw a predicted Spear: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("U"))
+	Menu.KeyBind:addParam("TrapKey", "Throw a trap: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+	Menu.KeyBind:addParam("HealManager", "Enable/Disable the HealManager: ", SCRIPT_PARAM_ONKEYTOGGLE, true, string.byte("N"))
+	Menu.KeyBind:addParam("SBTWKey", "Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
+	Menu.KeyBind:addParam("LastHitKey", "LastHit Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("T"))
+	Menu.KeyBind:addParam("LaneClearKey", "LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
+	Menu.KeyBind:addParam("JungleClearKey", "JungleClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+	Menu.KeyBind:addParam("JumpAssistantKey", "Jump Assistant Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Z"))
+	Menu.KeyBind:addParam("EscapeKey", "Escape Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Y"))
+	
+	-- Extra -- 
+	Menu.Extra:addParam("TrapDistance", "Distance traps are casted behind: ", SCRIPT_PARAM_SLICE, 100, 0, 250, -1)
+	Menu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QEQW - R>Q>E>W", "WEQQ - R>Q>E>W", "EQQW - R>Q>E>W", "EQEWE- R>Q>E>W"})
+	Menu.Extra:addParam("switchAfterRecall", "Switch to cougar after recall: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Extra:addParam("switchAfterRecallRange", "Switch only if no enemys in Range: ",  SCRIPT_PARAM_SLICE, 2000, 0, 2500, 3)
 	
 	-- HealManager --
-	Menu.HealManager:addParam("HealManager", "Enable/Disable the HealManager: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.HealManager:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.HealManager:addParam("healPriority", "HealPriority for the HealManager: ", SCRIPT_PARAM_LIST, 1, {"You", "Team"})
-	Menu.HealManager:addSubMenu(""..myHero.charName..": Your Settings", "Self")
-	Menu.HealManager:addParam("healSelf", "Use the HealManager for yourself: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("N"))
+	Menu.HealManager:addSubMenu("Your Settings:", "Self")
+	Menu.HealManager:addParam("healSelf", "Use the HealManager for yourself: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.HealManager.Self:addParam("autoHealSlider", "Auto Heal if your Health below %: ",  SCRIPT_PARAM_SLICE, 50, 0, 100, -1)
-	Menu.HealManager:addSubMenu(""..myHero.charName..": Team Settings", "Team")
-	Menu.HealManager:addParam("healTeam", "Use the HealManager for the team: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("M"))
+	Menu.HealManager:addSubMenu("Team Settings: ", "Team")
+	Menu.HealManager:addParam("healTeam", "Use the HealManager for the team: ", SCRIPT_PARAM_ONOFF, false)
 	for _, Team in ipairs(TeamChamps) do
 	Menu.HealManager.Team:addParam(Team.charName, "Heal: " .. Team.charName, SCRIPT_PARAM_ONOFF, false)
 	Menu.HealManager.Team:addParam(Team.charName.."slider", "Auto Heal if Health below %: ", SCRIPT_PARAM_SLICE, 20, 10, 100, -1)
 	end
 	-- SBTW Combo --
-	Menu.SBTW:addParam("sbtwKey", "Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
-	Menu.SBTW:addParam("sbtwHQ", "Use "..qHname.." (Q) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwHW", "Use "..wHname.." (W) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwHE", "Use "..eHname.." (E) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwCQ", "Use "..qCname.." (Q) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwCW", "Use "..wCname.." (W) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwCE", "Use "..eCname.." (E) in Combo", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwR", "Switch forms (R) in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.SBTW:addParam("sbtwItems", "Use Items in Combo: ", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwOrb", "OrbWalk in Combo", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwOrb", "OrbWalk in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.SBTW:addParam("sbtwHealSlider", "Auto Heal if Health below %: ",  SCRIPT_PARAM_SLICE, 50, 0, 100, -1)
-	
+	Menu.SBTW:addParam("info", "", SCRIPT_PARAM_INFO, "")
+	Menu.SBTW:addParam("info", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
+	Menu.SBTW:addParam("sbtwHQ", "Use "..qHname.." (Q) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwHW", "Use "..wHname.." (W) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwHE", "Use "..eHname.." (E) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwCQ", "Use "..qCname.." (Q) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwCW", "Use "..wCname.." (W) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwCE", "Use "..eCname.." (E) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTW:addParam("sbtwR", "Switch forms (R) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+
 	-- KillSteal --
-	Menu.KS:addParam("Ignite", "Use Auto Ignite", SCRIPT_PARAM_ONOFF, true)
+	Menu.KS:addParam("Ignite", "Use Auto Ignite: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.KS:addParam("smartKS", "Enable smart KS: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.KS:addParam("smartKShuman", "Use smart KS as Human: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.KS:addParam("smartKScougar", "Use smart KS as Cougar: ", SCRIPT_PARAM_ONOFF, true)
@@ -263,73 +277,79 @@ function AddMenu()
 
 	-- Lane Clear --
 	Menu.Farm:addParam("laneClearTyp", "Form in LaneClear: ", SCRIPT_PARAM_LIST, 3, {"Human", "Cougar", "Mixed"})
-	Menu.Farm:addParam("clearLane", "Lane Clear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	Menu.Farm:addParam("lastHitMinions", "Auto LastHit Minions with AA's", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("T"))
-	Menu.Farm:addParam("clearHQ", "Farm with "..qHname.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Farm:addParam("clearHW", "Farm with "..wHname.." (W)", SCRIPT_PARAM_ONOFF, false)
-	Menu.Farm:addParam("clearHE", "Farm with "..eHname.." (E)", SCRIPT_PARAM_ONOFF, false)
-	Menu.Farm:addParam("clearCQ", "Farm with "..qCname.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Farm:addParam("clearCW", "Farm with "..wCname.." (W)", SCRIPT_PARAM_ONOFF, false)
-	Menu.Farm:addParam("clearCE", "Farm with "..eCname.." (E)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Farm:addParam("clearOrbM", "OrbWalk the Minions", SCRIPT_PARAM_ONOFF, true)
+	Menu.Farm:addParam("clearOrbM", "OrbWalk the Minions: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Farm:addParam("info", "", SCRIPT_PARAM_INFO, "")
+	Menu.Farm:addParam("info", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
+	Menu.Farm:addParam("clearHQ", "Clear with "..qHname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Farm:addParam("clearHW", "Clear with "..wHname.." (W): ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Farm:addParam("clearHE", "Clear with "..eHname.." (E): ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Farm:addParam("clearCQ", "Clear with "..qCname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Farm:addParam("clearCW", "Clear with "..wCname.." (W): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Farm:addParam("clearCE", "Clear with "..eCname.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Jungle Clear --
 	Menu.Jungle:addParam("jungleTyp", "Form in JungleClear: ", SCRIPT_PARAM_LIST, 3, {"Human", "Cougar", "Mixed"})
-	Menu.Jungle:addParam("jungleKey", "Jungle Clear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
---	Menu.Jungle:addParam("jungleSteal", "Jungle Steal Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("I"))
-	Menu.Jungle:addParam("jungleHQ", "Clear with "..qHname.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Jungle:addParam("jungleHW", "Clear with "..wHname.." (W)", SCRIPT_PARAM_ONOFF, false)
-	Menu.Jungle:addParam("jungleHE", "Clear with "..eHname.." (E)", SCRIPT_PARAM_ONOFF, false)
-	Menu.Jungle:addParam("jungleCQ", "Clear with "..qCname.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Jungle:addParam("jungleCW", "Clear with "..wCname.." (W)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Jungle:addParam("jungleCE", "Clear with "..eCname.." (E)", SCRIPT_PARAM_ONOFF, true)
-	Menu.Jungle:addParam("jungleOrbwalk", "OrbWalk the Jungle", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jungle:addParam("jungleOrbwalk", "OrbWalk the Jungle: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jungle:addParam("info", "", SCRIPT_PARAM_INFO, "")
+	Menu.Jungle:addParam("info", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
+	Menu.Jungle:addParam("jungleHQ", "Clear with "..qHname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jungle:addParam("jungleHW", "Clear with "..wHname.." (W): ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Jungle:addParam("jungleHE", "Clear with "..eHname.." (E): ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Jungle:addParam("jungleCQ", "Clear with "..qCname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jungle:addParam("jungleCW", "Clear with "..wCname.." (W): ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jungle:addParam("jungleCE", "Clear with "..eCname.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Jump/Escape --
-	Menu.Jump:addParam("Jump", "Jump Assistant", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Z"))
-	Menu.Jump:addParam("EscapeKey", "Escape Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Y"))
-	Menu.Jump:addParam("m2mjump", "Move to Mouse while Jump Assistant: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Jump:addParam("movetomouse", "Move to Mouse while Jump Assistant: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Jump:addParam("EscapeUseW", "Use "..wCname.." (W) while escape", SCRIPT_PARAM_ONOFF, true)
 	Menu.Jump:addParam("EscapeUseE", "Auto "..eHname.." (E) before escape", SCRIPT_PARAM_ONOFF, true)
 	Menu.Jump:addParam("EscapeHealSlider", "Auto Heal if Health below %: ",  SCRIPT_PARAM_SLICE, 50, 0, 100, -1)
 	Menu.Jump:addParam("JumpSlider", "Jump Accuracy 1:slow - 15:fast", SCRIPT_PARAM_SLICE, 12, 1, 15, 0)
 	
-	-- Drawings -- 
+	-- Prediction --
+	Menu.Prediction:addParam("PredictionMode", "Choose your Spear Prediction: ", SCRIPT_PARAM_LIST, 1, {"VPrediction", "PROdiction", "BoL-Prediction"})
+		-- VPrediction --
+	Menu.Prediction:addSubMenu("VPrediction", "VPrediction")
+	Menu.Prediction.VPrediction:addParam("HitChance", "HitChance in VPrediction: ", SCRIPT_PARAM_LIST, 2, {"Low Hitchance", "High Hitchance", "Target slow/close", "Target immobile", "Target dashing/blinking"})
+	Menu.Prediction.VPrediction:addParam("Hitbox", "Use HitBox in VPrediction: ", SCRIPT_PARAM_ONOFF, false) 
+		-- PROdiction --
+	Menu.Prediction:addSubMenu("PROdiction", "PROdiction")
+	Menu.Prediction.PROdiction:addParam("Hitbox", "Use HitBox in PROdiction: ", SCRIPT_PARAM_ONOFF, false) 
+		-- BoL-Prediction --
+	Menu.Prediction:addSubMenu("BoL-Prediction", "BoLPrediction")	
+	Menu.Prediction.BoLPrediction:addParam("HitChance", "HitChance in BoL-Prediction: ", SCRIPT_PARAM_SLICE, 0.7, 0.1, 1, 2)
+	
+	-- Drawings --
+	Menu.Draw:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.Draw:addParam("drawQ", "Draw Human Q Range: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawW", "Draw Human W Range: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawE", "Draw Human E Range: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Draw:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.Draw:addParam("drawJumpspots", "Draw Jumpspots while pressing Key: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawPerJumpspots", "Draw Jumpspots always: ", SCRIPT_PARAM_ONOFF, false)
-	Menu.Draw:addParam("drawKillText", "Draw KillText on enemy: ", SCRIPT_PARAM_ONOFF, true)
+	Menu.Draw:addParam("info", "", SCRIPT_PARAM_INFO, "")
+	Menu.Draw:addParam("drawTargetLine", "Draw line to enemy: ", SCRIPT_PARAM_ONOFF, false)
+	Menu.Draw:addParam("drawKillText", "Draw killtext on enemy: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw:addParam("drawCol", "Draw Collision: ", SCRIPT_PARAM_ONOFF, false)
-	-- LFC --
-	Menu.Draw:addSubMenu(""..myHero.charName..": LFC Settings", "LFC")
+		-- LFC --
+	Menu.Draw:addSubMenu("LagFreeCircles: ", "LFC")
 	Menu.Draw.LFC:addParam("LagFree", "Activate Lag Free Circles", SCRIPT_PARAM_ONOFF, false)
 	Menu.Draw.LFC:addParam("CL", "Length before Snapping", SCRIPT_PARAM_SLICE, 350, 75, 2000, 0)
 	Menu.Draw.LFC:addParam("CLinfo", "Higher length = Lower FPS Drops", SCRIPT_PARAM_INFO, "")
-	-- Permashow --
-	Menu.Draw:addSubMenu(""..myHero.charName..": PermaShow Settings", "PermaShow")
-	Menu.Draw.PermaShow:addParam("info", "---- Reload (Double F9) if you change the settings ----", SCRIPT_PARAM_INFO, "")
+		-- Permashow --
+	Menu.Draw:addSubMenu("PermaShow: ", "PermaShow")
+	Menu.Draw.PermaShow:addParam("info", "--- Reload (Double F9) if you change the settings ---", SCRIPT_PARAM_INFO, "")
 	Menu.Draw.PermaShow:addParam("aimQtoggle", "Show Auto Spear: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw.PermaShow:addParam("laneClearTyp", "Show LaneClearTyp: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw.PermaShow:addParam("jungleTyp", "Show JungleTyp: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw.PermaShow:addParam("PredictionMode", "Show PredictionMode: ", SCRIPT_PARAM_ONOFF, true)
-	-- Prediction --
-	Menu.Prediction:addParam("PredictionMode", "Spear Prediction: ", SCRIPT_PARAM_LIST, 1, {"VPrediction", "PROdiction", "BoL-Prediction"})
-	Menu.Prediction:addParam("seperate", "---- VPrediction Settings ----", SCRIPT_PARAM_INFO, "")
-	Menu.Prediction:addParam("VPredHitChance", "HitChance in VPrediction: ", SCRIPT_PARAM_LIST, 2, {"Low Hitchance", "High Hitchance", "Target slow/close", "Target immobile", "Target dashing/blinking"})
-	Menu.Prediction:addParam("VPHitbox", "Use HitBox in VPrediction: ", SCRIPT_PARAM_ONOFF, false) 
-	Menu.Prediction:addParam("seperate", "---- PROdiction Settings ----", SCRIPT_PARAM_INFO, "")
-	Menu.Prediction:addParam("ProHitbox", "Use HitBox in PROdiction: ", SCRIPT_PARAM_ONOFF, false) 
-	Menu.Prediction:addParam("seperate", "---- BoL-Prediciton Settings ----", SCRIPT_PARAM_INFO, "")
-	Menu.Prediction:addParam("BoLHitChance", "HitChance in BoL-Prediction: ", SCRIPT_PARAM_SLICE, 0.7, 0.1, 1, 2)
-	
+	Menu.Draw.PermaShow:addParam("HealManager", "Show HealManager: ", SCRIPT_PARAM_ONOFF, true)
 	-- Other --
 	Menu:addParam("Version", "Version", SCRIPT_PARAM_INFO, Version)
-
+	Menu:addParam("Author", "Author", SCRIPT_PARAM_INFO, Author)
 	-- PermaShow --
 	if Menu.Draw.PermaShow.aimQtoggle
-		then Menu.Basic:permaShow("aimQtoggle")
+		then Menu.KeyBind:permaShow("SpearToggle") 
 	end
 	if Menu.Draw.PermaShow.laneClearTyp
 		then Menu.Farm:permaShow("laneClearTyp")
@@ -340,11 +360,15 @@ function AddMenu()
 	if Menu.Draw.PermaShow.PredictionMode
 		then Menu.Prediction:permaShow("PredictionMode")
 	end
+	if Menu.Draw.PermaShow.HealManager
+		then Menu.KeyBind:permaShow("HealManager")
+	end
 end
 ---------------------------------------------------------------------
 --- On Tick ---------------------------------------------------------
 ---------------------------------------------------------------------
 function OnTick()
+	if myHero.dead then return end
 	ts:update()
 	Target = ts.target 
 	Check()
@@ -352,43 +376,53 @@ function OnTick()
 	LFCfunc()
 	AutoLevelMySkills()
 	MyAccurateDelay()
+	KeyBindings()
 
 	if Target then
 			-- Auto Ignite
 			if Menu.KS.AutoIgnite then AutoIgnite(Target) end
 			-- Toggle Auto Predicted Q Harass --
-			if Menu.Basic.aimQtoggle and not Recalling then AimTheQ() end
+			if SpearToggleKey and not Recalling then AimTheQ() end
 			-- Aim Predicted Q --
-			if Menu.Basic.aimQ then AimTheQ()end
+			if SpearKey then AimTheQ()end
 			-- Aim W behind Target --
-			if Menu.Basic.aimWbehind then AimTheWbehind() end
-			-- Test --
-			if Menu.Basic.Test then testWfunc(Target) end
-			
+			if TrapKey then AimTheWbehind() end
 	end
 	-- HealManager --
-	if Menu.HealManager.HealManager then HealManager() end
+	if HealManagerKey then HealManager() end
 	-- KillSteal--
 	if Menu.KS.smartKS then smartKS() end
 	-- Lane Clear --
-	if Menu.Farm.clearLane then LaneClear() end
-	-- Jungle Steal --
---	if Menu.Jungle.jungleSteal then checkJungleSteal() end
+	if LaneClearKey then LaneClear() end
 	-- Last Hit --
-	if Menu.Farm.lastHitMinions then lastHit() end
+	if LastHitKey then lastHit() end
 	-- Jungle Clear --
-	if Menu.Jungle.jungleKey then JungleClear() end
+	if JungleClearKey then JungleClear() end
 	-- Escape --
-	if Menu.Jump.EscapeKey then Escape() end
+	if EscapeKey then Escape() end
 	-- Jump Assistant --
-	if Menu.Jump.Jump then JumpAssistant() end 
+	if JumpAssistantKey then JumpAssistant() end 
 	-- SBTW Combo --
-	if Menu.SBTW.sbtwKey then SBTW() end
+	if SBTWKey then SBTW() end
+end
+---------------------------------------------------------------------
+--- Function KeyBindings for easier KeyManagement -------------------
+---------------------------------------------------------------------
+function KeyBindings()
+	SpearKey = Menu.KeyBind.SpearKey
+	SpearToggleKey = Menu.KeyBind.SpearToggle
+	TrapKey = Menu.KeyBind.TrapKey
+	HealManagerKey = Menu.KeyBind.HealManager
+	SBTWKey = Menu.KeyBind.SBTWKey
+	LastHitKey = Menu.KeyBind.LastHitKey
+	LaneClearKey = Menu.KeyBind.LaneClearKey
+	JungleClearKey = Menu.KeyBind.JungleClearKey
+	JumpAssistantKey = Menu.KeyBind.JumpAssistantKey
+	EscapeKey = Menu.KeyBind.EscapeKey
 end
 ---------------------------------------------------------------------
 --- Function Checks for Spells and Forms ----------------------------
 ---------------------------------------------------------------------
-
 function Check()
 	-- Cooldownchecks for Abilitys and Summoners -- 
 	QREADY = (myHero:CanUseSpell(_Q) == READY)
@@ -439,7 +473,7 @@ function Check()
 		bwcReady		= (bwcSlot		~= nil and myHero:CanUseSpell(bwcSlot)		== READY) -- Bilgewater Cutlass
 		botrkReady		= (botrkSlot	~= nil and myHero:CanUseSpell(botrkSlot)	== READY) -- Blade of the Ruined King
 		sheenReady		= (sheenSlot 	~= nil and myHero:CanUseSpell(sheenSlot) 	== READY) -- Sheen
-	--	lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichSlot) 	== READY) -- Lichbane
+		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichSlot) 	== READY) -- Lichbane
 		trinityReady	= (trinitySlot 	~= nil and myHero:CanUseSpell(trinitySlot) 	== READY) -- Trinity Force
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
@@ -451,7 +485,7 @@ function Check()
 		bwcSlot 		= GetInventorySlotItem(3144)
 		botrkSlot		= GetInventorySlotItem(3153)							
 		sheenSlot		= GetInventorySlotItem(3057)
-	--	lichbaneSlot	= GetInventorySlotItem(3100)
+		lichbaneSlot	= GetInventorySlotItem(3100)
 		trinitySlot		= GetInventorySlotItem(3078)
 		liandrysSlot	= GetInventorySlotItem(3151)
 		tmtSlot			= GetInventorySlotItem(3077)
@@ -477,23 +511,24 @@ end
 --- Draw Function ---------------------------------------------------
 ---------------------------------------------------------------------	
 function OnDraw()
+	if myHero.dead then return end
 -- Draw SpellRanges only when our champ is alive and the spell is ready --
 	-- Draw Q --
-	if Menu.Draw.drawQ and not myHero.dead then
+	if Menu.Draw.drawQ then
 		if QREADY and Menu.Draw.drawQ then DrawCircle(myHero.x, myHero.y, myHero.z, qRange, qColor) end
 	end
 	-- Draw W --
-	if Menu.Draw.drawW and not myHero.dead then
+	if Menu.Draw.drawW then
 		if WREADY and Menu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
 	end
 	-- Draw E --
-	if Menu.Draw.drawE and not myHero.dead then
+	if Menu.Draw.drawE then
 		if EREADY and Menu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
 	end
 	-- Draw Collission --
 	if Target and Menu.Draw.drawCol then QCol:DrawCollision(myHero, Target) end
 -- Draw Jump Spots --
-	if Menu.Jump.Jump and COUGAR and Menu.Draw.drawJumpspots
+	if JumpAssistantKey and COUGAR and Menu.Draw.drawJumpspots
 	or Menu.Draw.drawPerJumpspots
 	then
 				for i,group in pairs(pouncePosition) do
@@ -516,6 +551,12 @@ function OnDraw()
 				end
 			end
 		end
+-- Line to Target --
+	if Menu.Draw.drawTargetLine and Target ~= nil then
+				local Point1 = WorldToScreen(D3DXVECTOR3(myHero.x, myHero.y, myHero.z))
+				local Point2 = WorldToScreen(D3DXVECTOR3(Target.x, Target.y, Target.z))
+				DrawLine(Point1.x, Point1.y, Point2.x, Point2.y, 7, ARGB(92,191,255,0))			 
+	end
 end
 ---------------------------------------------------------------------
 -- Checks Prediction Mode and set ModeVar ---------------------------
@@ -554,22 +595,22 @@ function AimTheQ()
 end
 -- VPrediction of the Q --
 function AimTheQVP()
-	if Menu.Prediction.VPHitbox
+	if Menu.Prediction.VPrediction.Hitbox
 		then
 			local CastPosition,  HitChance,  Position = VP:GetLineCastPosition(Target, qDelay, qWidth, qRange, qSpeed, myHero, true)
-			if HitChance >= Menu.Prediction.VPredHitChance and (GetDistance(Target) - getHitBoxRadius(Target)/2) <= qRange and QREADY
+			if HitChance >= Menu.Prediction.VPrediction.HitChance and (GetDistance(Target) - getHitBoxRadius(Target)/2) <= qRange and QREADY
 			then CastSpell(_Q,CastPosition.x,CastPosition.z)
 			end
 	else
 			local CastPosition,  HitChance,  Position = VP:GetLineCastPosition(Target, qDelay, qWidth, qRange, qSpeed, myHero, true)
-			if HitChance >= Menu.Prediction.VPredHitChance and GetDistance(Target) <= qRange and QREADY
+			if HitChance >= Menu.Prediction.VPrediction.HitChance and GetDistance(Target) <= qRange and QREADY
 			then CastSpell(_Q,CastPosition.x,CastPosition.z)
 			end
 	end
 end
 -- BoLVip-Prediction of the Q --
 function AimTheQVIP()
-            if VipPredTarget and qp:GetHitChance(Target) > Menu.Prediction.BoLHitChance
+            if VipPredTarget and qp:GetHitChance(Target) > Menu.Prediction.BoLPrediction.HitChance
 			then
 			local coll = Collision(qRange, qSpeed, qDelay, qWidth)
 				if not coll:GetMinionCollision(Target, myHero)
@@ -584,7 +625,7 @@ function GetQPos(unit, pos)
 end
 	-- Aims the PROdicted Q --
 function AimTheQPRO(unit, pos, spell)
-if Menu.Prediction.ProHitbox
+if Menu.Prediction.PROdiction.Hitbox
 	then 
 		if (GetDistance(pos) - getHitBoxRadius(unit)/2 < qRange)
 		then
@@ -605,7 +646,7 @@ end
 end
 	-- Calls the function when an enemy starts to dash (Dash, jump, getting knockbacked) --
 function OnDashFunc(unit, pos, spell)
-if Menu.Prediction.ProHitbox
+if Menu.Prediction.PROdiction.Hitbox
 	then    
 		if (GetDistance(pos) - getHitBoxRadius(unit)/2 < qRange)
 		then
@@ -626,7 +667,7 @@ end
 end
 	-- Calls the function to hit when an enemy is about to land from a dash (e.g. Tristana W) --
 function AfterDashFunc(unit, pos, spell)
-if Menu.Prediction.ProHitbox
+if Menu.Prediction.PROdiction.Hitbox
 	then   
 		if (GetDistance(pos) - getHitBoxRadius(unit)/2 < qRange)
 		then
@@ -647,7 +688,7 @@ end
 end
 	-- Calls the function when an enemy is immobile (stunned/surpressed) -- 
 function OnImmobileFunc(unit, pos, spell)
-if Menu.Prediction.ProHitbox
+if Menu.Prediction.PROdiction.Hitbox
 	then   
 		if (GetDistance(pos) - getHitBoxRadius(unit)/2 < qRange)
 		then
@@ -668,7 +709,7 @@ end
 end
 	-- Calls the function right when an enemys immobile ends --
 function AfterImmobileFunc(unit, pos, spell)
-if Menu.Prediction.ProHitbox
+if Menu.Prediction.PROdiction.Hitbox
 	then   
 		if (GetDistance(pos) - getHitBoxRadius(unit)/2 < qRange)
 		then
@@ -687,13 +728,11 @@ else
 		end
 end
 end
-	
-
 -- Aims W (Trap) at the VPredicted Target --
 function AimtheW()
 		if HUMAN == true then
 			local CastPosition,  HitChance,  Position = VP:GetCircularCastPosition(Target, wDelay, wWidth, wRange) 
-			if HitChance >= Menu.Prediction.VPredHitChance and GetDistance(CastPosition) <= 1200 and WREADY
+			if HitChance >= Menu.Prediction.VPrediction.HitChance and GetDistance(CastPosition) <= 1200 and WREADY
 			then CastSpell(_W, CastPosition.x, CastPosition.z)
             end
         end
@@ -702,8 +741,8 @@ end
 function AimTheWbehind()
 		if HUMAN == true and GetDistance(Target) <= 900 then
 			local CastPosition,  HitChance,  Position = VP:GetCircularCastPosition(Target, 0.500, 80, 900)
-			if HitChance >= Menu.Prediction.VPredHitChance and GetDistance(CastPosition) <= 900 and WREADY
-			then local CastBehind = myHero + Vector(CastPosition.x-myHero.x, myHero.y, CastPosition.z-myHero.z):normalized()*(GetDistance(myHero,CastPosition)+Menu.Basic.aimWdistance)
+			if HitChance >= Menu.Prediction.VPrediction.HitChance and GetDistance(CastPosition) <= 900 and WREADY
+			then local CastBehind = myHero + Vector(CastPosition.x-myHero.x, myHero.y, CastPosition.z-myHero.z):normalized()*(GetDistance(myHero,CastPosition)+Menu.Extra.TrapDistance)
 			if GetDistance(myHero,CastBehind) <= 900 then CastSpell(_W,CastBehind.x,CastBehind.z) end
             end
         end
@@ -725,12 +764,12 @@ end
 -- Cougar W --
 function CastTheCW(enemy)
 		if not enemy then enemy = Target end
-		if (not WREADY or (GetDistance(enemy) > eWRange))
+		if not WREADY or (GetDistance(enemy) > wCRange) or (GetDistance(enemy) < 150) or UnitAtTower(enemy)
 			then return false
 		end
 		if not attackCast then
-			if ValidTarget(enemy) then 
-				CastSpell(_W)
+			if ValidTarget(enemy) and isFacing(myHero, enemy, 100)
+				then CastSpell(_W)
 				return true
 			end
 		end
@@ -743,7 +782,7 @@ function CastTheCE(enemy)
 			then return false
 		end
 		if not attackCast then
-			if ValidTarget(enemy) then 
+			if ValidTarget(enemy) and isFacing(myHero, enemy, 200) then 
 				CastSpell(_E)
 				return true
 			end
@@ -916,7 +955,7 @@ end
 ---------------------------------------------------------------------
 function JumpAssistant()
 				-- Move to Mouse while Jump Assistant--
-				if (Menu.Jump.Jump and Menu.Jump.m2mjump and busy == false)
+				if (JumpAssistantKey and Menu.Jump.movetomouse and busy == false)
 					then moveToCursor()
 				end
 				-- Jump Assistant -- 
@@ -1331,7 +1370,7 @@ end
 function JungleClearCougar()
 	if COUGAR == true then
 		if Menu.Jungle.jungleCQ and GetDistance(JungleMob) <= qCRange then CastTheCQ(JungleMob) end
-		if Menu.Jungle.jungleCW and GetDistance(JungleMob) <= wCRange then CastSpell(_W, JungleMob.x, JungleMob.z) end
+		if Menu.Jungle.jungleCW and GetDistance(JungleMob) <= wCRange then CastTheCW(JungleMob) end
 		if Menu.Jungle.jungleCE and GetDistance(JungleMob) <= eCRange then CastTheCE(JungleMob) end
 	else CastSpell (_R) end
 end
@@ -1363,18 +1402,6 @@ function GetJungleMob()
                 if ValidTarget(Mob, eCRange) then return Mob end
         end
 end
----------------------------------------------------------------------
---- Jungle Steal with Q ---------------------------------------------
----------------------------------------------------------------------
-
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
----------------------------------------------------------------------------------------------rewrite ------------------
-
 ---------------------------------------------------------------------
 -- Object Handling Functions ----------------------------------------
 -- Checks for objects that are created and deleted
@@ -1424,13 +1451,18 @@ function OnRecall(hero, channelTimeInMs)
 	end
 end
 function OnAbortRecall(hero)
-	if hero.networkID == player.networkID then
-		Recalling = false
+	if hero.networkID == player.networkID
+		then Recalling = false
+		
+		
 	end
 end
 function OnFinishRecall(hero)
-	if hero.networkID == player.networkID then
-		Recalling = false
+	if hero.networkID == player.networkID
+		then Recalling = false
+	end
+	if Menu.Extra.switchAfterRecall and HUMAN and RREADY and EnemysInRange(Menu.Extra.switchAfterRecallRange) == 0
+		then CastSpell(_R)
 	end
 end
 ---------------------------------------------------------------------
@@ -1443,22 +1475,18 @@ function OrbWalking(Target)
         moveToCursor()
     end
 end
-
 function TimeToAttack()
     return (GetTickCount() + GetLatency()/2 > lastAttack + lastAttackCD)
 end
-
 function heroCanMove()
 	return (GetTickCount() + GetLatency()/2 > lastAttack + lastWindUpTime + 20)
 end
-
 function moveToCursor()
 	if GetDistance(mousePos) then
 		local moveToPos = myHero + (Vector(mousePos) - myHero):normalized()*300
 		myHero:MoveTo(moveToPos.x, moveToPos.z)
     end        
 end
-
 function OnProcessSpell(object,spell)
 	if object == myHero then
 		if spell.name:lower():find("attack") then
@@ -1502,7 +1530,7 @@ end
 ---------------------------------------------------------------------
 function LaneClear()
 		setLaneClearMode()
-		if Menu.Farm.clearLane then
+		if LaneClearKey then
 			for _, minion in pairs(enemyMinions.objects) do
 				if  ValidTarget(minion)
 				then
@@ -1517,7 +1545,7 @@ function LaneClear()
 						if Menu.Farm.clearOrbM then OrbWalking(minion) end
 						if HUMAN == true then CastSpell(_R) end
 						if Menu.Farm.clearCQ and QREADY and GetDistance(minion) <= qCRange then CastTheCQ(minion) end
-						if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastSpell(_W, minion.x, minion.z) end
+						if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastTheCW(minion) end
 						if Menu.Farm.clearCE and EREADY and GetDistance(minion) <= eCRange then CastTheCE(minion) end
 					end
 					if LaneClearModeVar == 3 then
@@ -1537,7 +1565,7 @@ function LaneClear()
 						if COUGAR == true then
 							if Menu.Farm.clearOrbM then OrbWalking(minion) end
 							if Menu.Farm.clearCQ and QREADY and GetDistance(minion) <= qCRange then CastTheCQ(minion) end
-							if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastSpell(_W, minion.x, minion.z) end
+							if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastTheCW(minion) end
 							if Menu.Farm.clearCE and EREADY and GetDistance(minion) <= eCRange then CastTheCE(minion) end
 						end
 					end	
@@ -1585,13 +1613,13 @@ end
 --- Autolevel Skills ------------------------------------------------
 ---------------------------------------------------------------------
 function AutoLevelMySkills()
-		if Menu.Basic.AutoLevelSkills == 2 then
+		if Menu.Extra.AutoLevelSkills == 2 then
 			autoLevelSetSequence(levelSequence.startQ)
-		elseif Menu.Basic.AutoLevelSkills == 3 then
+		elseif Menu.Extra.AutoLevelSkills == 3 then
 			autoLevelSetSequence(levelSequence.startW)
-		elseif Menu.Basic.AutoLevelSkills == 4 then
+		elseif Menu.Extra.AutoLevelSkills == 4 then
 			autoLevelSetSequence(levelSequence.startE)
-		elseif Menu.Basic.AutoLevelSkills == 5 then
+		elseif Menu.Extra.AutoLevelSkills == 5 then
 			autoLevelSetSequence(levelSequence.hardLane)
 		end
 end
@@ -1615,10 +1643,10 @@ function DamageCalculation()
 				bwcDmg 		= ((bwcReady and getDmg("BWC", enemy, myHero)) or 0)	-- Bilgewater Cutlass
 				botrkDmg 	= ((botrkReady and getDmg("RUINEDKING", enemy, myHero)) or 0)	-- Blade of the Ruined King
 				sheenDmg	= ((sheenReady and getDmg("SHEEN", enemy, myHero)) or 0)	-- Sheen
-		--		lichbaneDmg = ((lichbaneReady and getDmg("LICHBANE", enemy, myHero)) or 0)	-- Lichbane
+				lichbaneDmg = ((lichbaneReady and getDmg("LICHBANE", enemy, myHero)) or 0)	-- Lichbane
 				trinityDmg 	= ((trinityReady and getDmg("TRINITY", enemy, myHero)) or 0)	-- Trinity Force
 				liandrysDmg = ((liandrysReady and getDmg("LIANDRYS", enemy, myHero)) or 0)	-- Liandrys 
-				local extraDmg 	= iDmg + dfgDmg + hxgDmg + bwcDmg + botrkDmg + sheenDmg + trinityDmg + liandrysDmg-- + lichbaneDmg 
+				local extraDmg 	= iDmg + dfgDmg + hxgDmg + bwcDmg + botrkDmg + sheenDmg + trinityDmg + liandrysDmg + lichbaneDmg 
 				local abilityDmg = qHDmg + qCDmg + wCDmg + eCDmg
 				local totalDmg = abilityDmg + extraDmg
 	-- Set Kill Text --	
@@ -1733,4 +1761,45 @@ function HealCheckSelf()
 		then needSelfHeal = true
 	else needSelfHeal = false
 	end
+end
+---------------------------------------------------------------------
+-- Function UnitAtTower --------------------------------------------- 
+-- Checks if a unit is under a tower e.g. UnitAtTower(enemy)
+---------------------------------------------------------------------
+function UnitAtTower(unit)
+	for u = 1, objManager.maxObjects do
+		local obj = objManager:GetObject(u)
+		if obj ~= nil and obj.name:find("Chaos_Turret_") and obj.team ~= myHero.team and not obj.dead then
+			if GetDistance(unit,obj) <= 775
+				then return true
+			end
+		end
+	end
+	return false
+end
+---------------------------------------------------------------------
+-- Function EnemysInRange ------------------------------------------- 
+-- Counts the enemys in a specific range (RangeToEnemys)
+-- and returns the value as a number e.g. 2 if two are in Range
+---------------------------------------------------------------------
+function EnemysInRange(RangeToEnemys)
+	local enemysInRange = 0
+	for i = 1, heroManager.iCount, 1 do
+	local enemyHeroes = heroManager:getHero(i)
+		if enemyHeroes.valid and enemyHeroes.visible and enemyHeroes.dead == false and enemyHeroes.team ~= myHero.team and GetDistance(enemyHeroes) <= RangeToEnemys
+			then enemysInRange = enemysInRange + 1 end
+		end
+	return enemysInRange
+end
+---------------------------------------------------------------------
+-- isFacing ---------------------------------------------------------
+-- Returns if our Hero is facing an enemy
+-- Source = Our Champ, Target = enemy, lineLength = Width for checks
+---------------------------------------------------------------------
+function isFacing(source, ourtarget, lineLength)
+local sourceVector = Vector(source.visionPos.x, source.visionPos.z)
+local sourcePos = Vector(source.x, source.z)
+sourceVector = (sourceVector-sourcePos):normalized()
+sourceVector = sourcePos + (sourceVector*(GetDistance(ourtarget, source)))
+return GetDistanceSqr(ourtarget, {x = sourceVector.x, z = sourceVector.y}) <= (lineLength and lineLength^2 or 90000)
 end
