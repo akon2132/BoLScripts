@@ -1,4 +1,4 @@
-local Version = "0.01"
+local Version = "0.02"
 local Author = "QQQ"
 if myHero.charName ~= "Renekton" then return end
 local IsLoaded = "Crocodile Dundee"
@@ -269,8 +269,6 @@ function OnTick()
 	if myHero.dead then return end
 	ts:update()
 	Target = ts.target 
-	IgniteCheck()
-	JungleNames()
 	Check()
 	LFCfunc()
 	AutoLevelMySkills()
@@ -283,6 +281,7 @@ function OnTick()
 	if JungleClearKey then JungleClear() end
 	if HarassKey then Harass() end
 	if HarassToggleKey then Harass() end
+
 end
 ---------------------------------------------------------------------
 --- Function KeyBindings for easier KeyManagement -------------------
@@ -318,8 +317,6 @@ function Check()
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
 		hdrReady		= (hdrSlot		~= nil and myHero:CanUseSpell(hdrSlot) 		== READY) -- Hydra
 		youReady		= (youSlot		~= nil and myHero:CanUseSpell(youSlot)		== READY) -- Youmuus Ghostblade
-	
-	-- rSOW:ForceTarget(Target)
 	
 	-- Set the slots for item --
 		dfgSlot 		= GetInventorySlotItem(3128)
@@ -621,8 +618,7 @@ function OnCreateObj(obj)
 	end
 end
 function OnDeleteObj(obj)
-if obj ~= nil then
-		
+	if obj ~= nil then
 		if obj.name:find("TeleportHome.troy") then
 			if GetDistance(obj) <= 70 then
 				Recalling = false
@@ -638,15 +634,6 @@ if obj ~= nil then
 				table.remove(JungleFocusMobs, i)
 			end
 		end
-	end
-end
----------------------------------------------------------------------
---- Orbwalker -------------------------------------------------------
----------------------------------------------------------------------
-function OnAnimation(unit, animationName)
-	if unit.isMe then 
-			rSOW:EnableAttacks()
-			rSOW.Move = true
 	end
 end
 ---------------------------------------------------------------------
