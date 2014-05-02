@@ -1,32 +1,8 @@
-local Version = "0.12"
+local Version = "0.13"
+local Author = "QQQ"
 if myHero.charName ~= "Rengar" then return end
 local IsLoaded = "Predators Pride"
 local AUTOUPDATE = true
---[[
-Changelog:
--- 0.06 -- 
-	- Beta Release
--- 0.07 --
-	- Fixed possible bug for the harass bolean error --
--- 0.08 --
-	- Renamed harass to rharass for bolean error
-	- Changed some standart hotkeys
-	- Added a new way to check AA cancels (should stop the stuttering)
--- 0.09 -- 
-	- Fixed BotRK Typo in the checks, it should no longer spam an error if you buy the item
--- 0.10 --
-	- Added Itemusage in Combo and in Jungle-/Laneclear 
-	- (Deathfire Grasp, Hextech Gunblade, Bilgewater Cutless, Blade of the Ruined King, Tiamat, Hydra)
-	- Added Autoheal with Emp W if low health to SBTW
-	- Added a check to not use any abilitys while stealth is active
-	- Added a check to not interrupt AA's while SBTW
-	- Added a new method for casting emp E into normal E (needs testing)
-	- Fixed some small bugs
--- 0.11 --
-	- Preparationpatch for the new Autoupdatefunction
--- 0.12 --
-	- New Autoupdater
-]]--
 ---------------------------------------------------------------------
 --- AutoUpdate for the script ---------------------------------------
 ---------------------------------------------------------------------
@@ -37,7 +13,7 @@ local UPDATE_PATH = "/bolqqq/BoLScripts/master/Rengar%20-%20Predators%20Pride.lu
 local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
-function AutoupdaterMsg(msg) print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
+function AutoupdaterMsg(msg) print("<font color=\"#FF794C\">["..IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
 if AUTOUPDATE then
     local ServerData = GetWebResult(UPDATE_HOST, UPDATE_PATH)
     if ServerData then
@@ -64,6 +40,7 @@ end
 local REQUIRED_LIBS = 
 	{
 		["VPrediction"] = "https://raw.github.com/honda7/BoL/master/Common/VPrediction.lua",
+		["SOW"] = "https://raw.github.com/honda7/BoL/master/Common/SOW.lua"
 	}
 		
 local DOWNLOADING_LIBS = false
@@ -74,7 +51,7 @@ function AfterDownload()
 	DOWNLOAD_COUNT = DOWNLOAD_COUNT - 1
 	if DOWNLOAD_COUNT == 0 then
 		DOWNLOADING_LIBS = false
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
+		print("<font color=\"#FF794C\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
 	end
 end
 
@@ -85,7 +62,7 @@ for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(REQUIRED_LIBS) do
 		DOWNLOADING_LIBS = true
 		DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
 
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
+		print("<font color=\"#FF794C\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
 		DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
 	end
 end
@@ -103,6 +80,7 @@ if DOWNLOADING_LIBS then return end
 	local eDelay = 0.250
 	local wColor = ARGB(76, 255, 76,170)
 	local eColor = ARGB(255, 255, 0,128)
+	local TargetColor = ARGB(100,76,255,76)
 	local Ferocity = 0
 	local qName = "Savagery"
 	local wName = "Battle Roar"
@@ -118,7 +96,6 @@ if DOWNLOADING_LIBS then return end
 	lastAttack = 0
 	lastAttackCD = 0
 	lastWindUpTime = 0
-	attackCast = false
 -- Vars for JungleClear --
 	JungleMobs = {}
 	JungleFocusMobs = {}
@@ -155,6 +132,12 @@ if DOWNLOADING_LIBS then return end
 						"Kill! - (Q)+(Q2)+(E)",		-- 13
 						"Kill! - (Q)+(Q2)+(W)+(E)"	-- 14
 					}
+-- Vars for Autolevel --
+	levelSequence = {
+					startQ = { 1,2,3,1,1,4,1,3,1,3,4,3,3,2,2,4,2,2 },
+					startW = { 2,1,3,1,1,4,1,3,1,3,4,3,3,2,2,4,2,2 },
+					startE = { 3,1,2,1,1,4,1,3,1,3,4,3,3,2,2,4,2,2 }
+					}
 -- Misc Vars --
 	enemyHeroes = GetEnemyHeroes()
 	Recalling = false
@@ -163,19 +146,17 @@ if DOWNLOADING_LIBS then return end
 	local needHealharass = false
 	local needHealjungle = false
 	local needHealfarm = false
--- EmpModes --
-	local EmpModeSBTW
-	local EmpModeHarass
-	local EmpModeJungle
-	local EmpModeFarm
+-- EmpMode --
+	local EmpMode = nil
 ---------------------------------------------------------------------
 --- Menu ------------------------------------------------------------
 ---------------------------------------------------------------------
 function OnLoad()
-		 AddMenu()
 		 JungleNames()
 		 IgniteCheck()
 		 VP = VPrediction()
+		 rSOW = SOW(VP)
+		 AddMenu()
 		 --LFC--
 	_G.oldDrawCircle = rawget(_G, 'DrawCircle')
 	_G.DrawCircle = DrawCircle2
@@ -183,114 +164,160 @@ function OnLoad()
 	end
 function AddMenu()
 	-- Script Menu --
-	RengarMenu = scriptConfig("Rengar", "Rengar")
+	RengarMenu = scriptConfig("Rengar - Predators Pride", "Rengar")
 	
 	-- Target Selector --
 	RengarMenu:addTS(ts)
 	
 	-- Create SubMenu --
-	RengarMenu:addSubMenu("["..myHero.charName.." - Basic Settings]", "Basic")
-	RengarMenu:addSubMenu("["..myHero.charName.." - Combo Settings]", "SBTW")
-	RengarMenu:addSubMenu("["..myHero.charName.." - Harass Settings]", "rHarass")
-	RengarMenu:addSubMenu("["..myHero.charName.." - KillSteal Settings]", "KS")
-	RengarMenu:addSubMenu("["..myHero.charName.." - Farm Settings]", "Farm")
-	RengarMenu:addSubMenu("["..myHero.charName.." - JungleClear Settings]", "Jungle")
-	RengarMenu:addSubMenu("["..myHero.charName.." - Draw Settings]", "Draw")
+	RengarMenu:addSubMenu(""..myHero.charName..": Key Bindings", "KeyBind")
+	RengarMenu:addSubMenu(""..myHero.charName..": Extra", "Extra")
+	RengarMenu:addSubMenu(""..myHero.charName..": Orbwalk", "Orbwalk")
+	RengarMenu:addSubMenu(""..myHero.charName..": SBTW-Combo", "SBTW")
+	RengarMenu:addSubMenu(""..myHero.charName..": Harass", "rHarass")
+	RengarMenu:addSubMenu(""..myHero.charName..": KillSteal", "KS")
+	RengarMenu:addSubMenu(""..myHero.charName..": LaneClear", "Farm")
+	RengarMenu:addSubMenu(""..myHero.charName..": JungleClear", "Jungle")
+	RengarMenu:addSubMenu(""..myHero.charName..": Drawings", "Draw")
 	
-	-- Basic --
-	RengarMenu.Basic:addParam("aimEkey","Throw predicted (E): ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+	-- KeyBind --
+	RengarMenu.KeyBind:addParam("aimEkey","Throw predicted (E): ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+	RengarMenu.KeyBind:addParam("SBTWKey", "SBTW-Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
+	RengarMenu.KeyBind:addParam("HarassKey","Harass Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("A"))
+	RengarMenu.KeyBind:addParam("LaneClearKey", "LaneClear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
+	RengarMenu.KeyBind:addParam("JungleClearKey", "JungleClear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("J"))
+	
+	-- Extra --
+	RengarMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QWEQ - R>Q>E>W", "WQEQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
+	
+	-- SOW-Orbwalking --
+	rSOW:LoadToMenu(RengarMenu.Orbwalk)
 	
 	-- SBTW Combo --
-	RengarMenu.SBTW:addParam("sbtwKey", "Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
 	RengarMenu.SBTW:addParam("empPrioritySBTW", "Empowered Priority in SBTW", SCRIPT_PARAM_LIST, 3, {"Q-Priority", "W-Priority", "E-Priority"})
 	RengarMenu.SBTW:addParam("sbtwHeal", "Emp(W) over Prio if hp below %: ",  SCRIPT_PARAM_SLICE, 25, 0, 100, -1)
+	RengarMenu.SBTW:addParam("sbtwItems", "Use Items in Combo", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.SBTW:addParam("sbtwInfo", "", SCRIPT_PARAM_INFO, "")
+	RengarMenu.SBTW:addParam("sbtwInfo", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
 	RengarMenu.SBTW:addParam("sbtwQ", "Use "..qName.." (Q) in Combo", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.SBTW:addParam("sbtwW", "Use "..wName.." (W) in Combo", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.SBTW:addParam("sbtwE", "Use "..eName.." (E) in Combo", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.SBTW:addParam("sbtwItems", "Use Items in Combo", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.SBTW:addParam("sbtwOrb", "OrbWalk in Combo", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Harass --
-	RengarMenu.rHarass:addParam("harassComboKey","Harass Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
 	RengarMenu.rHarass:addParam("empPriorityHarass", "Empowered Priority in Harass", SCRIPT_PARAM_LIST, 2, {"W-Priority", "E-Priority"})
 	RengarMenu.rHarass:addParam("harassHeal", "Emp(W) over Prio if hp below %: ",  SCRIPT_PARAM_SLICE, 30, 0, 100, -1)
+	RengarMenu.rHarass:addParam("harassInfo", "", SCRIPT_PARAM_INFO, "")
+	RengarMenu.rHarass:addParam("harassInfo", "--- Choose your abilitys for Harass ---", SCRIPT_PARAM_INFO, "")
 	RengarMenu.rHarass:addParam("harassW","Use "..wName.." (W) in Harass", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.rHarass:addParam("harassE","Use "..eName.." (E) in Harass", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.rHarass:addParam("harassOrb","Orbwalk while Harass", SCRIPT_PARAM_ONOFF, true)
 	
 	-- KillSteal --
-	RengarMenu.KS:addParam("killstealIgnite", "Use Auto Ignite", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.KS:addParam("Ignite", "Use Auto Ignite", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.KS:addParam("useSmartKS", "Use Smart KillSteal", SCRIPT_PARAM_ONOFF, true)
 	
-	-- Lane Clear --
-	RengarMenu.Farm:addParam("clearLaneKey", "Lane Clear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	RengarMenu.Farm:addParam("lastHitMinions", "Auto Last Hit Minions", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("T"))
+	-- Lane Clear --	
 	RengarMenu.Farm:addParam("empPriorityFarm", "Empowered Priority in Farm", SCRIPT_PARAM_LIST, 2, {"Q-Priority", "W-Priority"})
 	RengarMenu.Farm:addParam("farmHeal", "Emp(W) over Prio if hp below %: ",  SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
-	RengarMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Farm:addParam("farmW", "Farm with "..wName.." (W)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Farm:addParam("farmE", "Farm with "..eName.." (E)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Farm:addParam("farmOrb", "OrbWalk the Minions", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Farm:addParam("farmInfo", "", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Farm:addParam("farmW", "Farm with "..wName.." (W): ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Farm:addParam("farmE", "Farm with "..eName.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Jungle Clear --
-	RengarMenu.Jungle:addParam("jungleKey", "Jungle Clear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	RengarMenu.Jungle:addParam("empPriorityJungle", "Empowered Priority in Jungle", SCRIPT_PARAM_LIST, 2, {"Q-Priority", "W-Priority"})
 	RengarMenu.Jungle:addParam("jungleHeal", "Emp(W) over Prio if hp below %: ",  SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
-	RengarMenu.Jungle:addParam("jungleQ", "Clear with "..qName.." (Q)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Jungle:addParam("jungleW", "Clear with "..wName.." (W)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Jungle:addParam("jungleE", "Clear with "..eName.." (E)", SCRIPT_PARAM_ONOFF, true)
-	RengarMenu.Jungle:addParam("jungleOrbwalk", "Orbwalk the Jungle", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Jungle:addParam("jungleInfo", "", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Jungle:addParam("jungleInfo", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Jungle:addParam("jungleQ", "Clear with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Jungle:addParam("jungleW", "Clear with "..wName.." (W): ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Jungle:addParam("jungleE", "Clear with "..eName.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Drawings --
 	RengarMenu.Draw:addParam("drawW", "Draw W Range: ", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.Draw:addParam("drawE", "Draw E Range: ", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.Draw:addParam("drawKillText", "Draw KillText: ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Draw:addParam("drawTarget", "Draw current target: ", SCRIPT_PARAM_ONOFF, false)
 	-- LFC --
-		if VIP_USER
-		then
-				RengarMenu.Draw:addSubMenu("["..myHero.charName.." - LFC Settings]", "LFC")
-				RengarMenu.Draw.LFC:addParam("LagFree", "Activate Lag Free Circles", SCRIPT_PARAM_ONOFF, false)
-				RengarMenu.Draw.LFC:addParam("CL", "Length before Snapping", SCRIPT_PARAM_SLICE, 350, 75, 2000, 0)
-				RengarMenu.Draw.LFC:addParam("CLinfo", "Higher length = Lower FPS Drops", SCRIPT_PARAM_INFO, "")
-		end
+	RengarMenu.Draw:addSubMenu("LagFreeCircles: ", "LFC")
+	RengarMenu.Draw.LFC:addParam("LagFree", "Activate Lag Free Circles", SCRIPT_PARAM_ONOFF, false)
+	RengarMenu.Draw.LFC:addParam("CL", "Length before Snapping", SCRIPT_PARAM_SLICE, 350, 75, 2000, 0)
+	RengarMenu.Draw.LFC:addParam("CLinfo", "Higher length = Lower FPS Drops", SCRIPT_PARAM_INFO, "")
+	-- Permashow --
+	RengarMenu.Draw:addSubMenu("PermaShow: ", "PermaShow")
+	RengarMenu.Draw.PermaShow:addParam("info", "--- Reload (Double F9) if you change the settings ---", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Draw.PermaShow:addParam("empPrioritySBTW", "Show empPrioritySBTW: ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Draw.PermaShow:addParam("empPriorityHarass", "Show empPriorityHarass: ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Draw.PermaShow:addParam("empPriorityFarm", "Show empPriorityFarm: ", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.Draw.PermaShow:addParam("empPriorityJungle", "Show empPriorityJungle: ", SCRIPT_PARAM_ONOFF, true)
+
 	-- Other --
 	RengarMenu:addParam("Version", "Version", SCRIPT_PARAM_INFO, Version)
-			
+	RengarMenu:addParam("Author", "Author", SCRIPT_PARAM_INFO, Author)
+
+	-- PermaShow --
+	if RengarMenu.Draw.PermaShow.empPrioritySBTW
+		then RengarMenu.SBTW:permaShow("empPrioritySBTW")
+	end
+	if RengarMenu.Draw.PermaShow.empPriorityHarass
+		then RengarMenu.rHarass:permaShow("empPriorityHarass")
+	end
+	if RengarMenu.Draw.PermaShow.empPriorityFarm
+		then RengarMenu.Farm:permaShow("empPriorityFarm")
+	end
+	if RengarMenu.Draw.PermaShow.empPriorityJungle
+		then RengarMenu.Jungle:permaShow("empPriorityJungle")
+	end
 end
 function OnTick()
+	if myHero.dead then return end
 	ts:update()
+	Target = ts.target 
 	Check()
 	DamageCalculation()
 	LFCfunc()
+	AutoLevelMySkills()
+	KeyBindings()
+	
 	-- Aim VPredicted E Function --
-		if ts.target ~= nil and RengarMenu.Basic.aimEkey
-			then AimTheE() 
+		if Target
+			then
+				if AimEKey then AimTheE() end
+				if RengarMenu.KS.Ignite then AutoIgnite(Target) end
 		end
-	-- SBTW --
-	if RengarMenu.SBTW.sbtwKey then SBTW() end
-	-- SmartKS --
+	if SBTWKey then SBTW() end
+	if HarassKey then Harass() end
+	if LaneClearKey then LaneClear() end
+	if JungleClearKey then JungleClear() end
 	if RengarMenu.KS.useSmartKS then smartKS() end
-	-- AutoIgnite --
---	if RengarMenu.KS.killstealIgnite then AutoIgnite() end
-	-- Lane Clear --
-	if RengarMenu.Farm.clearLaneKey then LaneClear() end
-	-- Last Hit --
-	if RengarMenu.Farm.lastHitMinions then lastHit() end
-	-- Jungle Clear --
-	if RengarMenu.Jungle.jungleKey then JungleClear() end
-	-- Harass --
-	if RengarMenu.rHarass.harassComboKey then HarassCombo() end
+end
+---------------------------------------------------------------------
+--- Function KeyBindings for easier KeyManagement -------------------
+---------------------------------------------------------------------
+function KeyBindings()
+	AimEKey = RengarMenu.KeyBind.aimEkey
+	SBTWKey = RengarMenu.KeyBind.SBTWKey
+	HarassKey = RengarMenu.KeyBind.HarassKey
+	LaneClearKey = RengarMenu.KeyBind.LaneClearKey
+	JungleClearKey = RengarMenu.KeyBind.JungleClearKey
 end
 ---------------------------------------------------------------------
 --- Draw Function --- 
 ---------------------------------------------------------------------	
 function OnDraw()
+	if myHero.dead then return end
 -- Draw SpellRanges --
+	-- Draw W --
 	if RengarMenu.Draw.drawW and not myHero.dead then
 		if WREADY and RengarMenu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
 	end
+	-- Draw E --
 	if RengarMenu.Draw.drawE and not myHero.dead then
 		if EREADY and RengarMenu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
+	end
+-- Draw Target --
+	if Target ~= nil and RengarMenu.Draw.drawTarget
+		then DrawCircle(Target.x, Target.y, Target.z, (GetDistance(Target.minBBox, Target.maxBBox)/2), TargetColor)
 	end
 -- Draw KillText --
 	if RengarMenu.Draw.drawKillText then
@@ -304,7 +331,7 @@ function OnDraw()
 					
 				end
 			end
-		end
+	end
 end
 ---------------------------------------------------------------------
 --- Function Check --- 
@@ -337,6 +364,8 @@ function Check()
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
 		hdrReady		= (hdrSlot		~= nil and myHero:CanUseSpell(hdrSlot) 		== READY) -- Hydra
+		youReady		= (youSlot		~= nil and myHero:CanUseSpell(youSlot)		== READY) -- Youmuus Ghostblade
+		
 	-- Set the slots for item --
 		dfgSlot 		= GetInventorySlotItem(3128)
 		hxgSlot 		= GetInventorySlotItem(3146)
@@ -347,8 +376,27 @@ function Check()
 		trinitySlot		= GetInventorySlotItem(3078)
 		liandrysSlot	= GetInventorySlotItem(3151)
 		tmtSlot			= GetInventorySlotItem(3077)
-		hdrSlot			= GetInventorySlotItem(3074)	
+		hdrSlot			= GetInventorySlotItem(3074)
+		youSlot			= GetInventorySlotItem(3142)		
 end
+---------------------------------------------------------------------
+--- ItemUsage -------------------------------------------------------
+---------------------------------------------------------------------
+function UseItems()
+	if not enemy then enemy = Target end
+	if ValidTarget(enemy) then
+		if dfgReady		and GetDistance(enemy) <= 750 then CastSpell(dfgSlot, enemy) end
+		if hxgReady		and GetDistance(enemy) <= 700 then CastSpell(hxgSlot, enemy) end
+		if bwcReady		and GetDistance(enemy) <= 450 then CastSpell(bwcSlot, enemy) end
+		if botrkReady	and GetDistance(enemy) <= 450 then CastSpell(botrkSlot, enemy) end
+		if tmtReady		and GetDistance(enemy) <= 185 then CastSpell(tmtSlot) end
+		if hdrReady 	and GetDistance(enemy) <= 185 then CastSpell(hdrSlot) end
+		if youReady		and GetDistance(enemy) <= 185 then CastSpell(youSlot) end
+	end
+end
+---------------------------------------------------------------------
+--- HealCheck -------------------------------------------------------
+---------------------------------------------------------------------
 function HealCheck()
 -- JungleHealthCalculation --
 	if Ferocity == 5 and EmpModeJungle == 1
@@ -384,18 +432,16 @@ if Ferocity == 5 and not EmpModeSBTW == 2
 	end
 end
 ---------------------------------------------------------------------
---- Functions for VPredicted Spells and Spells---
+--- Functions for VPredicted Spells and Spells ----------------------
 ---------------------------------------------------------------------
 function CastTheQ(enemy)
 		if (not QREADY or (GetDistance(enemy) > qRange))
 			then return false
 		end
-		if not attackCast then
-			if ValidTarget(enemy) then 
-				CastSpell(_Q)
-				myHero:Attack(enemy)
-				return true
-			end
+		if ValidTarget(enemy)
+			then CastSpell(_Q)
+				 myHero:Attack(enemy)
+				 return true
 		end
 		return false
 end
@@ -403,17 +449,15 @@ function CastTheW(enemy)
 	if (not WREADY or (GetDistance(enemy) > wRange))
 			then return false
 		end
-		if not attackCast then
-			if ValidTarget(enemy) then 
-				CastSpell(_W)
-				return true
-			end
+		if ValidTarget(enemy)
+			then CastSpell(_W)
+			return true
 		end
 		return false
 end
 function AimTheE()
-	local CastPosition,  HitChance,  Position = VP:GetLineCastPosition(ts.target, eDelay, eWidth, eRange, eSpeed, myHero, true)
-	if HitChance >= 2  and GetDistance(ts.target) <= 1000 and EREADY
+	local CastPosition,  HitChance,  Position = VP:GetLineCastPosition(Target, eDelay, eWidth, eRange, eSpeed, myHero, true)
+	if HitChance >= 2  and GetDistance(Target) <= 1000 and EREADY
 	then CastSpell(_E, CastPosition.x, CastPosition.z)
 	end
 end
@@ -421,25 +465,18 @@ end
 --- Functions for SBTW ---
 ---------------------------------------------------------------------
 function SBTW()
-	setEmpModeSBTW()
-	if RengarMenu.SBTW.sbtwOrb then
-			if ts.target ~= nil then
-				OrbWalking(ts.target)
-			else
-			moveToCursor()
-			end
-		end
-	if ValidTarget(ts.target) and allowSpells
+	setEmpMode()
+	if ValidTarget(Target) and allowSpells
 	then
-		if Ferocity <= 4 and not attackCast
+		if Ferocity <= 4 and not rSOW:CanAttack()
 			then
-				if RengarMenu.SBTW.sbtwQ and QREADY and GetDistance(ts.target) < qRange
+				if RengarMenu.SBTW.sbtwQ and QREADY and GetDistance(Target) < qRange
 					then CastSpell(_Q)
 				end
-				if RengarMenu.SBTW.sbtwW and WREADY and GetDistance(ts.target) < wRange 
+				if RengarMenu.SBTW.sbtwW and WREADY and GetDistance(Target) < wRange 
 					then CastSpell(_W)
 				end
-				if RengarMenu.SBTW.sbtwE and EREADY and GetDistance(ts.target) < eRange
+				if RengarMenu.SBTW.sbtwE and EREADY and GetDistance(Target) < eRange
 					then AimTheE()
 
 				end
@@ -450,21 +487,21 @@ function SBTW()
 					then
 					if EmpModeSBTW == 1
 						then	
-							if GetDistance(ts.target) < qRange
+							if GetDistance(Target) < qRange
 								then CastSpell(_Q)
 							end
 					elseif EmpModeSBTW == 2
 						then
-							if GetDistance(ts.target) < wRange
+							if GetDistance(Target) < wRange
 								then CastSpell(_W)
 							end
 					elseif EmpModeSBTW == 3
 						then
-							if GetDistance(ts.target) < eRange
+							if GetDistance(Target) < eRange
 								then AimTheE()
 							end
 					end
-				else CastTheW(ts.target)
+				else CastTheW(Target)
 				end 
 		end
 		if RengarMenu.SBTW.sbtwItems then UseItems() end
@@ -505,103 +542,66 @@ end
 ---------------------------------------------------------------------
 --- Functions for Harass ---
 ---------------------------------------------------------------------
-function HarassCombo()
-	setEmpModeHarass()
-	if ts.target ~= nil then
-		if RengarMenu.rHarass.harassOrb then OrbWalking(ts.target) end
-		if Ferocity <= 4 and not attackCast
+function Harass()
+	setEmpMode()
+	if Target ~= nil then
+		if Ferocity <= 4 and not rSOW:CanAttack()
 			then
-				if RengarMenu.rHarass.harassW then CastTheW(ts.target) end
+				if RengarMenu.rHarass.harassW then CastTheW(Target) end
 				if RengarMenu.rHarass.harassE then AimTheE() end 
 		end
 		if Ferocity == 5 then
 					if needHealharass == false
 					then
-						if not attackCast then
-							if EmpModeHarass == 1 then CastTheW(ts.target) end
+						if not rSOW:CanAttack() then
+							if EmpModeHarass == 1 then CastTheW(Target) end
 							if EmpModeHarass == 2 then AimTheE() end
 						end
-					else CastTheW(ts.target)
+					else CastTheW(Target)
 					end
 		end
-	else moveToCursor()
 	end	
 end
 ---------------------------------------------------------------------
---- Functions for the different EmpModes ---
+--- Function for EmpMode --------------------------------------------
 ---------------------------------------------------------------------
-function setEmpModeSBTW()
+function setEmpMode()
 	EmpModeSBTW = RengarMenu.SBTW.empPrioritySBTW
-end
-function setEmpModeHarass()
 	EmpModeHarass = RengarMenu.rHarass.empPriorityHarass
-end
-function setEmpModeJungle()
 	EmpModeJungle = RengarMenu.Jungle.empPriorityJungle
-end
-function setEmpModeFarm()
 	EmpModeFarm = RengarMenu.Farm.empPriorityFarm
-end
----------------------------------------------------------------------
---- ItemUsage ---
----------------------------------------------------------------------
-function UseItems()
-		if dfgReady		and GetDistance(ts.target) <= 750 then CastSpell(dfgSlot, ts.target) end
-		if hxgReady		and GetDistance(ts.target) <= 700 then CastSpell(hxgSlot, ts.target) end
-		if bwcReady		and GetDistance(ts.target) <= 450 then CastSpell(bwcSlot, ts.target) end
-		if botrkReady	and GetDistance(ts.target) <= 450 then CastSpell(botrkSlot, ts.target) end
-		if tmtReady		and GetDistance(ts.target) <= 185 then CastSpell(tmtSlot) end
-		if hdrReady 	and GetDistance(ts.target) <= 185 then CastSpell(hdrSlot) end
-end
-
----------------------------------------------------------------------
---- Function for Misc Movement ---
----------------------------------------------------------------------
-function moveToMouse()
-	if GetDistance(mousePos) 
-	then local moveToPos = myHero + (Vector(mousePos) - myHero):normalized()*300
-	myHero:MoveTo(moveToPos.x, moveToPos.z)
-	end        
 end
 ---------------------------------------------------------------------
 --- Jungle Mob Names ---
 ---------------------------------------------------------------------
 function JungleNames()
+-- JungleMobNames are the names of the smaller Junglemobs --
 	JungleMobNames =
 {
 	-- Blue Side --
 		-- Blue Buff --
-		["YoungLizard1.1.2"] = true, 
-        ["YoungLizard1.1.3"] = true,
+		["YoungLizard1.1.2"] = true, ["YoungLizard1.1.3"] = true,
 		-- Red Buff --
-		["YoungLizard4.1.2"] = true,
-        ["YoungLizard4.1.3"] = true,
+		["YoungLizard4.1.2"] = true, ["YoungLizard4.1.3"] = true,
 		-- Wolf Camp --
-		["wolf2.1.2"] = true,
-        ["wolf2.1.3"] = true,
+		["wolf2.1.2"] = true, ["wolf2.1.3"] = true,
 		-- Wraith Camp --
-		["LesserWraith3.1.2"] = true,
-        ["LesserWraith3.1.3"] = true,
-        ["LesserWraith3.1.4"] = true,
+		["LesserWraith3.1.2"] = true, ["LesserWraith3.1.3"] = true, ["LesserWraith3.1.4"] = true,
 		-- Golem Camp --
 		["SmallGolem5.1.1"] = true,
 	-- Purple Side --
 		-- Blue Buff --
-		["YoungLizard7.1.2"] = true,
-        ["YoungLizard7.1.3"] = true,
+		["YoungLizard7.1.2"] = true, ["YoungLizard7.1.3"] = true,
 		-- Red Buff --
-		["YoungLizard10.1.2"] = true,
-        ["YoungLizard10.1.3"] = true,
+		["YoungLizard10.1.2"] = true, ["YoungLizard10.1.3"] = true,
 		-- Wolf Camp --
-		["wolf8.1.2"] = true,
-        ["wolf8.1.3"] = true,
+		["wolf8.1.2"] = true, ["wolf8.1.3"] = true,
 		-- Wraith Camp --
-		["LesserWraith9.1.2"] = true,
-        ["LesserWraith9.1.3"] = true,
-        ["LesserWraith9.1.4"] = true,
+		["LesserWraith9.1.2"] = true, ["LesserWraith9.1.3"] = true, ["LesserWraith9.1.4"] = true,
 		-- Golem Camp --
 		["SmallGolem11.1.1"] = true,
 }
+-- FocusJungleNames are the names of the important/big Junglemobs --
 	FocusJungleNames =
 {
 	-- Blue Side --
@@ -635,7 +635,6 @@ function JungleNames()
 	-- Baron --
 		["Worm12.1.1"] = true,
 }
-
 	for i = 0, objManager.maxObjects do
 		local object = objManager:getObject(i)
 		if object ~= nil then
@@ -651,29 +650,26 @@ end
 --- Jungle Clear ---
 ---------------------------------------------------------------------
 function JungleClear()
-	setEmpModeJungle()
+	setEmpMode()
 	local JungleMob = GetJungleMob()
-		if RengarMenu.Jungle.jungleOrbwalk then
-			if JungleMob ~= nil
-				then OrbWalking(JungleMob)
-				else moveToMouse()
-			end
-		end
 		if JungleMob ~= nil then
 			if tmtReady and GetDistance(JungleMob) <= 185 then CastSpell(tmtSlot) end
 			if hdrReady and GetDistance(JungleMob) <= 185 then CastSpell(hdrSlot) end
-			if Ferocity <= 4 and not attackCast then
-				if RengarMenu.Jungle.jungleQ and QREADY and GetDistance(JungleMob) <= qRange then CastTheQ(JungleMob) end
-				if RengarMenu.Jungle.jungleW and WREADY and GetDistance(JungleMob) <= wRange then CastTheW(JungleMob) end
-				if RengarMenu.Jungle.jungleE and EREADY and GetDistance(JungleMob) <= eRange then CastSpell(_E, JungleMob.x, JungleMob.z) end
-			end
-			if Ferocity == 5 then
-				if needHealjungle == false then
-					if not attackCast then
-						if EmpModeJungle == 1 then CastTheQ(JungleMob) end
-						if EmpModeJungle == 2 then CastTheW(JungleMob) end
+			
+			if not rSOW:CanAttack() then
+				if Ferocity <= 4 then
+					if RengarMenu.Jungle.jungleQ and QREADY and GetDistance(JungleMob) <= qRange then CastTheQ(JungleMob) end
+					if RengarMenu.Jungle.jungleW and WREADY and GetDistance(JungleMob) <= wRange then CastTheW(JungleMob) end
+					if RengarMenu.Jungle.jungleE and EREADY and GetDistance(JungleMob) <= eRange then CastSpell(_E, JungleMob.x, JungleMob.z) end
+				end
+				if Ferocity == 5 then
+					if needHealjungle == false then
+						if not rSOW:CanAttack() then
+							if EmpModeJungle == 1 then CastTheQ(JungleMob) end
+							if EmpModeJungle == 2 then CastTheW(JungleMob) end
+						end
+					else CastTheW(JungleMob)
 					end
-				else CastTheW(JungleMob)
 				end
 			end
 		end
@@ -755,77 +751,17 @@ function OnFinishRecall(hero)
 	end
 end
 ---------------------------------------------------------------------
---- Orbwalker ---
----------------------------------------------------------------------
-function OrbWalking(Target)
-	if TimeToAttack() and GetDistance(Target) <= myHero.range + GetDistance(myHero.minBBox) then
-		myHero:Attack(Target)
-    elseif heroCanMove() then
-        moveToCursor()
-    end
-end
-function TimeToAttack()
-    return (GetTickCount() + GetLatency()/2 > lastAttack + lastAttackCD)
-end
-function moveToCursor()
-	if GetDistance(mousePos) then
-		local moveToPos = myHero + (Vector(mousePos) - myHero):normalized()*300
-		myHero:MoveTo(moveToPos.x, moveToPos.z)
-    end        
-end
-function heroCanMove()
-	return (GetTickCount() + GetLatency()/2 > lastAttack + lastWindUpTime + 20)
-end
-function OnProcessSpell(object,spell)
-	if object == myHero then
-		if spell.name:lower():find("attack") then
-			lastAttack = GetTickCount() - GetLatency()/2
-			lastWindUpTime = spell.windUpTime*1000
-			lastAttackCD = spell.animationTime*1000
-        end
-    end
-end
-function OnAnimation(unit, animationName)
-    	if unit.isMe and lastAnimation ~= animationName then 
-			lastAnimation = animationName
-			if (animationName == "Crit" or animationName == "Spell1") and not attackCast then
-				attackCast = true
-			elseif animationName:find("Attack") and attackCast then
-				attackCast = false
-			end
-		end
-end
----------------------------------------------------------------------
---- Last Hit Minions ---
----------------------------------------------------------------------
-local nextTick = 0
-function lastHit()
-	enemyMinions:update()
-	if GetTickCount() > nextTick then
-		myHero:MoveTo(mousePos.x, mousePos.z)
-	end						
-	for index, minion in pairs(enemyMinions.objects) do
-		if ValidTarget(minion) then
-			local aaMinionDmg = getDmg("AD",minion,myHero)
-			if minion.health <= aaMinionDmg and GetDistance(minion) <= (myHero.range) and not attackCast and GetTickCount() > nextTick then
-				myHero:Attack(minion)
-				nextTick = GetTickCount() + 450
-			end
-		end		 
-	end
-end
----------------------------------------------------------------------
 --- Lane Clear ---
 ---------------------------------------------------------------------
 function LaneClear()
-	setEmpModeFarm()
-			for _, minion in pairs(enemyMinions.objects) do
-				if ValidTarget(minion)
+setEmpMode()
+		for _, minion in pairs(enemyMinions.objects) do
+				if ValidTarget(minion) and not rSOW:CanAttack()
 				then
 					if tmtReady and GetDistance(minion) <= 185 then CastSpell(tmtSlot) end
 					if hdrReady and GetDistance(minion) <= 185 then CastSpell(hdrSlot) end
 					if RengarMenu.Farm.farmOrb then OrbWalking(minion) end
-					if Ferocity <= 4 and not attackCast
+					if Ferocity <= 4 
 						then
 							if RengarMenu.Farm.farmQ and GetDistance(minion) <= qRange then CastTheQ(minion) end
 							if RengarMenu.Farm.farmW and GetDistance(minion) <= wRange then CastTheW(minion) end
@@ -834,18 +770,14 @@ function LaneClear()
 					if Ferocity == 5 then
 							if needHealfarm == false
 								then 
-								if not attackCast then
 									if EmpModeFarm == 1 then CastTheQ(minion) end
 									if EmpModeFarm == 2 then CastTheW(minion) end
-								end
 							else CastTheW(minion)
 							end
 					end
-				else
-					if RengarMenu.Farm.farmOrb then moveToMouse() end
 				end
 			end	
-end
+end 
 ---------------------------------------------------------------------
 --- Lag Free Circles ---
 ---------------------------------------------------------------------
@@ -941,4 +873,16 @@ function IgniteCheck()
 	elseif myHero:GetSpellData(SUMMONER_2).name:find("SummonerDot") then
 			ignite = SUMMONER_2
 	end
+end
+---------------------------------------------------------------------
+--- Autolevel Skills ------------------------------------------------
+---------------------------------------------------------------------
+function AutoLevelMySkills()
+		if RengarMenu.Extra.AutoLevelSkills == 2 then
+			autoLevelSetSequence(levelSequence.startQ)
+		elseif RengarMenu.Extra.AutoLevelSkills == 3 then
+			autoLevelSetSequence(levelSequence.startW)
+		elseif RengarMenu.Extra.AutoLevelSkills == 4 then
+			autoLevelSetSequence(levelSequence.startE)
+		end
 end
