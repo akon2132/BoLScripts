@@ -1,4 +1,4 @@
-local Version = "0.13"
+local Version = "0.14"
 local Author = "QQQ"
 if myHero.charName ~= "Rengar" then return end
 local IsLoaded = "Predators Pride"
@@ -82,6 +82,7 @@ if DOWNLOADING_LIBS then return end
 	local eColor = ARGB(255, 255, 0,128)
 	local TargetColor = ARGB(100,76,255,76)
 	local Ferocity = 0
+	local ignite = nil
 	local qName = "Savagery"
 	local wName = "Battle Roar"
 	local eName = "Bola Strike"
@@ -102,6 +103,7 @@ if DOWNLOADING_LIBS then return end
 -- Vars for LaneClear --
 	enemyMinions = minionManager(MINION_ENEMY, 1000, player, MINION_SORT_HEALTH_ASC)
 -- Vars for Damage Calculations and Drawing --
+	local iDmg = 0
 	local qDmg = 0
 	local qDmgE = 0
 	local wDmg = 0
@@ -212,7 +214,7 @@ function AddMenu()
 	RengarMenu.rHarass:addParam("harassE","Use "..eName.." (E) in Harass", SCRIPT_PARAM_ONOFF, true)
 	
 	-- KillSteal --
-	RengarMenu.KS:addParam("Ignite", "Use Auto Ignite", SCRIPT_PARAM_ONOFF, true)
+	RengarMenu.KS:addParam("AutoIgnite", "Use Auto Ignite", SCRIPT_PARAM_ONOFF, true)
 	RengarMenu.KS:addParam("useSmartKS", "Use Smart KillSteal", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Lane Clear --	
@@ -283,7 +285,7 @@ function OnTick()
 		if Target
 			then
 				if AimEKey then AimTheE() end
-				if RengarMenu.KS.Ignite then AutoIgnite(Target) end
+				if RengarMenu.KS.AutoIgnite then AutoIgnite(Target) end	
 		end
 	if SBTWKey then SBTW() end
 	if HarassKey then Harass() end
@@ -533,11 +535,12 @@ function smartKS()
 		end
 	end
 end
--- Auto Ignite --
+-- AutoIgnite --
 function AutoIgnite(enemy)
-	if enemy.health <= iDmg and GetDistance(enemy) <= 600 then
-			if IREADY then CastSpell(ignite, enemy) end
-	end
+		if enemy.health <= iDmg and GetDistance(enemy) <= 600 and ignite ~= nil
+			then
+				if IREADY then CastSpell(ignite, enemy) end
+		end
 end
 ---------------------------------------------------------------------
 --- Functions for Harass ---
@@ -760,7 +763,6 @@ setEmpMode()
 				then
 					if tmtReady and GetDistance(minion) <= 185 then CastSpell(tmtSlot) end
 					if hdrReady and GetDistance(minion) <= 185 then CastSpell(hdrSlot) end
-					if RengarMenu.Farm.farmOrb then OrbWalking(minion) end
 					if Ferocity <= 4 
 						then
 							if RengarMenu.Farm.farmQ and GetDistance(minion) <= qRange then CastTheQ(minion) end

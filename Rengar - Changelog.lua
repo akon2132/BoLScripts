@@ -23,10 +23,8 @@ Renekton - Crocodile Dundee v0.02 by QQQ
 -- 0.12 --
 - New Autoupdater on GitHub
 -- 0.13 --
-
 - Added SOW and removed inbuild orbwalk
 - Cleaned the Code a bit for future updates
-
 - Changes to the Menu
 	a. Removed "Basic"-Menu
 	b. Added "Orbwalk"-,"KeyBindings"- and "Extra"-menu
@@ -39,4 +37,8 @@ Renekton - Crocodile Dundee v0.02 by QQQ
 - Added SOW and removed the inbuild orbwalker
 - Cleaned the code a bit for future updates (rework and improve the code more in the next update)
 - Bugfixes:
-	a. Hopefully fixed the "Stutter"stepping
+	a. Hopefully fixed the "Stutter"stepping with Q
+-- 0.14 --
+- Bugfixes:
+	a. Fixed an error with ignite spamming 'compare to nil'
+	b. Fixed an error with LaneClear spamming 'compare to nil'
