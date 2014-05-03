@@ -809,7 +809,7 @@ function OnProcessSpell(object, spell)
 			if spell.name == 'RenektonExecute' and RenektonMenu.Extra.aniCancelW
 				then 
 					DelayAction(function()
-					if tmtReady then CastSpell(tmtSlot)
+					if tmtReady then CastSpell(tmtSlot) end
 					if hdrReady then CastSpell(hdrSlot) end
 					end, 0.1)
 			end	
