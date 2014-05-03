@@ -1,4 +1,4 @@
-local Version = "0.02"
+local Version = "0.03"
 local Author = "QQQ"
 if myHero.charName ~= "Renekton" then return end
 local IsLoaded = "Crocodile Dundee"
@@ -13,7 +13,7 @@ local UPDATE_PATH = "/bolqqq/BoLScripts/master/Renekton%20-%20Crocodile%20Dundee
 local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
-function AutoupdaterMsg(msg) print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
+function AutoupdaterMsg(msg) print("<font color=\"#FFFF73\">["..IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
 if AUTOUPDATE then
     local ServerData = GetWebResult(UPDATE_HOST, UPDATE_PATH)
     if ServerData then
@@ -50,7 +50,7 @@ function AfterDownload()
 	DOWNLOAD_COUNT = DOWNLOAD_COUNT - 1
 	if DOWNLOAD_COUNT == 0 then
 		DOWNLOADING_LIBS = false
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
+		print("<font color=\"#FFFF73\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
 	end
 end
 
@@ -61,7 +61,7 @@ for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(REQUIRED_LIBS) do
 		DOWNLOADING_LIBS = true
 		DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
 
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
+		print("<font color=\"#FFFF73\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
 		DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
 	end
 end
@@ -104,6 +104,7 @@ if DOWNLOADING_LIBS then return end
 					startE = { 3,1,2,1,1,4,1,3,1,3,4,3,3,2,2,4,2,2 }
 					}
 -- Vars for Damage Calculations and KilltextDrawing --
+	local iDmg = 0
 	local qDmg = 0
 	local wDmg = 0
 	local eDmg = 0
@@ -175,7 +176,7 @@ function AddMenu()
 	RenektonMenu.KeyBind:addParam("JungleClearKey", "JungleClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("J"))
 	
 	-- Extra --
---	RenektonMenu.Extra:addParam("extraItems", "Use Tiamat/Hydra with W: ", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.Extra:addParam("aniCancelW", "Use Animationcanceling on (W) with Tiamat/Hydra: ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QEWQ - R>Q>E>W", "WEQQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
 	
 	-- SOW-Orbwalking --
@@ -215,13 +216,13 @@ function AddMenu()
 	RenektonMenu.KS:addParam("smartKS", "Enable smart KS: ", SCRIPT_PARAM_ONOFF, false)
 	
 	-- Lane Clear --
-	RenektonMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
+	RenektonMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Farm:addParam("farmW", "Farm with "..wName.." (W): ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Farm:addParam("farmE", "Farm with "..eName.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Jungle Clear --
-	RenektonMenu.Jungle:addParam("jungleInfo", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
+	RenektonMenu.Jungle:addParam("jungleInfo", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Jungle:addParam("jungleQ", "Clear with "..qName.." (Q):", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Jungle:addParam("jungleW", "Clear with "..wName.." (W):", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Jungle:addParam("jungleE", "Clear with "..eName.." (E):", SCRIPT_PARAM_ONOFF, true)
@@ -275,18 +276,23 @@ function OnTick()
 	KeyBindings()
 	DamageCalculation()
 	
+	if Target
+		then
+			if RenektonMenu.KS.Ignite then AutoIgnite(Target) end
+	end
+	
 	if UltimateKey then RenektonsUltimate() end
 	if SBTWKey then SBTW() end
 	if LaneClearKey then LaneClear() end
 	if JungleClearKey then JungleClear() end
 	if HarassKey then Harass() end
 	if HarassToggleKey then Harass() end
-
 end
 ---------------------------------------------------------------------
 --- Function KeyBindings for easier KeyManagement -------------------
 ---------------------------------------------------------------------
 function KeyBindings()
+	TestKey = RenektonMenu.KeyBind.Test
 	UltimateKey = RenektonMenu.KeyBind.UltimateKey
 	SBTWKey = RenektonMenu.KeyBind.SBTWKey
 	HarassKey = RenektonMenu.KeyBind.HarassKey
@@ -304,6 +310,8 @@ function Check()
 	EREADY = (myHero:CanUseSpell(_E) == READY)
 	RREADY = (myHero:CanUseSpell(_R) == READY)
 	IREADY = (ignite ~= nil and myHero:CanUseSpell(ignite) == READY)
+	E1READY = (myHero:CanUseSpell(_E) == READY) and myHero:GetSpellData(_E).name == "RenektonSliceAndDice"
+	E2READY = (myHero:CanUseSpell(_E) == READY) and myHero:GetSpellData(_E).name == "renektondice"
 	
 	-- Check if items are ready -- 
 		dfgReady		= (dfgSlot		~= nil and myHero:CanUseSpell(dfgSlot)		== READY) -- Deathfire Grasp
@@ -792,4 +800,18 @@ function UnitAtTower(unit)
 		end
 	end
 	return false
+end
+
+function OnProcessSpell(object, spell) 
+	if ValidTarget(Target) and Target.type == myHero.type
+		then
+			-- Renekton W --
+			if spell.name == 'RenektonExecute' and RenektonMenu.Extra.aniCancelW
+				then 
+					DelayAction(function()
+					if tmtReady then CastSpell(tmtSlot)
+					if hdrReady then CastSpell(hdrSlot) end
+					end, 0.1)
+			end	
+	end
 end
