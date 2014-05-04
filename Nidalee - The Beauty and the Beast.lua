@@ -1,4 +1,4 @@
-local Version = "1.13"
+local Version = "1.14"
 local Author = "QQQ"
 if myHero.charName ~= "Nidalee" then return end
 local IsLoaded = "The Beauty and the Beast"
@@ -42,7 +42,7 @@ local REQUIRED_LIBS =
 		["VPrediction"] = "https://raw.github.com/honda7/BoL/master/Common/VPrediction.lua",
 		["Collision"] = "https://bitbucket.org/Klokje/public-klokjes-bol-scripts/raw/master/Common/Collision.lua",
 		["Prodiction"] = "https://bitbucket.org/Klokje/public-klokjes-bol-scripts/raw/master/Common/Prodiction.lua",
-	--	["SOW"] = "https://raw.github.com/honda7/BoL/master/Common/SOW.lua"
+		["SOW"] = "https://raw.github.com/honda7/BoL/master/Common/SOW.lua"
 	}		
 local DOWNLOADING_LIBS = false
 local DOWNLOAD_COUNT = 0
@@ -115,11 +115,6 @@ if DOWNLOADING_LIBS then return end
 	local busy = false
 	local functionDelay = 0;
 	local functionToExecute = nil
--- Vars for Orbwalking --
-	local lastAnimation = nil
-	local lastAttack = 0
-	local lastAttackCD = 0
-	local lastWindUpTime = 0
 -- Vars for JungleClear --
 	local JungleMobs = {}
 	local JungleFocusMobs = {}
@@ -135,6 +130,7 @@ if DOWNLOADING_LIBS then return end
 					hardLane = { 3,1,3,2,3,4,1,1,1,1,4,3,3,2,2,4,2,2 }
 					}
 -- Vars for Damage Calculations and KilltextDrawing --
+	local iDmg = 0
 	local qHDmg = 0
 	local qCDmg = 0
 	local wCDmg = 0
@@ -176,10 +172,11 @@ if DOWNLOADING_LIBS then return end
 --- Onload Function -------------------------------------------------
 ---------------------------------------------------------------------
 function OnLoad()
-	AddMenu()
 	IgniteCheck()
 	JungleNames()
 	VP = VPrediction()
+	nSOW = SOW(VP)
+	AddMenu()
 	-- LFC --
 	_G.oldDrawCircle = rawget(_G, 'DrawCircle')
 	_G.DrawCircle = DrawCircle2
@@ -214,6 +211,7 @@ function AddMenu()
 	
 	-- Create SubMenu --
 	Menu:addSubMenu(""..myHero.charName..": Key Bindings", "KeyBind")
+	Menu:addSubMenu(""..myHero.charName..": Orbwalk", "Orbwalk")
 	Menu:addSubMenu(""..myHero.charName..": Extra", "Extra")
 	Menu:addSubMenu(""..myHero.charName..": HealManager", "HealManager")
 	Menu:addSubMenu(""..myHero.charName..": SBTW-Combo", "SBTW")
@@ -230,11 +228,13 @@ function AddMenu()
 	Menu.KeyBind:addParam("TrapKey", "Throw a trap: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 	Menu.KeyBind:addParam("HealManager", "Enable/Disable the HealManager: ", SCRIPT_PARAM_ONKEYTOGGLE, true, string.byte("N"))
 	Menu.KeyBind:addParam("SBTWKey", "Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
-	Menu.KeyBind:addParam("LastHitKey", "LastHit Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("T"))
 	Menu.KeyBind:addParam("LaneClearKey", "LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
 	Menu.KeyBind:addParam("JungleClearKey", "JungleClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	Menu.KeyBind:addParam("JumpAssistantKey", "Jump Assistant Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Z"))
 	Menu.KeyBind:addParam("EscapeKey", "Escape Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Y"))
+	
+	-- SOW-Orbwalking --
+	nSOW:LoadToMenu(Menu.Orbwalk)
 	
 	-- Extra -- 
 	Menu.Extra:addParam("TrapDistance", "Distance traps are casted behind: ", SCRIPT_PARAM_SLICE, 100, 0, 250, -1)
@@ -254,9 +254,9 @@ function AddMenu()
 	Menu.HealManager.Team:addParam(Team.charName, "Heal: " .. Team.charName, SCRIPT_PARAM_ONOFF, false)
 	Menu.HealManager.Team:addParam(Team.charName.."slider", "Auto Heal if Health below %: ", SCRIPT_PARAM_SLICE, 20, 10, 100, -1)
 	end
+	
 	-- SBTW Combo --
 	Menu.SBTW:addParam("sbtwItems", "Use Items in Combo: ", SCRIPT_PARAM_ONOFF, true)
-	Menu.SBTW:addParam("sbtwOrb", "OrbWalk in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.SBTW:addParam("sbtwHealSlider", "Auto Heal if Health below %: ",  SCRIPT_PARAM_SLICE, 50, 0, 100, -1)
 	Menu.SBTW:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.SBTW:addParam("info", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
@@ -277,7 +277,6 @@ function AddMenu()
 
 	-- Lane Clear --
 	Menu.Farm:addParam("laneClearTyp", "Form in LaneClear: ", SCRIPT_PARAM_LIST, 3, {"Human", "Cougar", "Mixed"})
-	Menu.Farm:addParam("clearOrbM", "OrbWalk the Minions: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Farm:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.Farm:addParam("info", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
 	Menu.Farm:addParam("clearHQ", "Clear with "..qHname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
@@ -289,7 +288,6 @@ function AddMenu()
 	
 	-- Jungle Clear --
 	Menu.Jungle:addParam("jungleTyp", "Form in JungleClear: ", SCRIPT_PARAM_LIST, 3, {"Human", "Cougar", "Mixed"})
-	Menu.Jungle:addParam("jungleOrbwalk", "OrbWalk the Jungle: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Jungle:addParam("info", "", SCRIPT_PARAM_INFO, "")
 	Menu.Jungle:addParam("info", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
 	Menu.Jungle:addParam("jungleHQ", "Clear with "..qHname.." (Q): ", SCRIPT_PARAM_ONOFF, true)
@@ -431,9 +429,6 @@ function Check()
 	RREADY = (myHero:CanUseSpell(_R) == READY)
 	IREADY = (ignite ~= nil and myHero:CanUseSpell(ignite) == READY)
 	
-	-- Check for minions --
-	enemyMinions:update()
-	
 	-- Checks the PredictionMode --
 	setPredictionMode()
 	
@@ -473,7 +468,7 @@ function Check()
 		bwcReady		= (bwcSlot		~= nil and myHero:CanUseSpell(bwcSlot)		== READY) -- Bilgewater Cutlass
 		botrkReady		= (botrkSlot	~= nil and myHero:CanUseSpell(botrkSlot)	== READY) -- Blade of the Ruined King
 		sheenReady		= (sheenSlot 	~= nil and myHero:CanUseSpell(sheenSlot) 	== READY) -- Sheen
-		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichSlot) 	== READY) -- Lichbane
+		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichbaneSlot) == READY) -- Lichbane
 		trinityReady	= (trinitySlot 	~= nil and myHero:CanUseSpell(trinitySlot) 	== READY) -- Trinity Force
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
@@ -747,7 +742,7 @@ function CastTheCQ(enemy)
 		if (not QREADY or (GetDistance(enemy) > qCRange))
 			then return false
 		end
-		if not attackCast then
+		if not nSOW:CanAttack() then
 			if ValidTarget(enemy) then 
 				CastSpell(_Q)
 				return true
@@ -761,7 +756,7 @@ function CastTheCW(enemy)
 		if not WREADY or (GetDistance(enemy) > wCRange) or (GetDistance(enemy) < 150) or UnitAtTower(enemy)
 			then return false
 		end
-		if not attackCast then
+		if not nSOW:CanAttack() then
 			if ValidTarget(enemy) and isFacing(myHero, enemy, 100)
 				then CastSpell(_W)
 				return true
@@ -772,10 +767,10 @@ end
 -- Cougar E --
 function CastTheCE(enemy)
 		if not enemy then enemy = Target end
-		if (not EREADY or (GetDistance(enemy) > eCRange))
+		if (not EREADY or (GetDistance(enemy) > eCRange) or HUMAN)
 			then return false
 		end
-		if not attackCast then
+		if not nSOW:CanAttack() then
 			if ValidTarget(enemy) and isFacing(myHero, enemy, 200) then 
 				CastSpell(_E)
 				return true
@@ -787,13 +782,6 @@ end
 --- SBTW Combos -----------------------------------------------------
 ---------------------------------------------------------------------
 function SBTW()
-		if Menu.SBTW.sbtwOrb then
-			if Target ~= nil then
-				OrbWalking(Target)
-			else
-			moveToCursor()
-			end
-		end
 		if ValidTarget(Target)
 			then 
 				if Menu.SBTW.sbtwItems
@@ -814,8 +802,7 @@ function SBTW()
 				if COUGAR and Menu.SBTW.sbtwR and GetDistance(Target) > wRange
 						then CastSpell(_R)
 				end
-
-	end
+		end
 end
 function sbtwHumanPokeMode()
 	if Menu.SBTW.sbtwHQ then AimTheQ() end
@@ -929,18 +916,18 @@ function Escape()
 moveToCursor()
 	if Menu.Jump.EscapeUseE
 		then
-			if myHero.health < (myHero.maxHealth *(Menu.Jump.EscapeHealSlider/100)) and HUMAN == true
+			if myHero.health < (myHero.maxHealth *(Menu.Jump.EscapeHealSlider/100)) and HUMAN
 				then 	CastSpell(_E)
 						CastSpell(_R)
 			end
-			if myHero.health > (myHero.maxHealth *(Menu.Jump.EscapeHealSlider/100)) and HUMAN == true
+			if myHero.health > (myHero.maxHealth *(Menu.Jump.EscapeHealSlider/100)) and HUMAN
 				then	CastSpell(_R)
 			end
 	end		
-	if HUMAN == true and Menu.Jump.EscapeUseE == false
+	if HUMAN and Menu.Jump.EscapeUseE == false
 				then	CastSpell(_R)
 	end
-	if COUGAR == true and Menu.Jump.EscapeUseW
+	if COUGAR and Menu.Jump.EscapeUseW
 				then	CastSpell(_W)
 	end
 end
@@ -1340,17 +1327,11 @@ end
 function JungleClear()
 	setJungleMode()
 	JungleMob = GetJungleMob()
-		if Menu.Jungle.jungleOrbwalk then
-			if JungleMob ~= nil
-			then OrbWalking(JungleMob)
-			else moveToCursor()
-			end
-		end
-		if JungleMob ~= nil then
-			if JungleMode == 1 then JungleClearHuman() end 
-			if JungleMode == 2 then JungleClearCougar() end 
-			if JungleMode == 3 then JungleClearMixed() end
-		end
+	if JungleMob ~= nil then
+		if JungleMode == 1 then JungleClearHuman() end 
+		if JungleMode == 2 then JungleClearCougar() end 
+		if JungleMode == 3 then JungleClearMixed() end
+	end
 end
 
 function JungleClearHuman()
@@ -1390,10 +1371,10 @@ end
 -- Get Jungle Mob --
 function GetJungleMob()
         for _, Mob in pairs(JungleFocusMobs) do
-                if ValidTarget(Mob, qRange) then return Mob end
+                if ValidTarget(Mob, eWRange) then return Mob end
         end
         for _, Mob in pairs(JungleMobs) do
-                if ValidTarget(Mob, eCRange) then return Mob end
+                if ValidTarget(Mob, eWRange) then return Mob end
         end
 end
 ---------------------------------------------------------------------
@@ -1458,83 +1439,31 @@ function OnFinishRecall(hero)
 	end
 end
 ---------------------------------------------------------------------
---- Orbwalker -------------------------------------------------------
+--- MoveToCursor -------------------------------------------------------
 ---------------------------------------------------------------------
-function OrbWalking(Target)
-	if TimeToAttack() and GetDistance(Target) <= myHero.range + GetDistance(myHero.minBBox) then
-		myHero:Attack(Target)
-    elseif heroCanMove() then
-        moveToCursor()
-    end
-end
-function TimeToAttack()
-    return (GetTickCount() + GetLatency()/2 > lastAttack + lastAttackCD)
-end
-function heroCanMove()
-	return (GetTickCount() + GetLatency()/2 > lastAttack + lastWindUpTime + 20)
-end
 function moveToCursor()
 	if GetDistance(mousePos) then
 		local moveToPos = myHero + (Vector(mousePos) - myHero):normalized()*300
 		myHero:MoveTo(moveToPos.x, moveToPos.z)
     end        
 end
-function OnProcessSpell(object,spell)
-	if object == myHero then
-		if spell.name:lower():find("attack") then
-			lastAttack = GetTickCount() - GetLatency()/2
-			lastWindUpTime = spell.windUpTime*1000
-			lastAttackCD = spell.animationTime*1000
-        end
-    end
-end
-function OnAnimation(unit, animationName)
-    	if unit.isMe and lastAnimation ~= animationName then 
-			lastAnimation = animationName
-			if (animationName == "Crit" or animationName == "Spell1") and not attackCast then
-				attackCast = true
-			elseif animationName:find("Attack") and attackCast then
-				attackCast = false
-			end
-		end
-end
----------------------------------------------------------------------
---- Last Hit Minions ------------------------------------------------
----------------------------------------------------------------------
-local nextTick = 0
-function lastHit()
-	enemyMinions:update()
-	if GetTickCount() > nextTick then
-		myHero:MoveTo(mousePos.x, mousePos.z)
-	end						
-	for index, minion in pairs(enemyMinions.objects) do
-		if ValidTarget(minion) then
-			local aaMinionDmg = getDmg("AD",minion,myHero)
-			if minion.health <= aaMinionDmg and GetDistance(minion) <= (myHero.range) and not attackCast and GetTickCount() > nextTick then
-				myHero:Attack(minion)
-				nextTick = GetTickCount() + 450
-			end
-		end		 
-	end
-end
 ---------------------------------------------------------------------
 --- Lane Clear with different forms ---------------------------------
 ---------------------------------------------------------------------
 function LaneClear()
 		setLaneClearMode()
+		enemyMinions:update()
 		if LaneClearKey then
 			for _, minion in pairs(enemyMinions.objects) do
 				if  ValidTarget(minion)
 				then
 					if LaneClearModeVar == 1 then
-						if Menu.Farm.clearOrbM then OrbWalking(minion) end
 						if COUGAR == true then CastSpell(_R) end
 						if Menu.Farm.clearHQ and QREADY and GetDistance(minion) <= qRange then CastSpell(_Q, minion.x, minion.z) end
 						if Menu.Farm.clearHW and WREADY and GetDistance(minion) <= wRange then CastSpell(_W, minion.x, minion.z) end
 						if Menu.Farm.clearHE and EREADY then CastSpell(_E) end
 					end
 					if LaneClearModeVar == 2 then
-						if Menu.Farm.clearOrbM then OrbWalking(minion) end
 						if HUMAN == true then CastSpell(_R) end
 						if Menu.Farm.clearCQ and QREADY and GetDistance(minion) <= qCRange then CastTheCQ(minion) end
 						if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastTheCW(minion) end
@@ -1542,7 +1471,6 @@ function LaneClear()
 					end
 					if LaneClearModeVar == 3 then
 						if HUMAN == true then
-							if Menu.Farm.clearOrbM then OrbWalking(minion) end
 							if Menu.Farm.clearHQ and QREADY and GetDistance(minion) <= qRange then CastSpell(_Q, minion.x, minion.z) end
 							if Menu.Farm.clearHW and WREADY and GetDistance(minion) <= wRange then CastSpell(_W, minion.x, minion.z) end
 							if Menu.Farm.clearHE and EREADY then CastSpell(_E) end
@@ -1555,14 +1483,11 @@ function LaneClear()
 							if Menu.Farm.clearHQ and Menu.Farm.clearHW and Menu.Farm.clearHE and not QREADY and not WREADY and not EREADY then CastSpell(_R) end
 						end
 						if COUGAR == true then
-							if Menu.Farm.clearOrbM then OrbWalking(minion) end
 							if Menu.Farm.clearCQ and QREADY and GetDistance(minion) <= qCRange then CastTheCQ(minion) end
 							if Menu.Farm.clearCW and WREADY and GetDistance(minion) <= wCRange then CastTheCW(minion) end
 							if Menu.Farm.clearCE and EREADY and GetDistance(minion) <= eCRange then CastTheCE(minion) end
 						end
 					end	
-				else
-					if Menu.Farm.clearOrbM then moveToCursor() end
 				end
 			end
 		end
@@ -1638,7 +1563,7 @@ function DamageCalculation()
 				lichbaneDmg = ((lichbaneReady and getDmg("LICHBANE", enemy, myHero)) or 0)	-- Lichbane
 				trinityDmg 	= ((trinityReady and getDmg("TRINITY", enemy, myHero)) or 0)	-- Trinity Force
 				liandrysDmg = ((liandrysReady and getDmg("LIANDRYS", enemy, myHero)) or 0)	-- Liandrys 
-				local extraDmg 	= iDmg + dfgDmg + hxgDmg + bwcDmg + botrkDmg + sheenDmg + trinityDmg + liandrysDmg + lichbaneDmg 
+				local extraDmg 	= iDmg + dfgDmg + hxgDmg + bwcDmg + botrkDmg + sheenDmg + trinityDmg + liandrysDmg -- + lichbaneDmg 
 				local abilityDmg = qHDmg + qCDmg + wCDmg + eCDmg
 				local totalDmg = abilityDmg + extraDmg
 	-- Set Kill Text --	

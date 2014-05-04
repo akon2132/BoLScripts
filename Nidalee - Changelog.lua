@@ -133,6 +133,13 @@ Changelog:
 	a. Fixed a bug with Lichbane, now the script shouldn't crash completly if you buy it
 	b. Improved the scriptperformance a bit
 -- 1.13 --
- - Bugfixes:
+- Bugfixes:
 	a. Improved W will now be used in the SBTW-Combo
 	b. Fixed an error with the Drawingfunction
+-- 1.14 --
+- Removed inbuild Orbwalking
+- Added a new "Orbwalking"-menu
+- Added SOW as standartorbwalker (set both the jungle-/laneclearkey as the same key as the laneclearkey in your orbwalker)
+- Bugfixes:
+	a. Fixed another error with lichbane, the caused the script to print an error/crashed the script
+	
