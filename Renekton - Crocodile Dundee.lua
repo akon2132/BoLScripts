@@ -1,4 +1,4 @@
-local Version = "0.03"
+local Version = "1.00"
 local Author = "QQQ"
 if myHero.charName ~= "Renekton" then return end
 local IsLoaded = "Crocodile Dundee"
@@ -91,7 +91,7 @@ if DOWNLOADING_LIBS then return end
 	local JungleMobs = {}
 	local JungleFocusMobs = {}
 	-- Vars for LaneClear --
-	local enemyMinions = minionManager(MINION_ENEMY, 500, player, MINION_SORT_HEALTH_ASC)
+	local enemyMinions = minionManager(MINION_ENEMY, 500, myHero.visionPos, MINION_SORT_HEALTH_ASC)
 -- Vars for TargetSelector --
 	local ts
 	ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1000, DAMAGE_PHYSICAL, true)
@@ -131,8 +131,10 @@ if DOWNLOADING_LIBS then return end
 							"Kill! - (Q)+(W)+(E)"					-- 10
 						}
 -- Misc Vars --	
+	local enemyHeroes = GetEnemyHeroes()
 	local RenektonMenu
 	local VP = nil
+	local lastDash
 ---------------------------------------------------------------------
 --- Menu ------------------------------------------------------------
 ---------------------------------------------------------------------
@@ -170,13 +172,13 @@ function AddMenu()
 	-- KeyBindings --
 	RenektonMenu.KeyBind:addParam("SBTWKey", "SBTW-Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
 	RenektonMenu.KeyBind:addParam("UltimateKey", "Enable/Disable Auto-Ultimate: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("O"))
-	RenektonMenu.KeyBind:addParam("HarassKey", "HarassKey: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("A"))
+	RenektonMenu.KeyBind:addParam("HarassKey", "HarassKey: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
 	RenektonMenu.KeyBind:addParam("HarassToggleKey", "Toggle Harass: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("U"))
-	RenektonMenu.KeyBind:addParam("LaneClearKey", "LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	RenektonMenu.KeyBind:addParam("JungleClearKey", "JungleClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("J"))
+	RenektonMenu.KeyBind:addParam("ClearKey", "Jungle- and LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	
 	-- Extra --
 	RenektonMenu.Extra:addParam("aniCancelW", "Use Animationcanceling on (W) with Tiamat/Hydra: ", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.Extra:addParam("aniCancelWSlider", "Delay for AnimationCanceling: ", SCRIPT_PARAM_SLICE, 0.3, 0, 1.5, 1)
 	RenektonMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QEWQ - R>Q>E>W", "WEQQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
 	
 	-- SOW-Orbwalking --
@@ -201,16 +203,17 @@ function AddMenu()
 	RenektonMenu.SBTW:addParam("sbtwInfo", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.SBTW:addParam("sbtwQ", "Use "..qName.." (Q) in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.SBTW:addParam("sbtwW", "Use "..wName.." (W) in Combo: ", SCRIPT_PARAM_ONOFF, true)
-	RenektonMenu.SBTW:addParam("sbtwE", "Use "..eName.." (E) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.SBTW:addParam("sbtwE1", "Use Slice (E1) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.SBTW:addParam("sbtwE2", "Use Dice (E2) in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Harass --
-	RenektonMenu.Harass:addParam("harassMode", "Choose your HarassMode: ", SCRIPT_PARAM_LIST, 1, {"Q-Harass", "QW-Harass", "QWE-Harass"})
+	RenektonMenu.Harass:addParam("harassMode", "Choose your HarassMode: ", SCRIPT_PARAM_LIST, 1, {"Q", "Q-W", "EQWE to enemyPos", "EQWE to startPos"})
 	RenektonMenu.Harass:addParam("harassInfo", "", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Harass:addParam("harassInfo", "--- Choose your abilitys for SBTW ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Harass:addParam("harassQ","Use "..qName.." (Q) in Harass:", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Harass:addParam("harassW","Use "..wName.." (W) in Harass:", SCRIPT_PARAM_ONOFF, true)
-	RenektonMenu.Harass:addParam("harassE","Use "..eName.." (E) in Harass:", SCRIPT_PARAM_ONOFF, true)
-	
+	RenektonMenu.Harass:addParam("harassE1","Use Slice (E1) in Harass:", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.Harass:addParam("harassE2","Use Dice (E2) in Harass:", SCRIPT_PARAM_ONOFF, true)
 	-- KillSteal --
 	RenektonMenu.KS:addParam("Ignite", "Use Auto Ignite: ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.KS:addParam("smartKS", "Enable smart KS: ", SCRIPT_PARAM_ONOFF, false)
@@ -219,14 +222,14 @@ function AddMenu()
 	RenektonMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Farm:addParam("farmW", "Farm with "..wName.." (W): ", SCRIPT_PARAM_ONOFF, true)
-	RenektonMenu.Farm:addParam("farmE", "Farm with "..eName.." (E): ", SCRIPT_PARAM_ONOFF, true)
-	
+	RenektonMenu.Farm:addParam("farmE1", "Farm with Slice (E1): ", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.Farm:addParam("farmE2", "Farm with Dice (E2): ", SCRIPT_PARAM_ONOFF, true)
 	-- Jungle Clear --
 	RenektonMenu.Jungle:addParam("jungleInfo", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
 	RenektonMenu.Jungle:addParam("jungleQ", "Clear with "..qName.." (Q):", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Jungle:addParam("jungleW", "Clear with "..wName.." (W):", SCRIPT_PARAM_ONOFF, true)
-	RenektonMenu.Jungle:addParam("jungleE", "Clear with "..eName.." (E):", SCRIPT_PARAM_ONOFF, true)
-	
+	RenektonMenu.Jungle:addParam("jungleE1", "Clear with Slice (E1):", SCRIPT_PARAM_ONOFF, true)
+	RenektonMenu.Jungle:addParam("jungleE2", "Clear with Dice (E2):", SCRIPT_PARAM_ONOFF, true)
 	-- Drawings --
 	RenektonMenu.Draw:addParam("drawQ", "Draw (Q) Range:", SCRIPT_PARAM_ONOFF, true)
 	RenektonMenu.Draw:addParam("drawW", "Draw (W) Range:", SCRIPT_PARAM_ONOFF, false)
@@ -275,30 +278,27 @@ function OnTick()
 	AutoLevelMySkills()
 	KeyBindings()
 	DamageCalculation()
-	
 	if Target
 		then
 			if RenektonMenu.KS.Ignite then AutoIgnite(Target) end
 	end
-	
+
 	if UltimateKey then RenektonsUltimate() end
 	if SBTWKey then SBTW() end
-	if LaneClearKey then LaneClear() end
-	if JungleClearKey then JungleClear() end
 	if HarassKey then Harass() end
 	if HarassToggleKey then Harass() end
+	if ClearKey then LaneClear() JungleClear() end
+	if RenektonMenu.KS.smartKS then smartKS() end
 end
 ---------------------------------------------------------------------
 --- Function KeyBindings for easier KeyManagement -------------------
 ---------------------------------------------------------------------
 function KeyBindings()
-	TestKey = RenektonMenu.KeyBind.Test
 	UltimateKey = RenektonMenu.KeyBind.UltimateKey
 	SBTWKey = RenektonMenu.KeyBind.SBTWKey
 	HarassKey = RenektonMenu.KeyBind.HarassKey
 	HarassToggleKey = RenektonMenu.KeyBind.HarassToggleKey
-	LaneClearKey = RenektonMenu.KeyBind.LaneClearKey
-	JungleClearKey = RenektonMenu.KeyBind.JungleClearKey
+	ClearKey = RenektonMenu.KeyBind.ClearKey
 end
 ---------------------------------------------------------------------
 --- Function Checks for Spells and Forms ----------------------------
@@ -319,7 +319,7 @@ function Check()
 		bwcReady		= (bwcSlot		~= nil and myHero:CanUseSpell(bwcSlot)		== READY) -- Bilgewater Cutlass
 		botrkReady		= (botrkSlot	~= nil and myHero:CanUseSpell(botrkSlot)	== READY) -- Blade of the Ruined King
 		sheenReady		= (sheenSlot 	~= nil and myHero:CanUseSpell(sheenSlot) 	== READY) -- Sheen
-		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichSlot) 	== READY) -- Lichbane
+		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichbaneSlot) == READY) -- Lichbane
 		trinityReady	= (trinitySlot 	~= nil and myHero:CanUseSpell(trinitySlot) 	== READY) -- Trinity Force
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
@@ -349,8 +349,6 @@ function UseItems()
 		if hxgReady		and GetDistance(enemy) <= 700 then CastSpell(hxgSlot, enemy) end
 		if bwcReady		and GetDistance(enemy) <= 450 then CastSpell(bwcSlot, enemy) end
 		if botrkReady	and GetDistance(enemy) <= 450 then CastSpell(botrkSlot, enemy) end
-		if tmtReady		and GetDistance(enemy) <= 185 then CastSpell(tmtSlot) end
-		if hdrReady 	and GetDistance(enemy) <= 185 then CastSpell(hdrSlot) end
 		if youReady		and GetDistance(enemy) <= 185 then CastSpell(youSlot) end
 	end
 end
@@ -360,15 +358,11 @@ end
 function OnDraw()
 	if myHero.dead then return end 
 -- Draw SpellRanges only when our champ is alive and the spell is ready --
-	-- Draw Q --
+	-- Draw Q + W + E + Emax + R --
 		if QREADY and RenektonMenu.Draw.drawQ then DrawCircle(myHero.x, myHero.y, myHero.z, qRange, qColor) end
-	-- Draw W --
 		if WREADY and RenektonMenu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
-	-- Draw E --
 		if EREADY and RenektonMenu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
-	-- Draw E max --
 		if EREADY and RenektonMenu.Draw.drawEmax then DrawCircle(myHero.x, myHero.y, myHero.z, eRange*2, eColor) end
-	-- Draw R --
 		if RREADY and RenektonMenu.Draw.drawR then DrawCircle(myHero.x, myHero.y, myHero.z, rRange, rColor) end
 	-- Draw Target --
 	if Target ~= nil and RenektonMenu.Draw.drawTarget
@@ -409,7 +403,8 @@ function CastTheW(enemy)
 			then return false
 		end
 		if ValidTarget(enemy)
-			then CastSpell(_W)
+			then CastSpell(_W, enemy)
+			myHero:Attack(enemy)
 			return true
 		end
 		return false
@@ -422,6 +417,23 @@ function AimTheE(enemy)
 		then CastSpell(_E,CastPosition.x,CastPosition.z)
 	end
 end
+-- Renekton Slice (E1) --
+function AimTheSlice(enemy)
+	if not enemy then enemy = Target end
+	local CastPosition, HitChance, Position = VP:GetLineCastPosition(enemy, eDelay, eWidth, eRange, eSpeed, myHero, false)
+	if HitChance >= 2 and GetDistance(enemy) <= eRange and E1READY
+		then CastSpell(_E,CastPosition.x,CastPosition.z)
+	end
+end
+-- Renekton Dice (E2) --
+function AimTheDice(enemy)
+	if not enemy then enemy = Target end
+	local CastPosition, HitChance, Position = VP:GetLineCastPosition(enemy, eDelay, eWidth, eRange, eSpeed, myHero, false)
+	if HitChance >= 2 and GetDistance(enemy) <= eRange and E2READY
+		then CastSpell(_E,CastPosition.x,CastPosition.z)
+	end
+end
+
 ---------------------------------------------------------------------
 -- Function RenektonsUltimate --------------------------------------- 
 ---------------------------------------------------------------------
@@ -453,7 +465,8 @@ function SBTW()
 		then 
 			if RenektonMenu.SBTW.sbtwQ then CastTheQ(Target) end
 			if RenektonMenu.SBTW.sbtwW then CastTheW(Target) end
-			if RenektonMenu.SBTW.sbtwE then AimTheE(Target) end
+			if RenektonMenu.SBTW.sbtwE1 then AimTheSlice(Target) end
+			if RenektonMenu.SBTW.sbtwE2 then AimTheDice(Target) end
 			if RenektonMenu.SBTW.sbtwItems then UseItems() end
 	end
 end
@@ -476,9 +489,53 @@ function Harass()
 					then
 						if RenektonMenu.Harass.harassQ then CastTheQ(Target) end
 						if RenektonMenu.Harass.harassW then CastTheW(Target) end
-						if RenektonMenu.Harass.harassE then AimTheE(Target) end
+						if RenektonMenu.Harass.harassE1 then AimTheSlice(Target) end
+						if RenektonMenu.Harass.harassE2 then AimTheDice(Target) end
 				end
-				
+				if RenektonMenu.Harass.harassMode == 4
+					then 
+						if RenektonMenu.Harass.harassE1 then AimTheSlice(enemy) end
+						if not E1READY and RenektonMenu.Harass.harassQ then CastTheQ(Target) end
+						if not E1READY and not QREADY and RenektonMenu.Harass.harassW then CastTheW(Target) end
+						if not E1READY and not QREADY and not WREADY and RenektonMenu.Harass.harassE2 then LastDash() end
+				end				
+	end
+end
+-- Save the last location we dashed from --
+function OnDash(unit, dash)
+	if HarassKey and RenektonMenu.Harass.harassMode == 4
+		then
+			if unit and unit.valid and unit.isMe
+				then
+					lastDash = { dash.startPos, dash.startT, dash.endT }
+			end
+	end
+end
+function LastDash()
+if E2READY and lastDash and GetTickCount() > lastDash[3] and type(lastDash) == 'table'
+	then
+		local time = GetTickCount() - lastDash[2]
+		if lastDash[2] + 4000 <= GetTickCount()
+			then
+				CastSpell(_E, lastDash[1].x, lastDash[1].z)
+		end
+	end	
+end
+---------------------------------------------------------------------
+--- OnProcessSpell --------------------------------------------------
+---------------------------------------------------------------------
+function OnProcessSpell(object, spell)
+	if ValidTarget(Target)
+		then
+			-- Renekton W --
+			if spell.name == 'RenektonExecute' and RenektonMenu.Extra.aniCancelW
+				then 
+					DelayAction(function()
+					if tmtReady then CastSpell(tmtSlot) end
+					if hdrReady then CastSpell(hdrSlot) end
+					local delay = RenektonMenu.Extra.aniCancelWSlider
+					end, delay)
+			end	
 	end
 end
 ---------------------------------------------------------------------
@@ -496,6 +553,29 @@ function IgniteCheck()
 			ignite = SUMMONER_1
 	elseif myHero:GetSpellData(SUMMONER_2).name:find("SummonerDot") then
 			ignite = SUMMONER_2
+	end
+end
+function smartKS()
+	for _, enemy in pairs(enemyHeroes) do
+		if enemy ~= nil and ValidTarget(enemy) then
+		local distance = GetDistance(enemy)
+		local hp = enemy.health
+			if hp <= qDmg and QREADY and (distance <= qRange)
+				then CastTheQ(enemy)
+			elseif hp <= wDmg and WREADY and (distance <= wRange) 
+				then CastTheW(enemy)
+			elseif hp <= eDmg and EREADY and (distance <= eRange) 
+				then AimTheE()
+			elseif hp <= (qDmg + wDmg) and QREADY and WREADY and (distance <= qRange)
+				then CastTheW(enemy)
+			elseif hp <= (qDmg + eDmg) and QREADY and EREADY and (distance <= qRange)
+				then AimTheE()
+			elseif hp <= (wDmg + eDmg) and WREADY and EREADY and (distance <= wRange)
+				then AimTheE()
+			elseif hp <= (qDmg + wDmg + eDmg) and QREADY and WREADY and EREADY and (distance <= qRange)
+				then AimTheE()
+			end
+		end
 	end
 end
 ---------------------------------------------------------------------
@@ -581,7 +661,8 @@ function JungleClear()
 		if JungleMob ~= nil then
 			if RenektonMenu.Jungle.jungleQ then CastTheQ(JungleMob) end
 			if RenektonMenu.Jungle.jungleW then CastTheW(JungleMob) end
-			if RenektonMenu.Jungle.jungleE then AimTheE(JungleMob) end
+			if RenektonMenu.Jungle.jungleE1 then AimTheSlice(JungleMob) end
+			if RenektonMenu.Jungle.jungleE2 then AimTheDice(JungleMob) end
 		end
 end
 -- Get Jungle Mob --
@@ -599,11 +680,12 @@ end
 function LaneClear()
 	enemyMinions:update()
 	for _, minion in pairs(enemyMinions.objects) do
-		if ValidTarget(minion) and not rSOW:CanAttack()
+		if ValidTarget(minion) and minion ~= nil and not rSOW:CanAttack()
 			then 
 				if RenektonMenu.Farm.farmQ then CastTheQ(minion) end
 				if RenektonMenu.Farm.farmW then CastTheW(minion) end
-				if RenektonMenu.Farm.farmE then AimTheE(minion) end
+				if RenektonMenu.Farm.farmE1 then AimTheSlice(minion) end
+				if RenektonMenu.Farm.farmE2 then AimTheDice(minion) end
 		end
 	end
 end
@@ -791,27 +873,14 @@ end
 -- Checks if a unit is under a tower e.g. UnitAtTower(enemy)
 ---------------------------------------------------------------------
 function UnitAtTower(unit)
-	for u = 1, objManager.maxObjects do
-		local obj = objManager:GetObject(u)
-		if obj ~= nil and obj.name:find("Chaos_Turret_") and obj.team ~= myHero.team and not obj.dead then
-			if GetDistance(unit,obj) <= 775
-				then return true
+	for i, turret in pairs(GetTurrets()) do
+		if turret ~= nil then
+			if turret.team ~= myHero.team then
+				if GetDistance(unit, turret) <= turret.range then
+					return true
+				end
 			end
 		end
 	end
 	return false
-end
-
-function OnProcessSpell(object, spell) 
-	if ValidTarget(Target) and Target.type == myHero.type
-		then
-			-- Renekton W --
-			if spell.name == 'RenektonExecute' and RenektonMenu.Extra.aniCancelW
-				then 
-					DelayAction(function()
-					if tmtReady then CastSpell(tmtSlot) end
-					if hdrReady then CastSpell(hdrSlot) end
-					end, 0.1)
-			end	
-	end
 end
