@@ -1,4 +1,4 @@
-Renekton - Crocodile Dundee v0.02 by QQQ
+Rengar - Predators Pride v0.15 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -42,3 +42,10 @@ Renekton - Crocodile Dundee v0.02 by QQQ
 - Bugfixes:
 	a. Fixed an error with ignite spamming 'compare to nil'
 	b. Fixed an error with LaneClear spamming 'compare to nil'
+-- 0.15 --
+- Removed the LaneClearKey and the JungleClearKey
+- Changed Standardhotkeys to match SOW functions (you can still edit them as you like)
+- Added a new ClearKey for both - Jungle- and LaneClearing (u need to set the SOW, MMA, SAC LaneClearKey to the same as this key or you won't AA)
+ - Bugfixes:
+	a. Fixed and error with lichbane, the caused the script to print an error/crashed the script
+	b. Fixed an error in the Q-Castingfunction that prevented casting from time to time

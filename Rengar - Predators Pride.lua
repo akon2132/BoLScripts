@@ -1,4 +1,4 @@
-local Version = "0.14"
+local Version = "0.15"
 local Author = "QQQ"
 if myHero.charName ~= "Rengar" then return end
 local IsLoaded = "Predators Pride"
@@ -101,7 +101,7 @@ if DOWNLOADING_LIBS then return end
 	JungleMobs = {}
 	JungleFocusMobs = {}
 -- Vars for LaneClear --
-	enemyMinions = minionManager(MINION_ENEMY, 1000, player, MINION_SORT_HEALTH_ASC)
+	enemyMinions = minionManager(MINION_ENEMY, 1000, myHero.visionPos, MINION_SORT_HEALTH_ASC)
 -- Vars for Damage Calculations and Drawing --
 	local iDmg = 0
 	local qDmg = 0
@@ -185,9 +185,8 @@ function AddMenu()
 	-- KeyBind --
 	RengarMenu.KeyBind:addParam("aimEkey","Throw predicted (E): ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 	RengarMenu.KeyBind:addParam("SBTWKey", "SBTW-Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
-	RengarMenu.KeyBind:addParam("HarassKey","Harass Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("A"))
-	RengarMenu.KeyBind:addParam("LaneClearKey", "LaneClear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	RengarMenu.KeyBind:addParam("JungleClearKey", "JungleClear Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("J"))
+	RengarMenu.KeyBind:addParam("HarassKey","Harass Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+	RengarMenu.KeyBind:addParam("ClearKey", "Jungle- and LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	
 	-- Extra --
 	RengarMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QWEQ - R>Q>E>W", "WQEQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
@@ -219,7 +218,7 @@ function AddMenu()
 	
 	-- Lane Clear --	
 	RengarMenu.Farm:addParam("empPriorityFarm", "Empowered Priority in Farm", SCRIPT_PARAM_LIST, 2, {"Q-Priority", "W-Priority"})
-	RengarMenu.Farm:addParam("farmHeal", "Emp(W) over Prio if hp below %: ",  SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
+	RengarMenu.Farm:addParam("farmHeal", "Emp(W) over Prio if HP below %: ",  SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
 	RengarMenu.Farm:addParam("farmInfo", "", SCRIPT_PARAM_INFO, "")
 	RengarMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
 	RengarMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
@@ -289,8 +288,7 @@ function OnTick()
 		end
 	if SBTWKey then SBTW() end
 	if HarassKey then Harass() end
-	if LaneClearKey then LaneClear() end
-	if JungleClearKey then JungleClear() end
+	if ClearKey then LaneClear() JungleClear() end
 	if RengarMenu.KS.useSmartKS then smartKS() end
 end
 ---------------------------------------------------------------------
@@ -300,8 +298,7 @@ function KeyBindings()
 	AimEKey = RengarMenu.KeyBind.aimEkey
 	SBTWKey = RengarMenu.KeyBind.SBTWKey
 	HarassKey = RengarMenu.KeyBind.HarassKey
-	LaneClearKey = RengarMenu.KeyBind.LaneClearKey
-	JungleClearKey = RengarMenu.KeyBind.JungleClearKey
+	ClearKey = RengarMenu.KeyBind.ClearKey
 end
 ---------------------------------------------------------------------
 --- Draw Function --- 
@@ -361,7 +358,7 @@ function Check()
 		bwcReady		= (bwcSlot		~= nil and myHero:CanUseSpell(bwcSlot)		== READY) -- Bilgewater Cutlass
 		botrkReady		= (botrkSlot	~= nil and myHero:CanUseSpell(botrkSlot)	== READY) -- Blade of the Ruined King
 		sheenReady		= (sheenSlot 	~= nil and myHero:CanUseSpell(sheenSlot) 	== READY) -- Sheen
-		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichSlot) 	== READY) -- Lichbane
+		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichbaneSlot) 	== READY) -- Lichbane
 		trinityReady	= (trinitySlot 	~= nil and myHero:CanUseSpell(trinitySlot) 	== READY) -- Trinity Force
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
@@ -441,7 +438,7 @@ function CastTheQ(enemy)
 			then return false
 		end
 		if ValidTarget(enemy)
-			then CastSpell(_Q)
+			then CastSpell(_Q, enemy)
 				 myHero:Attack(enemy)
 				 return true
 		end
