@@ -9,7 +9,7 @@ local AUTOUPDATE = true
 local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
 local UPDATE_NAME = "Evelynn - The Devil wears Prada"
 local UPDATE_HOST = "raw.github.com"
-local UPDATE_PATH = "/bolqqq/BoLScripts/master/Evelynn%20-%20The%20Devil%20wears%20Prada?chunk="..math.random(1, 1000)
+local UPDATE_PATH = "/bolqqq/BoLScripts/master/Evelynn%20-%20The%20Devil%20wears%20Prada.lua?chunk="..math.random(1, 1000)
 local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
