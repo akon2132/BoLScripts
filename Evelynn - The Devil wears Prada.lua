@@ -1,4 +1,4 @@
-local Version = "1.00"
+local Version = "1.01"
 local Author = "QQQ"
 if myHero.charName ~= "Evelynn" then return end
 local IsLoaded = "The Devil wears Prada"
@@ -173,6 +173,7 @@ function AddMenu()
 	
 	-- Extra --
 	EvelynnMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, {"No Autolevel", "QEWQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
+	EvelynnMenu.Extra:addParam("packetUsage", "Use packets to cast spells: ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Escape --
 	EvelynnMenu.Escape:addParam("escapeQ", "Use (Q) to enemys in Range while escaping: ", SCRIPT_PARAM_ONOFF, true)
@@ -195,6 +196,7 @@ function AddMenu()
 	
 	-- Harass --
 	EvelynnMenu.Harass:addParam("harassMode", "Choose your HarassMode: ", SCRIPT_PARAM_LIST, 1, {"Q", "Q-E"})
+	EvelynnMenu.Harass:addParam("harassMana", "Don't Harass if below % Mana: ", SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
 	EvelynnMenu.Harass:addParam("harassInfo", "", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Harass:addParam("harassInfo", "--- Choose your abilitys for Harass ---", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Harass:addParam("harassQ","Use "..qName.." (Q) in Harass:", SCRIPT_PARAM_ONOFF, true)
@@ -205,11 +207,13 @@ function AddMenu()
 	EvelynnMenu.KS:addParam("smartKS", "Enable smart KS: ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Lane Clear --
+	EvelynnMenu.Farm:addParam("farmMana", "Don't LaneClear if below % Mana: ", SCRIPT_PARAM_SLICE, 20, 0, 100, -1)
 	EvelynnMenu.Farm:addParam("farmInfo", "--- Choose your abilitys for LaneClear ---", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Farm:addParam("farmQ", "Farm with "..qName.." (Q): ", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.Farm:addParam("farmE", "Farm with "..eName.." (E): ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Jungle Clear --
+	EvelynnMenu.Jungle:addParam("jungleMana", "Don't JungleClear if below % Mana: ", SCRIPT_PARAM_SLICE, 10, 0, 100, -1)
 	EvelynnMenu.Jungle:addParam("jungleInfo", "--- Choose your abilitys for JungleClear ---", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Jungle:addParam("jungleQ", "Clear with "..qName.." (Q):", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.Jungle:addParam("jungleE", "Clear with "..eName.." (E):", SCRIPT_PARAM_ONOFF, true)
@@ -369,8 +373,11 @@ function CastTheQ(enemy)
 		if (not QREADY or (GetDistance(enemy) > qRange))
 			then return false
 		end
-		if ValidTarget(enemy)
+		if ValidTarget(enemy) and not EvelynnMenu.Extra.packetUsage
 			then CastSpell(_Q)
+			return true
+		elseif ValidTarget(enemy) and EvelynnMenu.Extra.packetUsage
+			then Packet("S_CAST", { spellId = _Q, targetNetworkId = enemy.networkID }):send()
 			return true
 		end
 		return false
@@ -381,8 +388,11 @@ function CastTheE(enemy)
 		if (not EREADY or (GetDistance(enemy) > eRange))
 			then return false
 		end
-		if ValidTarget(enemy)
+		if ValidTarget(enemy) and not EvelynnMenu.Extra.packetUsage
 			then CastSpell(_E, enemy)
+			return true
+		elseif ValidTarget(enemy) and EvelynnMenu.Extra.packetUsage
+			then Packet("S_CAST", { spellId = _E, targetNetworkId = enemy.networkID }):send()
 			return true
 		end
 		return false
@@ -418,7 +428,7 @@ end
 --- Harass Functions ------------------------------------------------
 ---------------------------------------------------------------------
 function Harass()
-	if Target
+	if Target and ManaCheck(EvelynnMenu.Harass.harassMana)
 			then
 				if EvelynnMenu.Harass.harassMode == 1
 					then 
@@ -543,7 +553,7 @@ end
 ---------------------------------------------------------------------
 function JungleClear()
 	JungleMob = GetJungleMob()
-		if JungleMob ~= nil then
+		if JungleMob ~= nil and ManaCheck(EvelynnMenu.Jungle.jungleMana) then
 			if EvelynnMenu.Jungle.jungleQ then CastTheQ(JungleMob) end
 			if EvelynnMenu.Jungle.jungleE then CastTheE(JungleMob) end
 		end
@@ -563,7 +573,7 @@ end
 function LaneClear()
 	enemyMinions:update()
 	for _, minion in pairs(enemyMinions.objects) do
-		if ValidTarget(minion) and minion ~= nil and not eSOW:CanAttack()
+		if ValidTarget(minion) and minion ~= nil and not eSOW:CanAttack() and ManaCheck(EvelynnMenu.Farm.farmMana)
 			then 
 				if EvelynnMenu.Farm.farmQ then CastTheQ(minion) end
 				if EvelynnMenu.Farm.farmE then CastTheE(minion) end
@@ -721,6 +731,17 @@ function DamageCalculation()
 					end
 			end
 		end
+end
+---------------------------------------------------------------------
+-- Function for Manacheck -------------------------------------------
+-- Use like this: ManaCheck(Value or Slider in menu)
+---------------------------------------------------------------------
+function ManaCheck(ManaValue)
+	if myHero.mana > (myHero.maxMana * (ManaValue/100))
+		then return true
+	else
+		return false
+	end
 end
 ---------------------------------------------------------------------
 --- Function for Misc Movement --------------------------------------
