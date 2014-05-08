@@ -1,4 +1,4 @@
-Rengar - Predators Pride v0.15 by QQQ
+Rengar - Predators Pride v0.16 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -49,3 +49,9 @@ Rengar - Predators Pride v0.15 by QQQ
  - Bugfixes:
 	a. Fixed and error with lichbane, the caused the script to print an error/crashed the script
 	b. Fixed an error in the Q-Castingfunction that prevented casting from time to time
+-- 0.16 --
+- Some Performanceimprovements
+- Improved the Castingfunction from Harass, KS and SBTW - should be a bit better and more responsive now
+- Spells now can be casted with packets
+- Changes to the "Extra"-menu
+	a. Added a new toggle to disable/enable Packetcasting

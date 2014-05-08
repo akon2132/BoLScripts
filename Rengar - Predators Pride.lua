@@ -1,4 +1,4 @@
-local Version = "0.15"
+local Version = "0.16"
 local Author = "QQQ"
 if myHero.charName ~= "Rengar" then return end
 local IsLoaded = "Predators Pride"
@@ -69,10 +69,10 @@ end
 
 if DOWNLOADING_LIBS then return end
 ---------------------------------------------------------------------
---- Vars ---
+--- Vars ------------------------------------------------------------
 ---------------------------------------------------------------------
 -- Vars for Abilitys -- 
-	qRange = myHero.range + GetDistance(myHero.minBBox)
+	local qRange = myHero.range + GetDistance(myHero.minBBox)
 	local wRange = 400 -- for testing on 400 (normal 500)
 	local eRange = 1000
 	local eSpeed = 1500
@@ -92,11 +92,6 @@ if DOWNLOADING_LIBS then return end
 	local ts
 	ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1000, true)
 	ts.name = "Rengar"
--- Vars for Orbwalking --
-	lastAnimation = nil
-	lastAttack = 0
-	lastAttackCD = 0
-	lastWindUpTime = 0
 -- Vars for JungleClear --
 	JungleMobs = {}
 	JungleFocusMobs = {}
@@ -190,6 +185,8 @@ function AddMenu()
 	
 	-- Extra --
 	RengarMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, { "No Autolevel", "QWEQ - R>Q>E>W", "WQEQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
+	RengarMenu.Extra:addParam("extraInfo", "--- Packet Settings ---", SCRIPT_PARAM_INFO, "")
+	RengarMenu.Extra:addParam("packetUsage", "Use packets to cast spells: ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- SOW-Orbwalking --
 	rSOW:LoadToMenu(RengarMenu.Orbwalk)
@@ -283,7 +280,7 @@ function OnTick()
 	-- Aim VPredicted E Function --
 		if Target
 			then
-				if AimEKey then AimTheE() end
+				if AimEKey then AimTheE(Target) end
 				if RengarMenu.KS.AutoIgnite then AutoIgnite(Target) end	
 		end
 	if SBTWKey then SBTW() end
@@ -306,11 +303,10 @@ end
 function OnDraw()
 	if myHero.dead then return end
 -- Draw SpellRanges --
-	-- Draw W --
+	-- Draw W + E --
 	if RengarMenu.Draw.drawW and not myHero.dead then
 		if WREADY and RengarMenu.Draw.drawW then DrawCircle(myHero.x, myHero.y, myHero.z, wRange, wColor) end
 	end
-	-- Draw E --
 	if RengarMenu.Draw.drawE and not myHero.dead then
 		if EREADY and RengarMenu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
 	end
@@ -326,7 +322,7 @@ function OnDraw()
 					local barPos = WorldToScreen(D3DXVECTOR3(enemy.x, enemy.y, enemy.z))
 					local PosX = barPos.x - 35
 					local PosY = barPos.y - 10
-					DrawText(KillTextList[KillText[i]], 16, PosX, PosY, KillTextColor)			
+					DrawText(KillTextList[KillText[i]], 14, PosX, PosY, KillTextColor)			
 					
 				end
 			end
@@ -349,16 +345,13 @@ function Check()
 	-- Heal Check for Harass/Combo/Jungle/Farm --
 	HealCheck()
 	
-	-- Check for minions --
-	enemyMinions:update()
-	
 	-- Check if items are ready -- 
 		dfgReady		= (dfgSlot		~= nil and myHero:CanUseSpell(dfgSlot)		== READY) -- Deathfire Grasp
 		hxgReady		= (hxgSlot		~= nil and myHero:CanUseSpell(hxgSlot)		== READY) -- Hextech Gunblade
 		bwcReady		= (bwcSlot		~= nil and myHero:CanUseSpell(bwcSlot)		== READY) -- Bilgewater Cutlass
 		botrkReady		= (botrkSlot	~= nil and myHero:CanUseSpell(botrkSlot)	== READY) -- Blade of the Ruined King
 		sheenReady		= (sheenSlot 	~= nil and myHero:CanUseSpell(sheenSlot) 	== READY) -- Sheen
-		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichbaneSlot) 	== READY) -- Lichbane
+		lichbaneReady	= (lichbaneSlot ~= nil and myHero:CanUseSpell(lichbaneSlot) == READY) -- Lichbane
 		trinityReady	= (trinitySlot 	~= nil and myHero:CanUseSpell(trinitySlot) 	== READY) -- Trinity Force
 		lyandrisReady	= (liandrysSlot	~= nil and myHero:CanUseSpell(liandrysSlot) == READY) -- Liandrys 
 		tmtReady		= (tmtSlot 		~= nil and myHero:CanUseSpell(tmtSlot)		== READY) -- Tiamat
@@ -437,8 +430,12 @@ function CastTheQ(enemy)
 		if (not QREADY or (GetDistance(enemy) > qRange))
 			then return false
 		end
-		if ValidTarget(enemy)
+		if ValidTarget(enemy) and not RengarMenu.Extra.packetUsage
 			then CastSpell(_Q, enemy)
+				 myHero:Attack(enemy)
+				 return true
+		elseif ValidTarget(enemy) and RengarMenu.Extra.packetUsage
+			then Packet("S_CAST", {spellId = _Q}):send()
 				 myHero:Attack(enemy)
 				 return true
 		end
@@ -448,16 +445,19 @@ function CastTheW(enemy)
 	if (not WREADY or (GetDistance(enemy) > wRange))
 			then return false
 		end
-		if ValidTarget(enemy)
+		if ValidTarget(enemy) and not RengarMenu.Extra.packetUsage
 			then CastSpell(_W)
+			return true
+		elseif ValidTarget(enemy) and RengarMenu.Extra.packetUsage
+			then Packet("S_CAST", {spellId = _W}):send()
 			return true
 		end
 		return false
 end
-function AimTheE()
-	local CastPosition,  HitChance,  Position = VP:GetLineCastPosition(Target, eDelay, eWidth, eRange, eSpeed, myHero, true)
-	if HitChance >= 2  and GetDistance(Target) <= 1000 and EREADY
-	then CastSpell(_E, CastPosition.x, CastPosition.z)
+function AimTheE(enemy)
+	local CastPosition, HitChance, Position = VP:GetLineCastPosition(enemy, eDelay, eWidth, eRange, eSpeed, myHero, true)
+	if HitChance >= 2 and GetDistance(enemy) <= 1000 and EREADY
+		then CastSpell(_E, CastPosition.x, CastPosition.z)
 	end
 end
 ---------------------------------------------------------------------
@@ -470,14 +470,13 @@ function SBTW()
 		if Ferocity <= 4 and not rSOW:CanAttack()
 			then
 				if RengarMenu.SBTW.sbtwQ and QREADY and GetDistance(Target) < qRange
-					then CastSpell(_Q)
+					then CastTheQ(Target)
 				end
 				if RengarMenu.SBTW.sbtwW and WREADY and GetDistance(Target) < wRange 
-					then CastSpell(_W)
+					then CastTheW(Target)
 				end
 				if RengarMenu.SBTW.sbtwE and EREADY and GetDistance(Target) < eRange
-					then AimTheE()
-
+					then AimTheE(Target)
 				end
 		end
 		if Ferocity == 5
@@ -487,17 +486,17 @@ function SBTW()
 					if EmpModeSBTW == 1
 						then	
 							if GetDistance(Target) < qRange
-								then CastSpell(_Q)
+								then CastTheQ(Target)
 							end
 					elseif EmpModeSBTW == 2
 						then
 							if GetDistance(Target) < wRange
-								then CastSpell(_W)
+								then CastTheW(Target)
 							end
 					elseif EmpModeSBTW == 3
 						then
 							if GetDistance(Target) < eRange
-								then AimTheE()
+								then AimTheE(Target)
 							end
 					end
 				else CastTheW(Target)
@@ -519,15 +518,15 @@ function smartKS()
 			elseif hp <= wDmg and WREADY and (distance <= wRange) 
 				then CastTheW(enemy)
 			elseif hp <= eDmg and EREADY and (distance <= eRange) 
-				then AimTheE()
+				then AimTheE(Target)
 			elseif hp <= (qDmg + wDmg) and QREADY and WREADY and (distance <= qRange)
 				then CastTheW(enemy)
 			elseif hp <= (qDmg + eDmg) and QREADY and EREADY and (distance <= qRange)
-				then AimTheE()
+				then AimTheE(Target)
 			elseif hp <= (wDmg + eDmg) and WREADY and EREADY and (distance <= wRange)
-				then AimTheE()
+				then AimTheE(Target)
 			elseif hp <= (qDmg + wDmg + eDmg) and QREADY and WREADY and EREADY and (distance <= qRange)
-				then AimTheE()
+				then AimTheE(Target)
 			end
 		end
 	end
@@ -548,14 +547,14 @@ function Harass()
 		if Ferocity <= 4 and not rSOW:CanAttack()
 			then
 				if RengarMenu.rHarass.harassW then CastTheW(Target) end
-				if RengarMenu.rHarass.harassE then AimTheE() end 
+				if RengarMenu.rHarass.harassE then AimTheE(Target) end 
 		end
 		if Ferocity == 5 then
 					if needHealharass == false
 					then
 						if not rSOW:CanAttack() then
 							if EmpModeHarass == 1 then CastTheW(Target) end
-							if EmpModeHarass == 2 then AimTheE() end
+							if EmpModeHarass == 2 then AimTheE(Target) end
 						end
 					else CastTheW(Target)
 					end
@@ -754,6 +753,7 @@ end
 --- Lane Clear ---
 ---------------------------------------------------------------------
 function LaneClear()
+enemyMinions:update()
 setEmpMode()
 		for _, minion in pairs(enemyMinions.objects) do
 				if ValidTarget(minion) and not rSOW:CanAttack()
