@@ -1,8 +1,8 @@
-local Version = "1.01"
+local Version = "1.02"
+local AUTOUPDATE = true
 local Author = "QQQ"
 if myHero.charName ~= "Evelynn" then return end
 local IsLoaded = "The Devil wears Prada"
-local AUTOUPDATE = true
 ---------------------------------------------------------------------
 --- AutoUpdate for the script ---------------------------------------
 ---------------------------------------------------------------------
@@ -76,6 +76,7 @@ if DOWNLOADING_LIBS then return end
 	local rWidth = 350
 	local rSpeed = 1300
 	local rDelay = .250
+	local stealthRange = 730
 -- Vars for Abilitys --
 	local qName = "Hate Spike"
 	local wName = "Dark Frenzy"
@@ -84,6 +85,7 @@ if DOWNLOADING_LIBS then return end
 	local qColor = ARGB(100,217,0,163)
 	local eColor = ARGB(100,210,255,76)
 	local rColor = ARGB(100,150,115,255)
+	local stealthColor = ARGB(100,179,153,255)
 	local TargetColor = ARGB(100,76,255,76)
 -- Vars for JungleClear --
 	local JungleMobs = {}
@@ -153,7 +155,6 @@ function AddMenu()
 	-- Create SubMenu --
 	EvelynnMenu:addSubMenu(""..myHero.charName..": Key Bindings", "KeyBind")
 	EvelynnMenu:addSubMenu(""..myHero.charName..": Extra", "Extra")
-	EvelynnMenu:addSubMenu(""..myHero.charName..": Ultimate", "Ultimate")
 	EvelynnMenu:addSubMenu(""..myHero.charName..": Escape", "Escape")
 	EvelynnMenu:addSubMenu(""..myHero.charName..": Orbwalk", "Orbwalk")
 	EvelynnMenu:addSubMenu(""..myHero.charName..": SBTW-Combo", "SBTW")
@@ -169,18 +170,16 @@ function AddMenu()
 	EvelynnMenu.KeyBind:addParam("HarassToggleKey", "Toggle Harass: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("U"))
 	EvelynnMenu.KeyBind:addParam("ClearKey", "Jungle- and LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	EvelynnMenu.KeyBind:addParam("EscapeKey", "EscapeKey: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	EvelynnMenu.KeyBind:addParam("UltimateToggleKey", "AutoUltimateKey: ", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte("J"))
+	EvelynnMenu.KeyBind:addParam("UltimateKey", "AutoAim UltimateKey: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("T"))
 	
 	-- Extra --
 	EvelynnMenu.Extra:addParam("AutoLevelSkills", "Auto Level Skills (Reload Script!)", SCRIPT_PARAM_LIST, 1, {"No Autolevel", "QEWQ - R>Q>E>W", "EQWQ - R>Q>E>W"})
+	EvelynnMenu.Extra:addParam("extraInfo", "--- Packet Settings ---", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Extra:addParam("packetUsage", "Use packets to cast spells: ", SCRIPT_PARAM_ONOFF, true)
+	EvelynnMenu.Extra:addParam("blockR", "Block Ultimate if no target gets hit: ", SCRIPT_PARAM_ONOFF, true)
 	
 	-- Escape --
 	EvelynnMenu.Escape:addParam("escapeQ", "Use (Q) to enemys in Range while escaping: ", SCRIPT_PARAM_ONOFF, true)
-	
-	-- Ultimate --
-	EvelynnMenu.Ultimate:addParam("UltimateInfo", "--- Enable/disable Ultimate in KeyBindings ---", SCRIPT_PARAM_INFO, "")
-	EvelynnMenu.Ultimate:addParam("autoUltimateSlider", "Use only if more then X enemys: ", SCRIPT_PARAM_SLICE, 3, 1, 5, 0)
 	
 	-- SOW-Orbwalking --
 	eSOW:LoadToMenu(EvelynnMenu.Orbwalk)
@@ -192,7 +191,8 @@ function AddMenu()
 	EvelynnMenu.SBTW:addParam("sbtwQ", "Use "..qName.." (Q) in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.SBTW:addParam("sbtwW", "Use "..wName.." (W) in Combo: ", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.SBTW:addParam("sbtwE", "Use "..eName.." (E) in Combo: ", SCRIPT_PARAM_ONOFF, true)
-	EvelynnMenu.SBTW:addParam("sbtwR", "Use "..rName.." (R) in Combo: ", SCRIPT_PARAM_ONOFF, false)
+	EvelynnMenu.SBTW:addParam("sbtwR", "Use "..rName.." (R) in Combo: ", SCRIPT_PARAM_ONOFF, true)
+	EvelynnMenu.SBTW:addParam("sbtwRSlider", "Use (R) if more then X enemys: ", SCRIPT_PARAM_SLICE, 3, 1, 5, 0)
 	
 	-- Harass --
 	EvelynnMenu.Harass:addParam("harassMode", "Choose your HarassMode: ", SCRIPT_PARAM_LIST, 1, {"Q", "Q-E"})
@@ -222,6 +222,7 @@ function AddMenu()
 	EvelynnMenu.Draw:addParam("drawQ", "Draw (Q) Range:", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.Draw:addParam("drawE", "Draw (E) Range:", SCRIPT_PARAM_ONOFF, false)
 	EvelynnMenu.Draw:addParam("drawR", "Draw (R) Range:", SCRIPT_PARAM_ONOFF, true)
+	EvelynnMenu.Draw:addParam("drawStealth", "Draw Stealth-Range:", SCRIPT_PARAM_ONOFF, false)
 	EvelynnMenu.Draw:addParam("drawKillText", "Draw killtext on enemy: ", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.Draw:addParam("drawTarget", "Draw current target: ", SCRIPT_PARAM_ONOFF, false)
 		-- LFC --
@@ -234,17 +235,12 @@ function AddMenu()
 	EvelynnMenu.Draw.PermaShow:addParam("info", "--- Reload (Double F9) if you change the settings ---", SCRIPT_PARAM_INFO, "")
 	EvelynnMenu.Draw.PermaShow:addParam("HarassMode", "Show HarassMode: ", SCRIPT_PARAM_ONOFF, true)
 	EvelynnMenu.Draw.PermaShow:addParam("HarassToggleKey", "Show HarassToggleKey: ", SCRIPT_PARAM_ONOFF, true)
-	EvelynnMenu.Draw.PermaShow:addParam("UltimateToggleKey", "Show UltimateToggleKey: ", SCRIPT_PARAM_ONOFF, true)
-	
 	
 	if EvelynnMenu.Draw.PermaShow.HarassMode
 		then EvelynnMenu.Harass:permaShow("harassMode") 
 	end
 	if EvelynnMenu.Draw.PermaShow.HarassToggleKey
 		then EvelynnMenu.KeyBind:permaShow("HarassToggleKey") 
-	end
-	if EvelynnMenu.Draw.PermaShow.UltimateToggleKey
-		then EvelynnMenu.KeyBind:permaShow("UltimateToggleKey") 
 	end
 	
 	-- Other --
@@ -263,11 +259,10 @@ function OnTick()
 	AutoLevelMySkills()
 	KeyBindings()
 	DamageCalculation()
-	
 	if Target
 		then
 			if EvelynnMenu.KS.Ignite then AutoIgnite(Target) end
-			if UltimateToggleKey then AutoUltimate(Target) end
+			if UltimateKey then AimTheR(Target) end
 	end
 
 	if SBTWKey then SBTW() end
@@ -286,7 +281,7 @@ function KeyBindings()
 	HarassToggleKey = EvelynnMenu.KeyBind.HarassToggleKey
 	ClearKey = EvelynnMenu.KeyBind.ClearKey
 	EscapeKey = EvelynnMenu.KeyBind.EscapeKey
-	UltimateToggleKey = EvelynnMenu.KeyBind.UltimateToggleKey
+	UltimateKey = EvelynnMenu.KeyBind.UltimateKey
 end
 function Check()
 	-- Cooldownchecks for Abilitys and Summoners -- 
@@ -347,6 +342,8 @@ function OnDraw()
 		if EvelynnMenu.Draw.drawQ then DrawCircle(myHero.x, myHero.y, myHero.z, qRange, qColor) end
 		if EREADY and EvelynnMenu.Draw.drawE then DrawCircle(myHero.x, myHero.y, myHero.z, eRange, eColor) end
 		if RREADY and EvelynnMenu.Draw.drawR then DrawCircle(myHero.x, myHero.y, myHero.z, rRange, rColor) end
+	-- Stealth Range --
+		if EvelynnMenu.Draw.drawStealth then DrawCircle(myHero.x, myHero.y, myHero.z, stealthRange, stealthColor) end
 	-- Draw Target --
 	if Target ~= nil and EvelynnMenu.Draw.drawTarget
 		then DrawCircle(Target.x, Target.y, Target.z, (GetDistance(Target.minBBox, Target.maxBBox)/2), TargetColor)
@@ -401,16 +398,54 @@ end
 function AimTheR(enemy)
 	local CastPosition, HitChance, Position = VP:GetCircularAOECastPosition(enemy, rDelay, rWidth, rRange, rSpeed, myHero)
 	if HitChance >= 2 and GetDistance(enemy) <= rRange and RREADY
-		then CastSpell(_R, CastPosition.x, CastPosition.z)
+		then
+			if EvelynnMenu.Extra.packetUsage
+				then Packet('S_CAST', {spellId = _R, fromX = myHero.x, fromY = myHero.z,toX = CastPosition.x, toY = CastPosition.z}):send()
+			end
+			if not EvelynnMenu.Extra.packetUsage
+				then CastSpell(_R, CastPosition.x, CastPosition.z)
+			end
 	end
 end
 -- Evelynn Auto R --
-function AutoUltimate(enemy)
+function AimTheRonX(enemy)
 	if RREADY then
-		local Mintargets = EvelynnMenu.Ultimate.autoUltimateSlider
-		local AOECastPosition, MainTargetHitChance, nTargets = VP:GetCircularAOECastPosition(enemy, rDelay, rWidth, rRange, rSpeed)
-		if nTargets >= Mintargets then CastSpell(_R, AOECastPosition.x, AOECastPosition.z) end
+		local Mintargets = EvelynnMenu.SBTW.sbtwRSlider
+		local AoeCastPosition, MainTargetHitChance, nTargets = VP:GetCircularAOECastPosition(enemy, rDelay, rWidth, rRange, rSpeed, myHero)
+		local hitnumber, hit = CheckHitEnemys()
+		if MainTargetHitChance >= 2 and GetDistance(enemy) <= rRange and hitnumber >= Mintargets
+			then
+				if EvelynnMenu.Extra.packetUsage
+					then Packet('S_CAST', {spellId = _R, fromX = myHero.x, fromY = myHero.z,toX = AoeCastPosition.x, toY = AoeCastPosition.z}):send()
+				end
+				if not EvelynnMenu.Extra.packetUsage
+					then CastSpell(_R, AoeCastPosition.x, AoeCastPosition.z)
+				end
+		end
 	end
+end
+-- Block the cast of R if no enemy gets hit --
+function OnSendPacket(p)
+	if EvelynnMenu.Extra.blockR and RREADY and p.header == Packet.headers.S_CAST
+		then
+			local packet = Packet(p)
+			if packet:get('spellId') == _R
+				then
+					local hitnumber, hit = CheckHitEnemys()
+					if hitnumber == 0 then p:Block() end
+			end
+	end
+end
+-- Check how many enemys get hit by R --
+function CheckHitEnemys()
+	local enemieshit = {}
+	for i, enemy in ipairs(GetEnemyHeroes()) do
+		local position = VP:GetPredictedPos(enemy, rDelay)
+		if ValidTarget(enemy) and GetDistance(position) <= rWidth and GetDistance(enemy.visionPos, myHero) <= 1.25 * rWidth  then
+			table.insert(enemieshit, enemy)
+		end
+	end
+	return #enemieshit, enemieshit
 end
 ---------------------------------------------------------------------
 --- SBTW Functions --------------------------------------------------
@@ -420,7 +455,7 @@ function SBTW()
 		then 
 			if EvelynnMenu.SBTW.sbtwQ then CastTheQ(Target) end
 			if EvelynnMenu.SBTW.sbtwE then CastTheE(Target) end
-			if EvelynnMenu.SBTW.sbtwR then AimTheR(Target) end
+			if EvelynnMenu.SBTW.sbtwR then AimTheRonX(Target) end
 			if EvelynnMenu.SBTW.sbtwItems then UseItems() end
 	end
 end
