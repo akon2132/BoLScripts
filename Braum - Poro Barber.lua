@@ -1,4 +1,4 @@
-_G.BraumVersion = "0.02"
+_G.BraumVersion = "0.01"
 _G.BRAUMAUTOUPDATE = true
 _G.BraumAuthor = "QQQ+AWA"
 if myHero.charName ~= "Evelynn" then return end
@@ -12,7 +12,7 @@ local UPDATE_FILE_PATH = SCRIPT_PATH.."Braum - Poro Barber.lua"
 local UPDATE_NAME = "Braum - Poro Barber"
 local UPDATE_HOST = "raw.github.com"
 local UPDATE_PATH = "/bolqqq/BoLScripts/master/Braum%20-%20Poro%20Barber.lua?chunk="..math.random(1, 1000)
-local UPDATE_FILE_PATH = SCRIPT_PATH.."Braum - Poro Barber.lua.lua"
+local UPDATE_FILE_PATH = SCRIPT_PATH.."Braum - Poro Barber.lua"
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 function AutoupdaterMsg(msg) print("<font color=\"#FF7373\">[".._G.IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
@@ -23,7 +23,7 @@ if _G.BRAUMAUTOUPDATE then
         ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
         if ServerVersion then
             ServerVersion = tonumber(ServerVersion)
-            if tonumber(_G.EvelynnVersion) < ServerVersion then
+            if tonumber(_G.BraumVersion) < ServerVersion then
                 AutoupdaterMsg("A new version is available: ["..ServerVersion.."]")
                 AutoupdaterMsg("The script is updating... please don't press [F9]!")
                 DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
@@ -77,10 +77,10 @@ if DOWNLOADING_LIBS then return end
 -- Vars for TargetSelector --
 	local ts
 	ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1000, DAMAGE_MAGIC, true)
-	ts.name = "Evelynn: Target"
+	ts.name = "Braum: Target"
 -- Misc Vars --
 	local enemyHeroes = GetEnemyHeroes()
-	local EvelynnMenu
+	local BraumMenu
 	local VP = nil
 ---------------------------------------------------------------------
 --- OnLoad ----------------------------------------------------------
