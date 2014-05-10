@@ -1,4 +1,4 @@
-Evelynn - The Devil wears Prada v.1.02 by QQQ
+Evelynn - The Devil wears Prada v.1.03 by QQQ
 
 Changelog:
 -- 1.00 --
@@ -27,3 +27,8 @@ Changelog:
 	a. Added a new toggle to disable/enable the sightrange (disabled by default)
 - Bugfixes:
 	a. Fixed a bug that caused the SBTW to not always work
+-- 1.03 --
+- Added a new Autoupdater
+- Bugfixes:
+	a. Fixed a bug that caused the Ultimate to cast on yourself
+	b. Fixed a bug that caused the Ultimate to cast only in situational situations
