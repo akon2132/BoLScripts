@@ -1,4 +1,4 @@
-Swain - Birds and Generals v1.0 by QQQ
+Swain - Birds and Generals v1.1 by QQQ
 
 -- 0.01 --
 - Alpharelease
@@ -39,3 +39,6 @@ Swain - Birds and Generals v1.0 by QQQ
 - Changes to the "Draw"-menu:
 	a. Added a new toggle to enable/disable Killtext
 	b. Added a new toggle to enable/disable Ulttimedrawing
+-- 1.01 --
+- Bugfixes:
+	a. Deleted some debuggingmessages that spammed the chat
