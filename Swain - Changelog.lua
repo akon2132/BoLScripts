@@ -1,4 +1,4 @@
-Swain - Birds and Generals v1.1 by QQQ
+Swain - Birds and Generals v1.02 by QQQ
 
 -- 0.01 --
 - Alpharelease
@@ -42,3 +42,5 @@ Swain - Birds and Generals v1.1 by QQQ
 -- 1.01 --
 - Bugfixes:
 	a. Deleted some debuggingmessages that spammed the chat
+-- 1.02 --
+- Added an option in the "Extra"-menu to change between two different predictionmodi for the W (1 = since 1.00 2 = before 1.00 - standard = 1)
