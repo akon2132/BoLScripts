@@ -1,4 +1,4 @@
-local Version = "0.16"
+local Version = "0.17"
 local Author = "QQQ"
 if myHero.charName ~= "Rengar" then return end
 local IsLoaded = "Predators Pride"
@@ -157,7 +157,7 @@ function OnLoad()
 		 --LFC--
 	_G.oldDrawCircle = rawget(_G, 'DrawCircle')
 	_G.DrawCircle = DrawCircle2
-	PrintChat("<font color=\"#EFBFFF\"><b>"..IsLoaded.."</b> by <font color=\"#FFDC73\"><b>QQQ</b></font> sucessfully loaded! Version: <u><b>"..Version.."</b></u></font>")
+	PrintChat("<font color=\"#FF794C\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Sucessfully loaded! Version: [<u><b>"..Version.."</b></u>]</font>")
 	end
 function AddMenu()
 	-- Script Menu --
@@ -430,12 +430,14 @@ function CastTheQ(enemy)
 		if (not QREADY or (GetDistance(enemy) > qRange))
 			then return false
 		end
-		if ValidTarget(enemy) and not RengarMenu.Extra.packetUsage
+		if ValidTarget(enemy) and not RengarMenu.Extra.packetUsage and not rSOW:CanAttack() and not rSOW:CanMove()
 			then CastSpell(_Q, enemy)
+				 rSOW:resetAA()
 				 myHero:Attack(enemy)
 				 return true
-		elseif ValidTarget(enemy) and RengarMenu.Extra.packetUsage
+		elseif ValidTarget(enemy) and RengarMenu.Extra.packetUsage and not rSOW:CanAttack() and not rSOW:CanMove()
 			then Packet("S_CAST", {spellId = _Q}):send()
+				 rSOW:resetAA() 
 				 myHero:Attack(enemy)
 				 return true
 		end
@@ -479,7 +481,7 @@ function SBTW()
 					then AimTheE(Target)
 				end
 		end
-		if Ferocity == 5
+		if Ferocity == 5 and not rSOW:CanAttack()
 			then
 				if needHealharass == false
 					then
@@ -549,7 +551,7 @@ function Harass()
 				if RengarMenu.rHarass.harassW then CastTheW(Target) end
 				if RengarMenu.rHarass.harassE then AimTheE(Target) end 
 		end
-		if Ferocity == 5 then
+		if Ferocity == 5 and not rSOW:CanAttack() then
 					if needHealharass == false
 					then
 						if not rSOW:CanAttack() then
@@ -659,7 +661,17 @@ function JungleClear()
 				if Ferocity <= 4 then
 					if RengarMenu.Jungle.jungleQ and QREADY and GetDistance(JungleMob) <= qRange then CastTheQ(JungleMob) end
 					if RengarMenu.Jungle.jungleW and WREADY and GetDistance(JungleMob) <= wRange then CastTheW(JungleMob) end
-					if RengarMenu.Jungle.jungleE and EREADY and GetDistance(JungleMob) <= eRange then CastSpell(_E, JungleMob.x, JungleMob.z) end
+					if RengarMenu.Jungle.jungleE 
+						then
+							if RengarMenu.Jungle.jungleQ
+								then
+									if not QREADY and EREADY and GetDistance(JungleMob) <= eRange then CastSpell(_E, JungleMob.x, JungleMob.z) end
+							end
+							if not RengarMenu.Jungle.jungleQ
+								then 
+									if EREADY and GetDistance(JungleMob) <= eRange then CastSpell(_E, JungleMob.x, JungleMob.z) end
+							end
+					end
 				end
 				if Ferocity == 5 then
 					if needHealjungle == false then
@@ -719,6 +731,45 @@ function OnDeleteObj(obj)
 	end
 end
 ---------------------------------------------------------------------
+--- Lane Clear ---
+---------------------------------------------------------------------
+function LaneClear()
+enemyMinions:update()
+setEmpMode()
+		for _, minion in pairs(enemyMinions.objects) do
+				if ValidTarget(minion) and not rSOW:CanAttack()
+				then
+					if tmtReady and GetDistance(minion) <= 185 then CastSpell(tmtSlot) end
+					if hdrReady and GetDistance(minion) <= 185 then CastSpell(hdrSlot) end
+					if Ferocity <= 4 and not rSOW:CanAttack()
+						then
+							if RengarMenu.Farm.farmQ and GetDistance(minion) <= qRange then CastTheQ(minion)  end
+							if RengarMenu.Farm.farmW and GetDistance(minion) <= wRange then CastTheW(minion) end
+							if RengarMenu.Farm.farmE 
+								then 
+									if RengarMenu.Farm.farmQ 
+										then 
+											if not QREADY and EREADY and GetDistance(minion) <= eRange then CastSpell(_E, minion.x, minion.z) end
+									end
+									if not RengarMenu.Farm.farmQ 
+										then 
+											if EREADY and GetDistance(minion) <= eRange then CastSpell(_E, minion.x, minion.z) end
+									end
+							end	
+					end
+					if Ferocity == 5 and not rSOW:CanAttack()
+						then
+							if needHealfarm == false
+								then 
+									if EmpModeFarm == 1 then CastTheQ(minion) end
+									if EmpModeFarm == 2 then CastTheW(minion) end
+							else CastTheW(minion)
+							end
+					end
+				end
+			end	
+end
+---------------------------------------------------------------------
 -- Buff Functions ---
 ---------------------------------------------------------------------
 function OnGainBuff(unit, buff)
@@ -749,34 +800,6 @@ function OnFinishRecall(hero)
 		Recalling = false
 	end
 end
----------------------------------------------------------------------
---- Lane Clear ---
----------------------------------------------------------------------
-function LaneClear()
-enemyMinions:update()
-setEmpMode()
-		for _, minion in pairs(enemyMinions.objects) do
-				if ValidTarget(minion) and not rSOW:CanAttack()
-				then
-					if tmtReady and GetDistance(minion) <= 185 then CastSpell(tmtSlot) end
-					if hdrReady and GetDistance(minion) <= 185 then CastSpell(hdrSlot) end
-					if Ferocity <= 4 
-						then
-							if RengarMenu.Farm.farmQ and GetDistance(minion) <= qRange then CastTheQ(minion) end
-							if RengarMenu.Farm.farmW and GetDistance(minion) <= wRange then CastTheW(minion) end
-							if RengarMenu.Farm.farmE and GetDistance(minion) <= eRange then CastSpell(_E, minion.x, minion.z) end
-					end
-					if Ferocity == 5 then
-							if needHealfarm == false
-								then 
-									if EmpModeFarm == 1 then CastTheQ(minion) end
-									if EmpModeFarm == 2 then CastTheW(minion) end
-							else CastTheW(minion)
-							end
-					end
-				end
-			end	
-end 
 ---------------------------------------------------------------------
 --- Lag Free Circles ---
 ---------------------------------------------------------------------

@@ -1,4 +1,4 @@
-Rengar - Predators Pride v0.16 by QQQ
+Rengar - Predators Pride v0.17 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -55,3 +55,5 @@ Rengar - Predators Pride v0.16 by QQQ
 - Spells now can be casted with packets
 - Changes to the "Extra"-menu
 	a. Added a new toggle to disable/enable Packetcasting
+-- 0.17 --
+- Added some Fixes for Autoattackstuttering to SOW (read the post!)
