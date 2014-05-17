@@ -1,4 +1,4 @@
-Rengar - Predators Pride v0.17 by QQQ
+Rengar - Predators Pride v1.00 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -57,3 +57,38 @@ Rengar - Predators Pride v0.17 by QQQ
 	a. Added a new toggle to disable/enable Packetcasting
 -- 0.17 --
 - Added some Fixes for Autoattackstuttering to SOW (read the post!)
+-- 1.00 --
+- Offical 1.00 Release
+- Added the new TrippleQ-feature
+	a. For the new TrippleQ you need the following requirements: Q,W,E,R Ready, Level >= 6, 5 Ferocity
+	b. If you don't have the requirements, a message appears on your character whats needed
+	c. You can use the TrippleQ-Key before Ulting and it ults automatically if near an enemy or you can do ult yourself and press the Key then
+	d. Uses automatically items on your Target
+- Added the support for MMA/SAC-Targetsupport
+- Added a new Autolevelsequence for Toplane that starts E-Q-W-E R>E>Q>W
+- Changes to the "KeyBind"-menu:
+	a. Added a Key for the new TrippleQ
+- Cleanup & General Improvments:
+	a. Added some performanceimprovements and changed some functions for less FPS-Drops
+	b. Rewrote the whole JungleClearfunction for better clearing without stuttering
+	c. Rewrote the whole LaneClearfunction for better clearing without stuttering
+	d. Rewrote the whole 'overwrite EmpMode if low' logic for better detection and faster casting
+- Itemchanges: 
+	a. Added Sword of the Divine to the used items (especially good for TrippleQ)
+- Bugfixes
+	a. Changed some values for the detectionrange of JungleMobs for better E-Usage
+	b. Fixed some bugs that caused your champion to autostutter while clearing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
