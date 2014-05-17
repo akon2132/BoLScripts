@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.00 by QQQ
+Rengar - Predators Pride v1.01 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -78,10 +78,9 @@ Rengar - Predators Pride v1.00 by QQQ
 - Bugfixes
 	a. Changed some values for the detectionrange of JungleMobs for better E-Usage
 	b. Fixed some bugs that caused your champion to autostutter while clearing
-
-
-
-
+-- 1.01 --
+- Bugfixes:
+	a. Fixed a bug that cause the Q to cast randomly and prevented you for example from gaining 5 Ferocity in the after clearing a camp
 
 
 
