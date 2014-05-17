@@ -80,7 +80,7 @@ Rengar - Predators Pride v1.01 by QQQ
 	b. Fixed some bugs that caused your champion to autostutter while clearing
 -- 1.01 --
 - Bugfixes:
-	a. Fixed a bug that cause the Q to cast randomly and prevented you for example from gaining 5 Ferocity in the after clearing a camp
+	a. Fixed a bug that cause the Q to cast randomly and prevented you for example from gaining 5 Ferocity after clearing a camp
 
 
 
