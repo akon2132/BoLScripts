@@ -1,31 +1,34 @@
-local Version = "1.14"
-local Author = "QQQ"
+local Version = "1.15"
+_G.NidaleeVersion = "1.15"
+_G.NIDALEEAUTOUPDATE = true
+_G.NidaleeAuthor = "QQQ"
+_G.IsLoaded = "The Beauty and the Beast"
 if myHero.charName ~= "Nidalee" then return end
-local IsLoaded = "The Beauty and the Beast"
-local AUTOUPDATE = true
+
+--Encrypt this line and below
 ---------------------------------------------------------------------
 --- AutoUpdate for the script ---------------------------------------
 ---------------------------------------------------------------------
-local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
+local UPDATE_FILE_PATH = SCRIPT_PATH.."Nidalee - The Beauty and the Beast.lua"
 local UPDATE_NAME = "Nidalee - The Beauty and the Beast"
 local UPDATE_HOST = "raw.github.com"
 local UPDATE_PATH = "/bolqqq/BoLScripts/master/Nidalee%20-%20The%20Beauty%20and%20the%20Beast.lua?chunk="..math.random(1, 1000)
-local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
+local UPDATE_FILE_PATH = SCRIPT_PATH.."Nidalee - The Beauty and the Beast.lua"
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
-function AutoupdaterMsg(msg) print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
-if AUTOUPDATE then
+function AutoupdaterMsg(msg) print("<font color=\"#eFF99CC\">[".._G.IsLoaded.."]:</font> <font color=\"#FFDFBF\">"..msg..".</font>") end
+if _G.NIDALEEAUTOUPDATE then
     local ServerData = GetWebResult(UPDATE_HOST, UPDATE_PATH)
     if ServerData then
-        local ServerVersion = string.match(ServerData, "local Version = \"%d+.%d+\"")
+        local ServerVersion = string.match(ServerData, "_G.NidaleeVersion = \"%d+.%d+\"")
         ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
         if ServerVersion then
             ServerVersion = tonumber(ServerVersion)
-            if tonumber(Version) < ServerVersion then
+            if tonumber(_G.NidaleeVersion) < ServerVersion then
                 AutoupdaterMsg("A new version is available: ["..ServerVersion.."]")
                 AutoupdaterMsg("The script is updating... please don't press [F9]!")
                 DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
-				AutoupdaterMsg("Successfully updated! ("..Version.." -> "..ServerVersion.."), Please reload (double [F9]) for the updated version!") end) end, 3)
+				AutoupdaterMsg("Successfully updated! (".._G.NidaleeVersion.." -> "..ServerVersion.."), Please reload (double [F9]) for the updated version!") end) end, 3)
             else
                 AutoupdaterMsg("Your script is already the latest version: ["..ServerVersion.."]")
             end
@@ -52,7 +55,7 @@ function AfterDownload()
 	DOWNLOAD_COUNT = DOWNLOAD_COUNT - 1
 	if DOWNLOAD_COUNT == 0 then
 		DOWNLOADING_LIBS = false
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
+		print("<font color=\"#FF7373\">[".._G.IsLoaded.."]:</font><font color=\"#FFDFBF\"> Required libraries downloaded successfully, please reload (double [F9]).</font>")
 	end
 end
 
@@ -63,18 +66,17 @@ for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(REQUIRED_LIBS) do
 		DOWNLOADING_LIBS = true
 		DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
 
-		print("<font color=\"#FF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
+		print("<font color=\"#FFFF73\">[".._G.IsLoaded.."]:</font><font color=\"#FFDFBF\"> Not all required libraries are installed. Downloading: <b><u><font color=\"#73B9FF\">"..DOWNLOAD_LIB_NAME.."</font></u></b> now! Please don't press [F9]!</font>")
 		DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
 	end
 end
-
 if DOWNLOADING_LIBS then return end
 ---------------------------------------------------------------------
 --- Vars ------------------------------------------------------------
 ---------------------------------------------------------------------
 -- Vars for Ranges --
 	local qRange, wRange, eRange = 1500, 900, 600 
-	local qSpeed, qDelay, qWidth = 1300, 0.0, 70 -- changed from 60 to 70 for testing - 0.250 from 0.125
+	local qSpeed, qDelay, qWidth = 1300, 0.125, 70
 	local wSpeed, wDelay, wWidth = 1450, 0.500, 80
 	local wCRange, eCRange = 375, 350 -- E Range = 400-50 for testing
 	local qCRange = myHero.range + GetDistance(myHero.minBBox)
@@ -121,7 +123,7 @@ if DOWNLOADING_LIBS then return end
 	local JungleMode
 -- Vars for LaneClear --
 	local LaneClearModeVar
-	local enemyMinions = minionManager(MINION_ENEMY, 1000, player, MINION_SORT_HEALTH_ASC)
+	local enemyMinions = minionManager(MINION_ENEMY, 1000, myHero.visionPos, MINION_SORT_HEALTH_ASC)
 -- Vars for Autolevel --
 	levelSequence = {
 					startQ = { 1,3,1,2,1,4,1,3,1,3,4,3,3,2,2,4,2,2 },
@@ -197,7 +199,7 @@ function OnLoad()
               ProdQ:GetPredictionAfterImmobile(hero, AfterImmobileFunc)
            end
        end
-	PrintChat("<font color=\"#eFF99CC\">["..IsLoaded.."]:</font><font color=\"#FFDFBF\"> Sucessfully loaded! Version: [<u><b>"..Version.."</b></u>]</font>")
+	PrintChat("<font color=\"#eFF99CC\">[".._G.IsLoaded.."]:</font><font color=\"#FFDFBF\"> Sucessfully loaded! Version: [<u><b>".._G.NidaleeVersion.."</b></u>]</font>")
 end
 ---------------------------------------------------------------------
 --- Menu ------------------------------------------------------------
@@ -228,8 +230,7 @@ function AddMenu()
 	Menu.KeyBind:addParam("TrapKey", "Throw a trap: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 	Menu.KeyBind:addParam("HealManager", "Enable/Disable the HealManager: ", SCRIPT_PARAM_ONKEYTOGGLE, true, string.byte("N"))
 	Menu.KeyBind:addParam("SBTWKey", "Combo Key: ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
-	Menu.KeyBind:addParam("LaneClearKey", "LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
-	Menu.KeyBind:addParam("JungleClearKey", "JungleClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+	Menu.KeyBind:addParam("ClearKey", "Jungle- and LaneClear Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 	Menu.KeyBind:addParam("JumpAssistantKey", "Jump Assistant Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Z"))
 	Menu.KeyBind:addParam("EscapeKey", "Escape Key: ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("Y"))
 	
@@ -343,8 +344,8 @@ function AddMenu()
 	Menu.Draw.PermaShow:addParam("PredictionMode", "Show PredictionMode: ", SCRIPT_PARAM_ONOFF, true)
 	Menu.Draw.PermaShow:addParam("HealManager", "Show HealManager: ", SCRIPT_PARAM_ONOFF, true)
 	-- Other --
-	Menu:addParam("Version", "Version", SCRIPT_PARAM_INFO, Version)
-	Menu:addParam("Author", "Author", SCRIPT_PARAM_INFO, Author)
+	Menu:addParam("Version", "Version", SCRIPT_PARAM_INFO, _G.NidaleeVersion)
+	Menu:addParam("Author", "Author", SCRIPT_PARAM_INFO, _G.NidaleeAuthor)
 	-- PermaShow --
 	if Menu.Draw.PermaShow.aimQtoggle
 		then Menu.KeyBind:permaShow("SpearToggle") 
@@ -367,8 +368,8 @@ end
 ---------------------------------------------------------------------
 function OnTick()
 	if myHero.dead then return end
-	ts:update()
-	Target = ts.target 
+	Target = GetCustomTarget()
+	nSOW:ForceTarget(Target)
 	Check()
 	DamageCalculation()
 	LFCfunc()
@@ -386,21 +387,12 @@ function OnTick()
 			-- Aim W behind Target --
 			if TrapKey then AimTheWbehind() end
 	end
-	-- HealManager --
 	if HealManagerKey then HealManager() end
-	-- KillSteal--
 	if Menu.KS.smartKS then smartKS() end
-	-- Lane Clear --
-	if LaneClearKey then LaneClear() end
-	-- Last Hit --
+	if ClearKey then LaneClear() JungleClear() end
 	if LastHitKey then lastHit() end
-	-- Jungle Clear --
-	if JungleClearKey then JungleClear() end
-	-- Escape --
 	if EscapeKey then Escape() end
-	-- Jump Assistant --
 	if JumpAssistantKey then JumpAssistant() end 
-	-- SBTW Combo --
 	if SBTWKey then SBTW() end
 end
 ---------------------------------------------------------------------
@@ -412,11 +404,21 @@ function KeyBindings()
 	TrapKey = Menu.KeyBind.TrapKey
 	HealManagerKey = Menu.KeyBind.HealManager
 	SBTWKey = Menu.KeyBind.SBTWKey
-	LastHitKey = Menu.KeyBind.LastHitKey
-	LaneClearKey = Menu.KeyBind.LaneClearKey
-	JungleClearKey = Menu.KeyBind.JungleClearKey
+	ClearKey = Menu.KeyBind.ClearKey
 	JumpAssistantKey = Menu.KeyBind.JumpAssistantKey
 	EscapeKey = Menu.KeyBind.EscapeKey
+end
+function GetCustomTarget()
+	ts:update()
+    if _G.MMA_Target and _G.MMA_Target.type == myHero.type
+		then return _G.MMA_Target
+   	elseif _G.AutoCarry and _G.AutoCarry.Crosshair and _G.AutoCarry.Attack_Crosshair
+		then return _G.AutoCarry.Attack_Crosshair.target
+   	elseif ts.target and not ts.target.dead and ts.target.type  == "obj_AI_Hero"
+		then return ts.target
+    else
+    	return nil
+    end
 end
 ---------------------------------------------------------------------
 --- Function Checks for Spells and Forms ----------------------------
@@ -743,7 +745,8 @@ function CastTheCQ(enemy)
 			then return false
 		end
 		if not nSOW:CanAttack() then
-			if ValidTarget(enemy) then 
+			if ValidTarget(enemy) then
+				nSOW:resetAA()
 				CastSpell(_Q)
 				return true
 			end
@@ -1684,11 +1687,12 @@ end
 -- Checks if a unit is under a tower e.g. UnitAtTower(enemy)
 ---------------------------------------------------------------------
 function UnitAtTower(unit)
-	for u = 1, objManager.maxObjects do
-		local obj = objManager:GetObject(u)
-		if obj ~= nil and obj.name:find("Chaos_Turret_") and obj.team ~= myHero.team and not obj.dead then
-			if GetDistance(unit,obj) <= 775
-				then return true
+	for i, turret in pairs(GetTurrets()) do
+		if turret ~= nil then
+			if turret.team ~= myHero.team then
+				if GetDistance(unit, turret) <= turret.range then
+					return true
+				end
 			end
 		end
 	end
