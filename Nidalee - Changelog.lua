@@ -1,4 +1,4 @@
-Nidalee - The Beauty and the Beast v.1.12 by QQQ
+Nidalee - The Beauty and the Beast v.1.15 by QQQ
 
 Changelog:
 -- 1.0 --
@@ -142,4 +142,8 @@ Changelog:
 - Added SOW as standartorbwalker (set both the jungle-/laneclearkey as the same key as the laneclearkey in your orbwalker)
 - Bugfixes:
 	a. Fixed another error with lichbane, the caused the script to print an error/crashed the script
-	
+-- 1.15 --
+- Removed the LaneClearKey and the JungleClearKey
+- Added a new ClearKey for both - Jungle- and LaneClearing (u need to set the SOW, MMA, SAC LaneClearKey to the same as this key or you won't AA)
+- Improved the Autoupdater and fixed at least some reasons for bugsplats
+- Added the support for MMA/SAC-Targetsupport
