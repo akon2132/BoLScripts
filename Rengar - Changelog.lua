@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.02 by QQQ
+Rengar - Predators Pride v1.03 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -85,3 +85,14 @@ Rengar - Predators Pride v1.02 by QQQ
 - Bugfixes:
 	a. Fixed a bug that caused stutterstepping while SBTW
 	b. Fixed a bug that prevented SotD from casting sometimes
+-- 1.03 --
+- The script now detects if you are using MMA/SAC:R and tells you if it got found or not
+- The script automatically disables/enables the inbuild SOW-Orbwalker depending on the Orbwalker
+- The script now detects if you press a key in MMA/SAC:R
+	a. That means if you press a key in MMA/SAC:R you automatically activate the right function in the Rengarscript
+	b. This applies to the MixedModeKey -> Harass, LaneClearKey -> Clear and the Combokey -> SBTW
+- Bugfixes:
+	a. Fixed a bug that prevented Q from casting sometimes
+
+	
+	
