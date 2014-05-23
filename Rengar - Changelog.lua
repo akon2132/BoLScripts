@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.03 by QQQ
+Rengar - Predators Pride v1.04 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -93,5 +93,10 @@ Rengar - Predators Pride v1.03 by QQQ
     b. This applies to the MixedModeKey -> Harass, LaneClearKey -> Clear and the Combokey -> SBTW
 - Bugfixes:
     a. Fixed a bug that prevented Q from casting sometimes
-	
+-- 1.04 --
+- Added a new Castingfunction for the Q-Spell that fixes problems
+	a. In SBTW, JungleClear, LaneClear and Killsteal
+- Added new Instructions at the start of the beginning
+	a. If you use MMA/SOW you need to assign the Scriptkey to the Orbwalkingscriptkey
+	b. If you use SAC:R just press your SAC-keys and everything will be done for you
 	
