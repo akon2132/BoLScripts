@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.04 by QQQ
+Rengar - Predators Pride v1.05 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -99,4 +99,7 @@ Rengar - Predators Pride v1.04 by QQQ
 - Added new Instructions at the start of the beginning
 	a. If you use MMA/SOW you need to assign the Scriptkey to the Orbwalkingscriptkey
 	b. If you use SAC:R just press your SAC-keys and everything will be done for you
-	
+-- 1.05 --
+- Improved the Castingfunction for the Q while using SAC:R
+	a. Now the Q gets casted right before an autoattack which makes Q-Attacks faster and smoother
+- Changed the way Q gets casted with MMA - still needs more work
