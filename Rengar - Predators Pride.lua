@@ -1,3 +1,4 @@
+local Version = "1.04"
 _G.RengarVersion = "1.04"
 _G.RENGARAUTOUPDATE = true
 _G.RengarAuthor = "QQQ"
