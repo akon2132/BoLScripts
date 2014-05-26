@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.06 by QQQ
+Rengar - Predators Pride v1.07 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -106,3 +106,8 @@ Rengar - Predators Pride v1.06 by QQQ
 -- 1.06 --
 - Securityupdate:
 	a. Changed the autodownloadlibrarys to Hellsing's safe ones
+-- 1.07 --
+- Bugfixes:
+	a. Fixed the Killtextindicator giving always wrong values
+	b. Fixed Damagevalues for Q and Empowered Q - should be more accurate now
+	c. Fixed some Bugs in the TrippleQ Combo
