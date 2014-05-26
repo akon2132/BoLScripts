@@ -1,4 +1,4 @@
-Evelynn - The Devil wears Prada v.1.04 by QQQ
+Evelynn - The Devil wears Prada v.1.05 by QQQ
 
 Changelog:
 -- 1.00 --
@@ -34,3 +34,6 @@ Changelog:
 	b. Fixed a bug that caused the Ultimate to cast only in situational situations
 -- 1.04 --
 - Added some Items for Twisted Treeline, Howling Abyss and Summoners Rift
+-- 1.05 --
+- Securityupdate:
+	a. Changed the autodownloadlibrarys to Hellsing's safe ones

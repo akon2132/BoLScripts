@@ -1,4 +1,4 @@
-Nidalee - The Beauty and the Beast v.1.15 by QQQ
+Nidalee - The Beauty and the Beast v.1.16 by QQQ
 
 Changelog:
 -- 1.0 --
@@ -147,3 +147,6 @@ Changelog:
 - Added a new ClearKey for both - Jungle- and LaneClearing (u need to set the SOW, MMA, SAC LaneClearKey to the same as this key or you won't AA)
 - Improved the Autoupdater and fixed at least some reasons for bugsplats
 - Added the support for MMA/SAC-Targetsupport
+-- 1.16 --
+- Securityupdate:
+	a. Changed the autodownloadlibrarys to Hellsing's safe ones

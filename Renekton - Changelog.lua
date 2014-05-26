@@ -1,4 +1,4 @@
-Renekton - Crocodile Dundee v1.00 by QQQ
+Renekton - Crocodile Dundee v1.01 by QQQ
 
 Changelog:
 -- 0.01 --
@@ -32,3 +32,6 @@ Changelog:
 - Bugfixes: 
 	a. Fixed a bug with Tiamat/Hydra Animationcanceling while SBTW and UseItemfunction. Should now reset properly.
 	b. Fixed and error with lichbane, the caused the script to print an error/crashed the script
+-- 1.01 --
+- Securityupdate:
+	a. Changed the autodownloadlibrarys to Hellsing's safe ones

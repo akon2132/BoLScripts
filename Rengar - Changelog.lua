@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.05 by QQQ
+Rengar - Predators Pride v1.06 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -103,3 +103,6 @@ Rengar - Predators Pride v1.05 by QQQ
 - Improved the Castingfunction for the Q while using SAC:R
 	a. Now the Q gets casted right before an autoattack which makes Q-Attacks faster and smoother
 - Changed the way Q gets casted with MMA - still needs more work
+-- 1.06 --
+- Securityupdate:
+	a. Changed the autodownloadlibrarys to Hellsing's safe ones
