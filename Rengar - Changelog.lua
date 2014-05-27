@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.07 by QQQ
+Rengar - Predators Pride v1.08 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -111,3 +111,14 @@ Rengar - Predators Pride v1.07 by QQQ
 	a. Fixed the Killtextindicator giving always wrong values
 	b. Fixed Damagevalues for Q and Empowered Q - should be more accurate now
 	c. Fixed some Bugs in the TrippleQ Combo
+-- 1.08 --
+- Changed the way TrippleQ gets casted
+	a. Now you fully burst like ryan choi
+	b. Items now gets casted midjump instead before
+- Added a new method option that automatically switches your SOW-Mode to target if not set while pressing the TrippleQkey
+	a. Switches 'to target' if 'to mouse' is set
+	b. Switches automatically back to 'to mouse' if 'to target' is set and combo is done
+	c. Enable/Disable it in the "Extra"-menu
+- Changes to the "Extra"-menu:
+	a. Added a toggle to enable/disable autoswitch targetmode in sow
+	b. Added a slider for customitemdelay while TrippleQ (standard is 0.1 - change if u have issues)
