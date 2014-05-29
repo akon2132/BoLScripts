@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.08 by QQQ
+Rengar - Predators Pride v1.09 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -122,3 +122,8 @@ Rengar - Predators Pride v1.08 by QQQ
 - Changes to the "Extra"-menu:
 	a. Added a toggle to enable/disable autoswitch targetmode in sow
 	b. Added a slider for customitemdelay while TrippleQ (standard is 0.1 - change if u have issues)
+-- 1.09 --
+- Bugfixes:
+	a. Script now disables SOW's inbuild AutoQ reset for rengar
+		- Fixes some rare occasions where Q would stutter or not cast 
+		- Fixes problems with using Q's in Harass, SBTW, LaneClear and Jungleclear while disabled 
