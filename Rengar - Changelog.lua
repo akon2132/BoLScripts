@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.09 by QQQ
+Rengar - Predators Pride v1.10 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -126,4 +126,10 @@ Rengar - Predators Pride v1.09 by QQQ
 - Bugfixes:
 	a. Script now disables SOW's inbuild AutoQ reset for rengar
 		- Fixes some rare occasions where Q would stutter or not cast 
-		- Fixes problems with using Q's in Harass, SBTW, LaneClear and Jungleclear while disabled 
+		- Fixes problems with using Q's in Harass, SBTW, LaneClear and Jungleclear while disabled
+-- 1.10 --
+- Now TrippleQ and BushLeaps registers the increased Leaprange with 6 Trophies
+- KillStealfunctions won't trigger anymore while you are stealthed in your ultimate
+- BushJump now triggers automatically a Q for Autoattackreset if enabled
+- Added a toggle to change the Q mode to before Autoattack or after Autoattack
+- Added a new Autolevelsequence that maxes (QEWQ - Q>W>E)
