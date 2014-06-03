@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.10 by QQQ
+Rengar - Predators Pride v1.11 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -130,6 +130,32 @@ Rengar - Predators Pride v1.10 by QQQ
 -- 1.10 --
 - Now TrippleQ and BushLeaps registers the increased Leaprange with 6 Trophies
 - KillStealfunctions won't trigger anymore while you are stealthed in your ultimate
+- Added another Q mode into the "Extra"-menu, where you can just cast (Q) if its available 
 - BushJump now triggers automatically a Q for Autoattackreset if enabled
 - Added a toggle to change the Q mode to before Autoattack or after Autoattack
 - Added a new Autolevelsequence that maxes (QEWQ - Q>W>E)
+-- 1.11 --
+- Added a new method for drawing damage on the lifebar of the enemies
+- Removed the (E)-autoaim key because it was underused for most people (Please reassign your keys, they may switched!)
+- Changes to the "Extra"-menu:
+	a. Added SubMenus for the options to make it better looking and a lot cleaner
+	b. Removed TrippleQ to target option
+- Changes to the "Orbwalking"-menu:
+	a. Added autoswitch targetmode to "to target" while jungleclearing (enabled by default)
+	b. Added autoswitch targetmode to "to target" while TrippleQ (enabled by default)
+- Changes to the "Drawing"-menu:
+	a. Added a new Submenu for the damagedrawings on the lifebar
+	b. KillText is now disabled by default
+	c. Added Drawings for Q,Q2,W,W2,E,E2,Ignite (disabled by default)
+	d. Added Drawings for TrippleQ (enabled by default - if you have items like SotD, the damage will be more then shown on the bar)
+	e. Added smartDrawings for Q+W+E (enabled by default - changes the combodamage/-text based on whats on CD/not on CD)
+	f. The color changes from green over yellow to a dark red based on the healthvalue after the damage - It is white when he is killable
+- QoL-changges:
+	a. SmartKillSteal will no longer trigger while pressing the TrippleQ-Key to optimize TrippleQ timings
+	b. BushJump Auto-Q-reset now only triggers when pressing the SBTW or HarassKey and you are in a bush
+	c. BushJump Auto-Q reset is now a lot more reliable and way faster because it is no longer detected by buffs
+		- If you are in a bush and an enemy is in Jumprange, you automatically going to do the jump autoattack and instantly reset it with Q
+	d. Improved the "to target" while TrippleQ method to make the combo a bit faster and smoother
+	e. Added auto "to target" while Jungleclearing to make it less botlike
+- Bugfixes:
+	a. Fixed an error that caused KillSteal not always to work correctly because of wrong damagevalues
