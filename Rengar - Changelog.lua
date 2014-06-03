@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.11 by QQQ
+Rengar - Predators Pride v1.12 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -150,7 +150,7 @@ Rengar - Predators Pride v1.11 by QQQ
 	d. Added Drawings for TrippleQ (enabled by default - if you have items like SotD, the damage will be more then shown on the bar)
 	e. Added smartDrawings for Q+W+E (enabled by default - changes the combodamage/-text based on whats on CD/not on CD)
 	f. The color changes from green over yellow to a dark red based on the healthvalue after the damage - It is white when he is killable
-- QoL-changges:
+- QoL-changes:
 	a. SmartKillSteal will no longer trigger while pressing the TrippleQ-Key to optimize TrippleQ timings
 	b. BushJump Auto-Q-reset now only triggers when pressing the SBTW or HarassKey and you are in a bush
 	c. BushJump Auto-Q reset is now a lot more reliable and way faster because it is no longer detected by buffs
@@ -159,3 +159,6 @@ Rengar - Predators Pride v1.11 by QQQ
 	e. Added auto "to target" while Jungleclearing to make it less botlike
 - Bugfixes:
 	a. Fixed an error that caused KillSteal not always to work correctly because of wrong damagevalues
+-- 1.12 --
+- Bugfixes :
+	a. Fixed a bug that caused spam in the chat
