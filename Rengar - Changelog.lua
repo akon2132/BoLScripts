@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.12 by QQQ
+Rengar - Predators Pride v1.13 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -160,5 +160,9 @@ Rengar - Predators Pride v1.12 by QQQ
 - Bugfixes:
 	a. Fixed an error that caused KillSteal not always to work correctly because of wrong damagevalues
 -- 1.12 --
-- Bugfixes :
+- Bugfixes:
 	a. Fixed a bug that caused spam in the chat
+-- 1.13 --
+- First update for the new TrippleQ changes (more optimizing will be done)
+- Bugfixes:
+	a. Fixed a bug that caused a VPrediction Target nil error
