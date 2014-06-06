@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.13 by QQQ
+Rengar - Predators Pride v1.14 by QQQ
 
 -- 0.06 --
 - Beta Release
@@ -166,3 +166,8 @@ Rengar - Predators Pride v1.13 by QQQ
 - First update for the new TrippleQ changes (more optimizing will be done)
 - Bugfixes:
 	a. Fixed a bug that caused a VPrediction Target nil error
+-- 1.14 --
+- Bugfixes:
+	a. Fixed a bug that caused Q to cast randomly
+	b. Fixed a problem with items canceling your ult while pressing SBTWkey
+	c. Fixed a bug that caused the ult to jump directly after ulting without pressing a key
