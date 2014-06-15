@@ -10,3 +10,9 @@ Yasuo - The Windwalker by AWA and QQQ
 	c. More fixes AWA did (don't have a list yet - will be added later into the changelog)
 -- 1.02 --
 - Fixed many problems with the Authentification system! You should be able to load it now with iVade, MMA, SAC, Evadeee and more... 
+-- 1.03 --
+- Bugfixes:
+	a. Fixed another bug that caused you to walk randomly to targets (caused by autoignite)
+	b. Fixed a bug where the HarassToggleKey wouldn't work correctly
+	c. Fixed a bug where skills were not casting on JungleMobs (ClearKey)
+	d. Fixed a problem where yasuo dashed into turrets while laneclearing
