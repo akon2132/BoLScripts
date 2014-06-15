@@ -16,3 +16,4 @@ Yasuo - The Windwalker by AWA and QQQ
 	b. Fixed a bug where the HarassToggleKey wouldn't work correctly
 	c. Fixed a bug where skills were not casting on JungleMobs (ClearKey)
 	d. Fixed a problem where yasuo dashed into turrets while laneclearing
+	e. Fixed an error that caused the autoupdater not to work correctly
