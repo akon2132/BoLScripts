@@ -17,3 +17,7 @@ Yasuo - The Windwalker by AWA and QQQ
 	c. Fixed a bug where skills were not casting on JungleMobs (ClearKey)
 	d. Fixed a problem where yasuo dashed into turrets while laneclearing
 	e. Fixed an error that caused the autoupdater not to work correctly
+-- 1.04 --
+- Bugfixes:
+	a. Fixed a bug that caused an error spam with the message: 'Attempt to call global 'GD' (a nil value)
+	b. Fixed a bug that caused Autolevel to not work correctly
