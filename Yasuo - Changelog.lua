@@ -8,3 +8,5 @@ Yasuo - The Windwalker by AWA and QQQ
 	a. Fixed a bug that caused a spam in the chat with things like CastSpell(unsinged int)
 	b. You won't walk randomly to targets or lanes anymore (was cause by killstealfunction)
 	c. More fixes AWA did (don't have a list yet - will be added later into the changelog)
+-- 1.02 --
+- Fixed many problems with the Authentification system! You should be able to load it now with iVade, MMA, SAC, Evadeee and more... 
