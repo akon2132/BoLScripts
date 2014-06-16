@@ -21,3 +21,10 @@ Yasuo - The Windwalker by AWA and QQQ
 - Bugfixes:
 	a. Fixed a bug that caused an error spam with the message: 'Attempt to call global 'GD' (a nil value)
 	b. Fixed a bug that caused Autolevel to not work correctly
+-- 1.05 --
+- More changes to the Authentificationsystem. Should work a lot smoother now.
+- Changes to the Rspellmenu:
+	a. Added some spaces for a cleaner look
+- Bugfixes: 
+	a. Fixed a bug that caused LFC to not work
+	
