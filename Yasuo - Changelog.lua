@@ -27,4 +27,9 @@ Yasuo - The Windwalker by AWA and QQQ
 	a. Added some spaces for a cleaner look
 - Bugfixes: 
 	a. Fixed a bug that caused LFC to not work
-	
+-- 1.06 --
+- Added the support of iVade for the (W)spell (Windwall)
+- Added a new Autolevelsequence: EQEWE - R>Q>E>W
+- Bugfixes:
+	a. Fixed a bug that caused an error spam with the message: 'Attempt to index field 'Rspell' (a nil value)
+	b. Changed The minvalue for the LFC to 1 from 0 so the circles can't disappear anymore
