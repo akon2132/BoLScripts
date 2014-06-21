@@ -1,4 +1,4 @@
-Nidalee - The Beauty and the Beast v.1.16 by QQQ
+Nidalee - The Beauty and the Beast by QQQ
 
 Changelog:
 -- 1.0 --
@@ -150,3 +150,42 @@ Changelog:
 -- 1.16 --
 - Securityupdate:
 	a. Changed the autodownloadlibrarys to Hellsing's safe ones
+-- 2.00 --
+- Complete rework for Nidalees Gameplayupdate
+- Added a new autoupdater
+- General changes to the menu:
+	a. Added a new SubMenu for LastHit
+	b. Added a new SubMenu for Harass
+	c. Added a new SubMenu for Spells
+	d. Added manasliders to Harass, LastHit, LaneClear and JungleClear
+	e. Removed healsliders and Human(E) from LaneClear and JungleClear and EscapeKey
+	f. Removed Predictionmenu
+	g. A lot of small visual changes and rewordings for a general cleaner, better and easier look
+	h. New permashows
+- Changes to the KeyBindings:
+	a. Added a HarassKey
+	b. Added a HarassToggleKey
+	c. Added a LastHitKey
+	d. Added a Escape- and WalljumpKey
+	e. Removed the TrapKey
+	f. Removed the SpearKey
+	g. Removed the SpearToggleKey
+	h. Removed the EscapeKey
+	i. Removed the WalljumpKey
+- Changes to the Orbwalker:
+	a. Added full MMA and SAC:R support
+	b. The script now detects the usage of MMA/SAC:R and autodisables inbuild orbwalker
+- Changes to the HealManager:
+	a. Reworked the whole HealManager for better and faster detections
+	b. Now you can toggle a switchback to humanform if you are low and in cougarform
+- Changes to the Prediction:
+	a. Added the support for the new Prodiction 1.1
+	b. Removed the support for VIP-Bolprediction
+	c. Menusettings moved to Extra
+- Changes to the Spells:
+	a. Added a SubMenu for Human(W)
+		- Added a toggle to cast the trap directly or behind a target
+		- Added a slider to determine the range it gets casted behind
+- Changes to the Drawing:
+	a. Removed Killtext on targets
+	b. Added Damagedrawings on the Healthbar with various options
