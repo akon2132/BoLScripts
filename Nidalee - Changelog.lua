@@ -153,7 +153,12 @@ Changelog:
 -- 2.00 --
 - Complete rework for Nidalees Gameplayupdate
 - Added a new autoupdater
-- General changes to the menu:
+- Changes to the librarys:
+	a. Removed Collision as a requirement
+	b. Updated the Prodictionlink to match the new Prodiction 1.1
+	c. Added the requirement to the AQLib (The script will autodownload it if you don't have it)
+	d. AQLib now has an inbuild Autoupdater so you don't have to worry about updating it ever again
+- General changes to the menu
 	a. Added a new SubMenu for LastHit
 	b. Added a new SubMenu for Harass
 	c. Added a new SubMenu for Spells
@@ -161,7 +166,7 @@ Changelog:
 	e. Removed healsliders and Human(E) from LaneClear and JungleClear and EscapeKey
 	f. Removed Predictionmenu
 	g. A lot of small visual changes and rewordings for a general cleaner, better and easier look
-	h. New permashows
+	h. Added/Updated the new permashows to match the current functions
 - Changes to the KeyBindings:
 	a. Added a HarassKey
 	b. Added a HarassToggleKey
@@ -189,3 +194,5 @@ Changelog:
 - Changes to the Drawing:
 	a. Removed Killtext on targets
 	b. Added Damagedrawings on the Healthbar with various options
+	
+	nidaleepassivehunted

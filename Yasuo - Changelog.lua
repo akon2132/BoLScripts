@@ -33,3 +33,6 @@ Yasuo - The Windwalker by AWA and QQQ
 - Bugfixes:
 	a. Fixed a bug that caused an error spam with the message: 'Attempt to index field 'Rspell' (a nil value)
 	b. Changed The minvalue for the LFC to 1 from 0 so the circles can't disappear anymore
+-- 1.07 --
+- Changes to the Authentificationsystem and the script to improve the speed
+- Changed the AQLib to match these improvements and added an autoupdater to it
