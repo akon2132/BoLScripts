@@ -5,8 +5,8 @@ Changelog:
 	- First Release!
 -- 1.01 - 1.04 --
 	- Changed some standardkeys and standartsettings in the menu
-	- Rewrote a bit of the script to fix the Boolean Error on line 218/219
-	- Changed the menuname
+	- Rewrote a bit of the script to fix the Booleanerror on line 218/219
+	- Changed the name of the menu
 -- 1.05 --
 	- Added a new AutoHeal function
 		a. Added to Basic Menu with a toggle (Disabled by default)
@@ -25,7 +25,7 @@ Changelog:
 -- 1.06 --
 	- Preparationpatch for the new Autoupdatefunction
 -- 1.07 -- 
-	- Added an improved Autoupdater (Credit to Honda7)
+	- Added an improved autoupdater
 		a. Collision and VPrediction will now automatically be downloaded if you don't have it installed
 	- Added Itemsupport:
 		a. Deathfire Grasp, Hextech Gunblade, Bilgewater Cutlass, Blade of the Ruined King
@@ -40,20 +40,20 @@ Changelog:
 		b. Collision is still required for the next version (Prodiction and VIP-Prediction will be added)
 		c. Added new improved castfunctions for Cougar Q and E - should be a lot better and smoother now
 	- Preparationchanges for next versions:
-		a. Implemented a slider for the Prediction
+		a. Implemented a slider for the prediction
 		b. Removed Autoignite (will come back with the new damagecalculations)
 		c. Removed Junglesteal (will come back with the new damagecalculations)
 	- Deleted Menu:Testsettings (not needed anymore)
 -- 1.08 -- 
 	- Improved the Autoupdater
 		a. Now you're able to download VPrediction, Collision and PROdiction automatically if it's missing
-		b. Will now show you what Library is missing before downloading
+		b. Will now show you what library is missing before downloading
 		c. Changed a bit of the text/colors to make it more clean and better looking
 		d. Fixed an error that was causing a bugsplat while updating
 	- Reworked the look of the menu a bit to make it more clean and better looking
 	- Rewrote some parts of the script with a better logic for easier implementation of new features
-	- Added a new Menu for the Predictionchoice/-options
-	- Added new ways of Prediction:
+	- Added a new menu for the Predictionchoice/-options
+	- Added new ways of prediction:
 		a. Added the support of PROdiction with Donatorcallbacks 
 			- Currently you will aim at the outer hitbox (hit a bit further than normal - will be a option in the future)
 		b. Added the support of VIP-Prediction
@@ -152,47 +152,70 @@ Changelog:
 	a. Changed the autodownloadlibrarys to Hellsing's safe ones
 -- 2.00 --
 - Complete rework for Nidalees Gameplayupdate
-- Added a new autoupdater
+- Added a new improved autoupdater
+- General changes to Nidalee:
+	a. Updated all the spelldata with transforming W-range based on hunted targets
+	b. Added better prediction and castinglogic for all spells
+	c. Added and updated better calculations for nidalees damage for all spells
+	d. Added a custom forumla that calculates Nidalees speardamage with an ultrahigh accuracy
+		- Calculates damage based on the distance to your target
+		- Updates the damage on the hpbar of the enemy with every single unit you move
+		- Fast and advanced calculations without performancesdrops
+	e. Added a customcooldowntracker that traces all cooldowns in all forms
 - Changes to the librarys:
 	a. Removed Collision as a requirement
 	b. Updated the Prodictionlink to match the new Prodiction 1.1
 	c. Added the requirement to the AQLib (The script will autodownload it if you don't have it)
 	d. AQLib now has an inbuild Autoupdater so you don't have to worry about updating it ever again
 - General changes to the menu
-	a. Added a new SubMenu for LastHit
-	b. Added a new SubMenu for Harass
-	c. Added a new SubMenu for Spells
-	d. Added manasliders to Harass, LastHit, LaneClear and JungleClear
-	e. Removed healsliders and Human(E) from LaneClear and JungleClear and EscapeKey
-	f. Removed Predictionmenu
-	g. A lot of small visual changes and rewordings for a general cleaner, better and easier look
-	h. Added/Updated the new permashows to match the current functions
+	a. Added a new SubMenu for LastHit, Harass and Spells
+	b. Added manasliders to HealManager, Harass, LastHit, LaneClear and JungleClear
+	c. Removed healsliders and Human(E) from LaneClear and JungleClear and EscapeKey
+	d. Removed Predictionmenu
+	e. A lot of small visual changes and rewordings for a general cleaner, better and easier look
+	f. Added/Updated the new permashows to match the current functions (LastHit, KillSteal, SBTW)
+	g. Added an option to disable autoswitch forms for LastHit, LaneClear and JungleClear
+	h. Changed the standartsettings to match the new nidalee and menu
 - Changes to the KeyBindings:
-	a. Added a HarassKey
-	b. Added a HarassToggleKey
-	c. Added a LastHitKey
-	d. Added a Escape- and WalljumpKey
-	e. Removed the TrapKey
-	f. Removed the SpearKey
-	g. Removed the SpearToggleKey
-	h. Removed the EscapeKey
-	i. Removed the WalljumpKey
+	a. Added a HarassKey, HarassToggleKey, LastHitKey and a Escape- and WalljumpKey
+	b. Removed the TrapKey, SpearKey, SpearToggleKey, EscapeKey and the WalljumpKey
 - Changes to the Orbwalker:
 	a. Added full MMA and SAC:R support
 	b. The script now detects the usage of MMA/SAC:R and autodisables inbuild orbwalker
 - Changes to the HealManager:
 	a. Reworked the whole HealManager for better and faster detections
 	b. Now you can toggle a switchback to humanform if you are low and in cougarform
+	c. Now you can toggle a manacheck 
+	d. Set the manavalue via the new slider
 - Changes to the Prediction:
 	a. Added the support for the new Prodiction 1.1
 	b. Removed the support for VIP-Bolprediction
-	c. Menusettings moved to Extra
+	c. Predictionsettings moved to Extra
 - Changes to the Spells:
-	a. Added a SubMenu for Human(W)
-		- Added a toggle to cast the trap directly or behind a target
+	a. Added a Submenu for Cougar(Q)
+		- Added a toggle to cast it only if targethealth is under 50%
+	b. Added a SubMenu for Human(W)
+		- Added a toggle to cast traps directly at or behind a target
 		- Added a slider to determine the range it gets casted behind
+	c. Added a SubMenu for Cougar(W)
+		- Added a toggle to prevent towerdiving with (W)
+- Changes to the SBTW:
+	a. Added a dropdownmenu to choose the form you want in killsteal (Human/Cougar/Mixed) 
+- Changes to KillSteal:
+	a. Added a dropdownmenu to choose the form you want in killsteal (Human/Cougar/Mixed)
+	b. Added a better autoignite to killsteal
+	c. Added a list to choose the skills you want to use for killsteal
+	d. If you disable switch forms, you will only KS in the mode you have set
+- Changes to the Jumpassistant and the Escapemode:
+	a. Escape and the Jumpassistant are now on one key instead on two different
+	b. Improved the accuracy and the speed of the jumpmanager
+	c. Fixed some jumpspots that didn't worked correctly
+	d. Improved the circles and the colors for the jumpspots
+	e. A jump into the direction of a target will is now automatically prevented
+	f. Rewrote the jumplogic so you won't jump into random directions anymore
 - Changes to the Drawing:
 	a. Removed Killtext on targets
 	b. Added Damagedrawings on the Healthbar with various options
-	
-	nidaleepassivehunted
+		- Only draw the damage of the skills you want to draw
+		- Draw smartdamage that changes on your current cooldowns and form
+		- Choose the startingheight of the drawinglines
