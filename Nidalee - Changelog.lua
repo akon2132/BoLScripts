@@ -219,3 +219,6 @@ Changelog:
 		- Only draw the damage of the skills you want to draw
 		- Draw smartdamage that changes on your current cooldowns and form
 		- Choose the startingheight of the drawinglines
+-- 2.01 --
+- Bugfixes: 
+	a. Fixed a bug that caused an error spam with "obfuscated.lua782: attempt to perform arithmetic on global 'SpellbaseDmg' (a nil value)"
