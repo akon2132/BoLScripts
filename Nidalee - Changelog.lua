@@ -222,3 +222,6 @@ Changelog:
 -- 2.01 --
 - Bugfixes: 
 	a. Fixed a bug that caused an error spam with "obfuscated.lua782: attempt to perform arithmetic on global 'SpellbaseDmg' (a nil value)"
+-- 2.02 --
+- Bugfixes:
+	a. Fixed a bug with killsteal where nidalee wanted to killsteal dead targets (should fix a lot of random spears)
