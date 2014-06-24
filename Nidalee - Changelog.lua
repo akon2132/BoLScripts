@@ -229,7 +229,7 @@ Changelog:
 - Bugfixes:
 	a. Fixed an errorspam with 'string "LIB_PATH = package.path:gsub("?.lua", ")..."]:11 attempt to index local 'p1' (a nil value)'
 -- 2.04 --
-- Improved the Hitchance and Collision for spearollision for spears
+- Improved the Hitchance and Collision for spears
 - Changes to the Spells (Cougars
 - Changes to the Spells (Cougar W):
 	a. Added a toggle to check the minimum distance to jump (standard = enabled)
