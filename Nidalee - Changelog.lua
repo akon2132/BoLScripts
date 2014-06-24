@@ -225,3 +225,6 @@ Changelog:
 -- 2.02 --
 - Bugfixes:
 	a. Fixed a bug with killsteal where nidalee wanted to killsteal dead targets (should fix a lot of random spears)
+-- 2.03 --
+- Bugfixes:
+	a. Fixed an errorspam with 'string "LIB_PATH = package.path:gsub("?.lua", ")..."]:11 attempt to index local 'p1' (a nil value)'
