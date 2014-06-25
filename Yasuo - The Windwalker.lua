@@ -10,7 +10,7 @@
 --]]
 if myHero.charName ~= "Yasuo" then return end 
 _G.YasuoVersion = "1.08"
-_G.YASUOAUTOUPDATE = false
+_G.YASUOAUTOUPDATE = true
 _G.YasuoAuthor = "QQQ,AWA"
 _G.IsLoaded = "The Windwalker"
 
