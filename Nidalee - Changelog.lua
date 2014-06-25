@@ -230,10 +230,14 @@ Changelog:
 	a. Fixed an errorspam with 'string "LIB_PATH = package.path:gsub("?.lua", ")..."]:11 attempt to index local 'p1' (a nil value)'
 -- 2.04 --
 - Improved the Hitchance and Collision for spears
-- Changes to the Spells (Cougars
 - Changes to the Spells (Cougar W):
 	a. Added a toggle to check the minimum distance to jump (standard = enabled)
 	b. Added a slider to set the range that it needs to your target to jump (0-350 - standard = 200) 
 - Bugfixes:
 	a. Fixed a bug where Nidalee switched from cougar to human even if the manacheck was enabled and your mana was low
+-- 2.05 --
+- Bugfixes:
+	a. Fixed a bug on the Jumpmanager that caused auto(W) to cast all the time and made walljumping impossible
+	b. Fixed a bug that caused the Healmanager to cancel recalling in some rare occasions
+	c. Fixed a bug that caused an errorspam while laneclearing "attempt to index field lane (a nil value)"
 	

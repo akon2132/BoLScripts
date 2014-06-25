@@ -36,3 +36,21 @@ Yasuo - The Windwalker by AWA and QQQ
 -- 1.07 --
 - Changes to the Authentificationsystem and the script to improve the speed
 - Changed the AQLib to match these improvements and added an autoupdater to it
+-- 1.08 --
+- Updates to the 'AQLib.lua' to match the new yasuoversion - it should autoupdate - if not, update it manually.
+- Added Twisted Treeline Junglemobs to JungleClear
+- Improved Windwallcasting
+- Improved the Waveclearalgorithm
+- Improved EQ-Usage
+- Improved some code for better performance
+- Changes to the KeyBindings: 
+	a. Added a new AutoQKey
+- Changes to the Spell(Q):
+	a. Added a toggle to use Auto(Q) on enemies
+	b. Added a toggle to use Auto(Q2) on enemies
+	c. Added a toggle to not use Auto(Q) under tower
+- Changes to the Spell(R):
+	a. Added a toggle to enable Ultimate only on specific Targets
+- Changes to the Escape:
+	a. Added "Move to mouse" while escaping
+	b. Added "Q-Stacking" while escaping
