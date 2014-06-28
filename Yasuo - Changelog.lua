@@ -54,3 +54,5 @@ Yasuo - The Windwalker by AWA and QQQ
 - Changes to the Escape:
 	a. Added "Move to mouse" while escaping
 	b. Added "Q-Stacking" while escaping
+-- 1.09 --
+- 

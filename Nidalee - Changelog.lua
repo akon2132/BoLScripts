@@ -236,8 +236,12 @@ Changelog:
 - Bugfixes:
 	a. Fixed a bug where Nidalee switched from cougar to human even if the manacheck was enabled and your mana was low
 -- 2.05 --
+- Added Twisted Treeline compatibility for Junglemobs
+- Bugfixes:
+	a. Fixed a bug that caused the Healmanager to cancel recalling in some rare occasions
+	b. Fixed a bug that caused an errorspam while laneclearing "attempt to index field lane (a nil value)"
+	c. Fixed a bug that caused the Healmanager to switch back to human while escapemode
+-- 2.06 -- (planned)
 - Bugfixes:
 	a. Fixed a bug on the Jumpmanager that caused auto(W) to cast all the time and made walljumping impossible
-	b. Fixed a bug that caused the Healmanager to cancel recalling in some rare occasions
-	c. Fixed a bug that caused an errorspam while laneclearing "attempt to index field lane (a nil value)"
 	
