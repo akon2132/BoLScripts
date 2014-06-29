@@ -55,4 +55,4 @@ Yasuo - The Windwalker by AWA and QQQ
 	a. Added "Move to mouse" while escaping
 	b. Added "Q-Stacking" while escaping
 -- 1.09 --
-- 
+- Open Access fix
