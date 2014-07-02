@@ -56,3 +56,5 @@ Yasuo - The Windwalker by AWA and QQQ
 	b. Added "Q-Stacking" while escaping
 -- 1.09 --
 - Open Access fix
+-- 1.10 --
+- Authentification fix
