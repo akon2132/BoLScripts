@@ -241,7 +241,10 @@ Changelog:
 	a. Fixed a bug that caused the Healmanager to cancel recalling in some rare occasions
 	b. Fixed a bug that caused an errorspam while laneclearing "attempt to index field lane (a nil value)"
 	c. Fixed a bug that caused the Healmanager to switch back to human while escapemode
--- 2.06 -- (planned)
+-- 2.06 --
+- Updated Nidalees spearwidth to 40 for patch 4.11
+- Updated Nidalees cougarrange to 750 for patch 4.11
+-- 2.07 -- (planned)
 - Bugfixes:
 	a. Fixed a bug on the Jumpmanager that caused auto(W) to cast all the time and made walljumping impossible
 	
