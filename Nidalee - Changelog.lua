@@ -244,7 +244,10 @@ Changelog:
 -- 2.06 --
 - Updated Nidalees spearwidth to 40 for patch 4.11
 - Updated Nidalees cougarrange to 750 for patch 4.11
--- 2.07 -- (planned)
+-- 2.07 --
+- Fixed a misspelling in the Nidalee (Q) Menu
 - Bugfixes:
-	a. Fixed a bug on the Jumpmanager that caused auto(W) to cast all the time and made walljumping impossible
+	a. Fixed SBTW not working
+	b. Fixed Cougar (Q) not casting
+	c. Fixed Harass not working
 	
