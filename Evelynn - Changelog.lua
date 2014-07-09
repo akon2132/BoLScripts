@@ -1,4 +1,4 @@
-Evelynn - The Devil wears Prada v.1.05 by QQQ
+Evelynn - The Devil wears Prada by QQQ
 
 Changelog:
 -- 1.00 --
@@ -37,3 +37,13 @@ Changelog:
 -- 1.05 --
 - Securityupdate:
 	a. Changed the autodownloadlibrarys to Hellsing's safe ones
+-- 1.06 --
+- Added a new Autoupdater
+- Added Prodiction to the Libdownloader
+- Added Twisted Treeline Junglemobs to JungleClear
+- Added support for Prodiction
+- Improved the Blockfunction for the ultimate
+- Bugfixes:
+	a. Fixed a bug that caused the Ultimate to not cast
+	b. Fixed spellwidth of (R)
+	c. Fixed a problem with spells not casting for some users
