@@ -72,3 +72,9 @@ Yasuo - The Windwalker by AWA and QQQ
 	a. Fixed some rare bugs that caused windwall not casting all the time
 	b. Fixed some problems that caused Auto-Q to not work properly all the time
 	c. Fixed a problem that caused a waste of the empowered Q while dashing
+-- 1.12 --
+- Changes to the Authentification system for more security and performance
+- Bugfixes: 
+	a. Fixed a problem that caused an errorspam with 'attempt to index field EzEvade (a nil value)'
+	b. Fixed a problem with windwall not working for many spells (they only worked on max range)
+	c. Fixed a problem that prevented the ultimated from casting in sbtw as well as in the autoultfunction
