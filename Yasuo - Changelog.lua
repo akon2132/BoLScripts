@@ -58,3 +58,17 @@ Yasuo - The Windwalker by AWA and QQQ
 - Open Access fix
 -- 1.10 --
 - Authentification fix
+-- 1.11 --
+- Changes to the Authentification system
+- Added the support of ezEvade for the (W)spell (Windwall)
+- Optimized Combo which is working way more smooth and faster now (like 5% up to 30% in some occasions)
+- Optimized the usage of Auto-Q to work more accurate and faster
+- Optimized and tweaked the prediction settings for better targeting
+- Optimized the Fleemechanics:
+	a. Empowered Q no longer gets wasted
+	b. Now correctly stacks the Q while fleeing
+	c. Some speed and targetimprovements
+- Bugfixes:
+	a. Fixed some rare bugs that caused windwall not casting all the time
+	b. Fixed some problems that caused Auto-Q to not work properly all the time
+	c. Fixed a problem that caused a waste of the empowered Q while dashing
