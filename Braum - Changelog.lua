@@ -1,4 +1,4 @@
-Braum - Poro Barber by [Member='QQQ'] and [Member='AWA'] v1.01
+Braum - Poro Barber by AWA and QQQ
 
 -- 1.00 --
 - First Release
@@ -11,3 +11,10 @@ Braum - Poro Barber by [Member='QQQ'] and [Member='AWA'] v1.01
 -- 1.02 --
 - Securityupdate:
 	a. Changed the autodownloadlibrarys to Hellsing's safe ones
+-- 1.03 --
+- Added a new Autoupdater
+- Added Prodiction to the Libdownloader
+- Added the support for Prodiction
+- Bugfixes:
+	a. Fixed a problem with Braums (W) not casting
+	b. Fixed a problem with Braums (E) not casting
