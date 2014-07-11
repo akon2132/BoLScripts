@@ -78,3 +78,23 @@ Yasuo - The Windwalker by AWA and QQQ
 	a. Fixed a problem that caused an errorspam with 'attempt to index field EzEvade (a nil value)'
 	b. Fixed a problem with windwall not working for many spells (they only worked on max range)
 	c. Fixed a problem that prevented the ultimated from casting in sbtw as well as in the autoultfunction
+-- 1.13 --
+- Changes to the Authentification system (Post the errorcodes if you have problems)
+- Please make sure your AQLib is finally updated to 1.02 now. The update got pushed earlier to prevent problems.
+	a.  A lot of fixes for multiple outdated spells
+- Some of this changes already were in the last version but not completly functional as they were shipped by accident
+- Added a new dodgefunction for (E) that automatically tries to dodge important spells
+	a. You can change the settings in the Spells-E menu
+	b. You can dodge via Champions, Minions and JungleMobs
+	c. Only some important spells are currently supported for dodging like Malphiteultimate or Jinxultimate (some more)
+	d. More spells might get added over the next weeks
+- Changes to the Menu:
+	a. Cleaned different sections of the menu
+	b. Removed the by accident pushed 'Advanced menu'
+	c. Added the options from the Advanced menu into the 'Spells'menu
+	d. Reworded and cleaned up the whole old 'Advanced' menu from its developing state to user state
+	e. Changed a lot of standartsettings (Please reassign your KeyBindings!)
+	f. A lot of small visual changes and rewordings for a general cleaner, better and easier look
+- Bugfixes:
+	a. Fixed a problem that caused Yasuo to dash under turrets even while Prevent Turretdive was enabled (fixed SBTW and Harass)
+	b. Fixed some small loadingerrors
