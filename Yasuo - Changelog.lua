@@ -98,3 +98,7 @@ Yasuo - The Windwalker by AWA and QQQ
 - Bugfixes:
 	a. Fixed a problem that caused Yasuo to dash under turrets even while Prevent Turretdive was enabled (fixed SBTW and Harass)
 	b. Fixed some small loadingerrors
+-- 1.14 --
+- Changes to the Authentification system to prevent bugsplats
+- Bugfixes:
+	a. Fixed a problem which caused some spells to not work under turrets
