@@ -102,3 +102,7 @@ Yasuo - The Windwalker by AWA and QQQ
 - Changes to the Authentification system to prevent bugsplats
 - Bugfixes:
 	a. Fixed a problem which caused some spells to not work under turrets
+-- 1.15 --
+- Changes to the Authentification system
+- Changes to the Encryption
+- Some small improvements to the script
