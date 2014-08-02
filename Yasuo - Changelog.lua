@@ -106,3 +106,14 @@ Yasuo - The Windwalker by AWA and QQQ
 - Changes to the Authentification system
 - Changes to the Encryption
 - Some small improvements to the script
+-- 1.16 --
+- Changes to the Authentificationsystem
+	a. Improvements to the security
+	b. Improvements to the loadingtimes (30-75% faster depending on your computer)
+	c. Improvements for loadingtimes for chinese/korean people
+- Small improvements to the combologic
+- Small improvements to the combospeed
+- Small improvements to the Windwalllogic
+- Bugfixes:
+	a. Fixed a bug that caused Windwall to stop working
+	b. Fixed a bug that caused Autoult to not work on some rare occasions
