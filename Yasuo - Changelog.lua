@@ -117,3 +117,8 @@ Yasuo - The Windwalker by AWA and QQQ
 - Bugfixes:
 	a. Fixed a bug that caused Windwall to stop working
 	b. Fixed a bug that caused Autoult to not work on some rare occasions
+-- 1.17 --
+- Changes to the Authentificationsystem
+	a. Fixed some problems that occured to the new securitychanges
+	b. Fixed some problems that prevented the script from loading
+
