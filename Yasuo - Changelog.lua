@@ -121,4 +121,20 @@ Yasuo - The Windwalker by AWA and QQQ
 - Changes to the Authentificationsystem
 	a. Fixed some problems that occured to the new securitychanges
 	b. Fixed some problems that prevented the script from loading
+--1.18--
+a. Prediction fixed (better aiming)
+B. Ultimate fixed
+C. Added some spells to windwall
+D. Fixed TargetInDashRange Error
+E. Fixed something in the Menu
+F. Fixed a bug where it doesn't want to cast second Q sometimes
+--1.19--
+a. Added Selector Will make Targeting a lot better with it's advanced target selector logic 
+ -Note : Selector is the main TS now you can go back to old Target Selector options in menu 
+b. Improved Prediction on 3RD Q 
+ -Note : Prodiction is the main prediction please Delete your Bol/Saves Folder 
+c.Improved Menu and added a guy suggestion about "the prevent diving with E" You can now put it On Or Off using simply a hotkey
+e.Improvements to the combo Speed 
+d. Improvement to Windwall and added some missing spells 
+
 
