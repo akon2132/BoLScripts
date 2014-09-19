@@ -136,5 +136,7 @@ b. Improved Prediction on 3RD Q
 c.Improved Menu and added a guy suggestion about "the prevent diving with E" You can now put it On Or Off using simply a hotkey
 e.Improvements to the combo Speed 
 d. Improvement to Windwall and added some missing spells 
+-- 1.20 -- 
+-Improvements to the authentification system
 
 
