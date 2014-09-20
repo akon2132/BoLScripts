@@ -140,3 +140,5 @@ d. Improvement to Windwall and added some missing spells
 -Improvements to the authentification system
 --1.21--
 -Fix 1.20 auth bugs
+--1.22-- 
+Fixed Wasting Q while dashing. Or made it better hopefully.
