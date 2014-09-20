@@ -138,5 +138,5 @@ e.Improvements to the combo Speed
 d. Improvement to Windwall and added some missing spells 
 -- 1.20 -- 
 -Improvements to the authentification system
-
-
+--1.21--
+-Fix 1.20 auth bugs
