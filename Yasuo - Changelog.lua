@@ -142,3 +142,10 @@ d. Improvement to Windwall and added some missing spells
 -Fix 1.20 auth bugs
 --1.22-- 
 Fixed Wasting Q while dashing. Or made it better hopefully.
+--1.23--
+Fixed a lot of bugs including the most important one which is wasting Q while dashing please test and tell me if that fixed it.
+
+Fixed a huge typo in the windwall function.
+
+Recoded the combo and made it cleaner.
+
