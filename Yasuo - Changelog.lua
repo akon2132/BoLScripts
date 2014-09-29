@@ -149,3 +149,15 @@ Fixed a huge typo in the windwall function.
 
 Recoded the combo and made it cleaner.
 
+--1.24-- 
+Fixed Small bug 
+
+--1.25-- 
+-Fixed a lot in the menu and cleaned a bit of description typos.
+
+-Made the combo faster and better (actually i rewrote most of it.)
+-Added key to disable the R delay (The one that allow you to ulti in the last 0,1 second to add one more autoattack can be 2 autoattacks depends on your attack speed) you can now disable it RECOMMENDED to put it as off if you have a bad ping from 100+
+
+-cleaned harrass
+-Q wasting is now rly rare will happen only if enemy dash out of range in the last seconds.
+
