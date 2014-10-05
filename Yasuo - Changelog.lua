@@ -165,4 +165,6 @@ Test version.
 --1.27--
 -Fixed Attempting to reconnect 
 -Fixed Not casting spells at all.
+--1.28--
+-Fixed some stuff that wasn't working in 1.27 (was a fast update will do better tommorow)
 
