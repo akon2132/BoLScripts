@@ -160,4 +160,9 @@ Fixed Small bug
 
 -cleaned harrass
 -Q wasting is now rly rare will happen only if enemy dash out of range in the last seconds.
+--1.26--
+Test version.
+--1.27--
+-Fixed Attempting to reconnect 
+-Fixed Not casting spells at all.
 
