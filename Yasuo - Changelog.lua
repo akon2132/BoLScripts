@@ -167,4 +167,13 @@ Test version.
 -Fixed Not casting spells at all.
 --1.28--
 -Fixed some stuff that wasn't working in 1.27 (was a fast update will do better tommorow)
+--1.29--
+Major fixes : 
+-Fixed attempting to reconnect for real. If you're getting it now it's some other crappy script or its rito.
+-Fixed a problem that made the combo slower now it's at its usual speed again.
+-Fixed unit error 
+Minor fixes : 
+-Fixed Escape 
+-Fixed autoignite
+-Fixed autoQ + Qstack.
 
