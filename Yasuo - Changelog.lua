@@ -176,4 +176,6 @@ Minor fixes :
 -Fixed Escape 
 -Fixed autoignite
 -Fixed autoQ + Qstack.
+--1.30-- 
+-Fixed not casting Windwall on syndra R , E and EQ
 
