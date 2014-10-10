@@ -178,4 +178,8 @@ Minor fixes :
 -Fixed autoQ + Qstack.
 --1.30-- 
 -Fixed not casting Windwall on syndra R , E and EQ
+--1.31--
+-Hopefully fixed ATR 
+-Tweaked some combo stuff
+
 
