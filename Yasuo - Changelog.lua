@@ -181,5 +181,9 @@ Minor fixes :
 --1.31--
 -Hopefully fixed ATR 
 -Tweaked some combo stuff
+--1.32--
+-Fixed Autolevel
+-Fixed auth stuff
+
 
 
