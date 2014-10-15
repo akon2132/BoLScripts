@@ -184,6 +184,13 @@ Minor fixes :
 --1.32--
 -Fixed Autolevel
 -Fixed auth stuff
+--1.33--	
+-Fixed Q2 not casting 
+-Fixed error spam
+-Fixed Combo being slow
+-Fixed autoulti
+-Fixed AutoQ
+-Fixed Escape (delete saves folder)
 
 
 
