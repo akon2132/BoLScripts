@@ -191,6 +191,10 @@ Minor fixes :
 -Fixed autoulti
 -Fixed AutoQ
 -Fixed Escape (delete saves folder)
+-Fixed Towerdive check menu for ON/OFF also can be toggled using the key L
+-Adjusted some of AQLib spells
+-Added some tweaks to autowall
+
 
 
 
