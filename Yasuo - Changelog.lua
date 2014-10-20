@@ -194,6 +194,8 @@ Minor fixes :
 -Fixed Towerdive check menu for ON/OFF also can be toggled using the key L
 -Adjusted some of AQLib spells
 -Added some tweaks to autowall
+--1.34--
+-Auth is update.
 
 
 
