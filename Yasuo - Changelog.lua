@@ -195,8 +195,9 @@ Minor fixes :
 -Adjusted some of AQLib spells
 -Added some tweaks to autowall
 --1.34--
--Auth is update.
-
+-Auth is updated.
+--1.35--
+Fixed E laneclear and lasthit.
 
 
 
