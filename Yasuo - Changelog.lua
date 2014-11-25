@@ -198,6 +198,27 @@ Minor fixes :
 -Auth is updated.
 --1.35--
 Fixed E laneclear and lasthit.
+--1.36--
+Additions:
+- Added some additional logic to the combo
+- Added some additional logic to the autoultimate
 
+Bugfixes:
+- Fixed a problem that caused autoignite not work
+- Fixed a problem that caused the ultimatefunction to ignore the health of you as well as targets
+- Fixed a problem that caused problems with the Q-stacks while you were fleeing
+- Fixed a problem that caused auto-Q to not hit targets in different situations
+- Fixed a problem with E-gapclosing
+- Fixed a problem with the windwall
+- Fixed a rare problem that caused the combo to crash the game
+- Fixed some problems that caused different errormessages in your chat
+- Fixed a problem with the authenticationsystem
+- Fixed a problem with the authenticationserver (serverside)
+- Fixed a problem that caused a huge FPS loss on low spec computers
 
-
+Performance:
+- Improved the speed of the combo a lot
+- Improved the speed of harass and auto-Q
+- Improved the speed of gapclosing a lot
+- Improved the speed of the autoultimate a bit
+- Improved the speed of the authenticationsystem a bit
