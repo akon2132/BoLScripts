@@ -222,3 +222,18 @@ Performance:
 - Improved the speed of gapclosing a lot
 - Improved the speed of the autoultimate a bit
 - Improved the speed of the authenticationsystem a bit
+--1.37--
+Additions:
+- Added full support for the new Summoners Rift and the new Jungle
+
+Bugfixes:
+- Fixed some small typos in our code that caused a previous bugfix for the autoultimate to not work
+- Fixed a problem from the 1.36 update, that caused a nilerror spam
+- Fixed a problem that caused the script to not register some knockups in rare occasions 
+
+Changes:
+- Changed some values for the windwall for test purposes (you might notice a slightly better casting)
+
+Improvements:
+- Improved the detection for knockups
+- Small serverimprovments to guarrantee a better uptime for different countrys
