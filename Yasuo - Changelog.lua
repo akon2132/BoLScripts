@@ -237,3 +237,13 @@ Changes:
 Improvements:
 - Improved the detection for knockups
 - Small serverimprovments to guarrantee a better uptime for different countrys
+--1.38--
+Bugfixes:
+- Fixed Escape
+- Fixed LaneClear E not being turned off.
+
+Changes:
+- Changed values for the spells with more accurate ones.
+
+
+
