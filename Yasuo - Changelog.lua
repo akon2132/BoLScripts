@@ -239,11 +239,15 @@ Improvements:
 - Small serverimprovments to guarrantee a better uptime for different countrys
 --1.38--
 Bugfixes:
-- Fixed Escape
-- Fixed LaneClear E not being turned off.
+- Fixed a problem with the Q2 spell that prevented it from casting under certain circumstances
+- Fixed a rare bug that caused Q1 to think it gets casted even though it didn'targets
+- Fixed a rare bug with the Escapesystem
+- Fixed a bug that caused the LaneClear E to not being turned off.
+- Fixed a rare bug with the E-spell to not beeing casted
+- Fixed a bug in the LaneClearmenu
+- Fixed a bug in the Authsystem that caused an permanent automatic HWID-lock for some people
 
-Changes:
-- Changed values for the spells with more accurate ones.
-
-
-
+Improvements:
+- Small improvements to the Authsystem for faster authentications for people with low pc specs
+- Changed the values for the spells to more accurate ones
+- Changed the casttiming for the Autoult for a longer knockuptime
