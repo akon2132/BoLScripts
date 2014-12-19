@@ -171,3 +171,36 @@ Rengar - Predators Pride v1.14 by QQQ
 	a. Fixed a bug that caused Q to cast randomly
 	b. Fixed a problem with items canceling your ult while pressing SBTWkey
 	c. Fixed a bug that caused the ult to jump directly after ulting without pressing a key
+-- 1.15 --
+- Additions:
+	- Added support for the new Summoners Rift and the new Jungle
+	- Added support for Twisted Treeline and the Jungle
+	- Added support for Twisted Treeline and Howling Abyss Items
+	- Added new messages if a supported Item is found
+	- Added a new autoupdater
+	- Added the requirement for 'Prodiction'
+	- Added the requirement for 'SxOrbWalk'
+	- Added a new menusetting to choose your prediction (VPrediction/Prodiction)
+- Changes:
+	- Changed the standardprediction to Prodiction
+	- Fixed some spellingmistakes
+	- Reworded parts of the menu for easier understanding
+	- Reworked the look of the menu for more clarity
+	- Reworked the Orbwalkerdetection
+- Improvements:
+	- Improvements to the combologic
+	- Improvements to the combospeed
+	- Improvements to the speed of all spellcasts
+	- Improvements to the speed of itemcasts
+	- Improvements to nearly all checks of the script
+	- Improvements to the Triple-Q speed
+	- Improvements to the Triple-Q logic
+	- Improved the drawing of the Triple-Q text
+	- Improved the drawing of the Triple-Q color
+- Bugfixes:
+	- Fixed a problem that caused Autoignite to not work
+- Removals:
+	- Deleted the requirement for Simple Orbwalker 'SOW'
+	- Deleted the menu for specific Q-Settings
+	
+
