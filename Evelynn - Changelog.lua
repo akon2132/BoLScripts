@@ -79,3 +79,7 @@ Changelog:
 - Removals:
 	- Removed Simple Orbwalker (SOW)
 	- Removed W-Cast in Combo
+
+-- 1.08 --
+- Bugfixes:
+	- Fixed a bug that caused a nilerrorspam while pressing the laneclearkey
