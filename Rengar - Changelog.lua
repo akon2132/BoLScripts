@@ -1,4 +1,4 @@
-Rengar - Predators Pride v1.14 by QQQ
+Rengar - Predators Pride by QQQ
 
 -- 0.06 --
 - Beta Release
