@@ -47,3 +47,35 @@ Changelog:
 	a. Fixed a bug that caused the Ultimate to not cast
 	b. Fixed spellwidth of (R)
 	c. Fixed a problem with spells not casting for some users
+-- 1.07 --
+- Additions:
+	- Added SxOrbwalker	
+	- Added support for the new Summoners Rift and the new Jungle
+	- Added new messages if a supported Item is found
+	- Added Orbwalkerdetection
+	- Added full support for SAC:R and MMA
+	- Added Healthbardamagedrawing
+	
+- Bugfixes:
+	- Fixed a problem that caused Autoignite to not work
+	- Fixed packetcast with Q
+	- Fixed packetcast with Enabled
+	- Fixed ultimatecast in SBTW
+	- Fixed Autoaim for UltimateKey
+	- Fixed Escape
+	
+- Improvements:
+	- Improvements to the combologic
+	- Improvements to the combospeed
+	- Improvements to the speed of all spellcasts
+	- Improvements to the speed of itemcasts
+	- Improvements to nearly all checks of the script
+	
+- Changes:
+	- Fixed some spellingmistakes
+	- Reworded parts of the menu for easier understanding
+	- Reworked the look of the menu for more clarity
+
+- Removals:
+	- Removed Simple Orbwalker (SOW)
+	- Removed W-Cast in Combo
