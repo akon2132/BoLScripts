@@ -178,7 +178,7 @@ Rengar - Predators Pride v1.14 by QQQ
 	- Added support for Twisted Treeline and Howling Abyss Items
 	- Added new messages if a supported Item is found
 	- Added a new autoupdater
-	- Added the requirement for 'Prodiction'
+	- Added the requirement for  'Prodiction'
 	- Added the requirement for 'SxOrbWalk'
 	- Added a new menusetting to choose your prediction (VPrediction/Prodiction)
 - Changes:
@@ -202,5 +202,7 @@ Rengar - Predators Pride v1.14 by QQQ
 - Removals:
 	- Deleted the requirement for Simple Orbwalker 'SOW'
 	- Deleted the menu for specific Q-Settings
-	
 
+-- 1.16 --
+- Additions:
+	- Added a check to the Orbwalkdetection that informs you if you use the outdated SxOrbwalker that causes FPS-Drops
