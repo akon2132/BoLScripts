@@ -1,1 +1,1 @@
--- Wait for the release and don't sneakpeak the files!
+-- Wait for the offical release!
