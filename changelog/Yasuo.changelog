@@ -251,3 +251,58 @@ Improvements:
 - Small improvements to the Authsystem for faster authentications for people with low pc specs
 - Changed the values for the spells to more accurate ones
 - Changed the casttiming for the Autoult for a longer knockuptime
+
+-- 1.39 & 1.40 --
+Additions:
+	-- General
+	- Added a new 'updated' info in the scriptmenu
+	- Added a better 'Message of the day' system so we can inform you about things without updating the script
+	
+	-- Items:
+	- Added support for Twisted Treeline and Howling Abyss Items
+	- Added new messages if a supported Item is found
+	
+	-- Orbwalker:
+	- Added the requirement for 'SxOrbWalk'
+	- Added the new inbuilt orbwalker: SxOrbwalker
+	- Added new messages if a supported Orbwalker is found
+	- Added a new feature that automatically disables SxOrbwalker if MMA or SAC:R is found
+	
+	-- Skinhack 
+	- Added a new and working skinhack
+	- Added a new menusetting to choose your skin (Classic, High Noon, PROJECT: Yasuo)
+
+Removals:
+	-- SOW
+	- Simple Orbwalker (SOW) requirement
+	- Simple Orbwalker as standard inbuild orbwalker
+	
+	-- Selector
+	- Selector requirement
+
+Changes:
+	-- General
+	- Changed the standard VPrediction download to ralphlols github
+	- Changed the way empQ detection works
+	
+	-- Menu
+	- Fixed some spelling mistakes in the whole menu
+	- Changed the 'Prediction and Targetselector' menu to 'Extras'	
+	- Changed the standard keybindings to match sxorbwalkers standard keybindings
+	
+	-- Orbwalker
+	- Reworked the Orbwalkerdetection
+	
+Improvements:
+	- Added optimizations for the Twisted Treeline Jungle
+	- Added improvements to the delayed (R) casting
+	- Added a better method for connecting to the server for slow internet pc's
+	- Added a better encryption for faster authenticating up to 50% times faster
+	
+Bugfixes:
+	- Fixed a problem with autolevel spells
+	- Fixed a problem with empoweredQ not casting
+	- Fixed a problem with Yasuos dashes
+	- Fixed a problem with Escape
+
+	
