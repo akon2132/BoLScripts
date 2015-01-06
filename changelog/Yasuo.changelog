@@ -305,7 +305,7 @@ Bugfixes:
 	- Fixed a problem with Yasuos dashes
 	- Fixed a problem with Escape
 -- 1.41 --
-Additons:
+Additions:
 	- Added a check for outdated VPredictionversions
 Changes:
 	- Changed the 'Message of the Day' to a cleaner and better look and renamed it to 'Administrator'
