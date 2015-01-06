@@ -304,5 +304,13 @@ Bugfixes:
 	- Fixed a problem with empoweredQ not casting
 	- Fixed a problem with Yasuos dashes
 	- Fixed a problem with Escape
-
+-- 1.41 --
+Additons:
+	- Added a check for outdated VPredictionversions
+Changes:
+	- Changed the 'Message of the Day' to a cleaner and better look and renamed it to 'Administrator'
+	- Added a new way on how the skinhack works: Choose a supported skin on the list and press the button below once to change the skin
+	- Changed the skinhackdescription inside the menu
+Bugfixes:
+	- Fixed a problem where the skinhack caused AA's to disappear
 	
