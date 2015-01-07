@@ -290,4 +290,10 @@ Changes:
 	- Changed the skinhackdescription inside the menu
 Bugfixes:
 	- Fixed a problem where the skinhack caused AA's to disappear
-	
+-- 1.42 --
+Additions:
+	- Added packetcasting for items
+	- Added a menuoption for packetcasting for items
+Bugfixes:
+	- Fixed a problem where switching off (E) in lasthit still  would cause (E) to cast
+	- Fixed a problem where the new added Items didn't casted (Entropy, Blackfire Torch, Odyns Veil)
