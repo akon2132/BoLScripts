@@ -141,23 +141,17 @@ d. Improvement to Windwall and added some missing spells
 --1.21--
 -Fix 1.20 auth bugs
 --1.22-- 
-Fixed Wasting Q while dashing. Or made it better hopefully.
+-Fixed Wasting Q while dashing. Or made it better hopefully.
 --1.23--
-Fixed a lot of bugs including the most important one which is wasting Q while dashing please test and tell me if that fixed it.
-
-Fixed a huge typo in the windwall function.
-
-Recoded the combo and made it cleaner.
-
+-Fixed a lot of bugs including the most important one which is wasting Q while dashing please test and tell me if that fixed it.
+-Fixed a huge typo in the windwall function.
+-Recoded the combo and made it cleaner.
 --1.24-- 
 Fixed Small bug 
-
 --1.25-- 
 -Fixed a lot in the menu and cleaned a bit of description typos.
-
 -Made the combo faster and better (actually i rewrote most of it.)
 -Added key to disable the R delay (The one that allow you to ulti in the last 0,1 second to add one more autoattack can be 2 autoattacks depends on your attack speed) you can now disable it RECOMMENDED to put it as off if you have a bad ping from 100+
-
 -cleaned harrass
 -Q wasting is now rly rare will happen only if enemy dash out of range in the last seconds.
 --1.26--
@@ -202,7 +196,6 @@ Fixed E laneclear and lasthit.
 Additions:
 - Added some additional logic to the combo
 - Added some additional logic to the autoultimate
-
 Bugfixes:
 - Fixed a problem that caused autoignite not work
 - Fixed a problem that caused the ultimatefunction to ignore the health of you as well as targets
@@ -215,7 +208,6 @@ Bugfixes:
 - Fixed a problem with the authenticationsystem
 - Fixed a problem with the authenticationserver (serverside)
 - Fixed a problem that caused a huge FPS loss on low spec computers
-
 Performance:
 - Improved the speed of the combo a lot
 - Improved the speed of harass and auto-Q
@@ -225,15 +217,12 @@ Performance:
 --1.37--
 Additions:
 - Added full support for the new Summoners Rift and the new Jungle
-
 Bugfixes:
 - Fixed some small typos in our code that caused a previous bugfix for the autoultimate to not work
 - Fixed a problem from the 1.36 update, that caused a nilerror spam
 - Fixed a problem that caused the script to not register some knockups in rare occasions 
-
 Changes:
 - Changed some values for the windwall for test purposes (you might notice a slightly better casting)
-
 Improvements:
 - Improved the detection for knockups
 - Small serverimprovments to guarrantee a better uptime for different countrys
@@ -246,59 +235,47 @@ Bugfixes:
 - Fixed a rare bug with the E-spell to not beeing casted
 - Fixed a bug in the LaneClearmenu
 - Fixed a bug in the Authsystem that caused an permanent automatic HWID-lock for some people
-
 Improvements:
 - Small improvements to the Authsystem for faster authentications for people with low pc specs
 - Changed the values for the spells to more accurate ones
 - Changed the casttiming for the Autoult for a longer knockuptime
-
 -- 1.39 & 1.40 --
 Additions:
 	-- General
 	- Added a new 'updated' info in the scriptmenu
 	- Added a better 'Message of the day' system so we can inform you about things without updating the script
-	
 	-- Items:
 	- Added support for Twisted Treeline and Howling Abyss Items
 	- Added new messages if a supported Item is found
-	
 	-- Orbwalker:
 	- Added the requirement for 'SxOrbWalk'
 	- Added the new inbuilt orbwalker: SxOrbwalker
 	- Added new messages if a supported Orbwalker is found
 	- Added a new feature that automatically disables SxOrbwalker if MMA or SAC:R is found
-	
 	-- Skinhack 
 	- Added a new and working skinhack
 	- Added a new menusetting to choose your skin (Classic, High Noon, PROJECT: Yasuo)
-
 Removals:
 	-- SOW
 	- Simple Orbwalker (SOW) requirement
 	- Simple Orbwalker as standard inbuild orbwalker
-	
 	-- Selector
 	- Selector requirement
-
 Changes:
 	-- General
 	- Changed the standard VPrediction download to ralphlols github
 	- Changed the way empQ detection works
-	
 	-- Menu
 	- Fixed some spelling mistakes in the whole menu
 	- Changed the 'Prediction and Targetselector' menu to 'Extras'	
 	- Changed the standard keybindings to match sxorbwalkers standard keybindings
-	
 	-- Orbwalker
 	- Reworked the Orbwalkerdetection
-	
 Improvements:
 	- Added optimizations for the Twisted Treeline Jungle
 	- Added improvements to the delayed (R) casting
 	- Added a better method for connecting to the server for slow internet pc's
 	- Added a better encryption for faster authenticating up to 50% times faster
-	
 Bugfixes:
 	- Fixed a problem with autolevel spells
 	- Fixed a problem with empoweredQ not casting
