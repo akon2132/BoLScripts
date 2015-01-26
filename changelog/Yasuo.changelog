@@ -328,3 +328,7 @@ Removals:
 - Removed Prodiction since completly outdated
 - Removed Skinhack
 - Removed Extramenu
+
+-- 1.44 --
+Bugfixes:
+- Fixed a bug that caused multiple errorspams with isQemp()
