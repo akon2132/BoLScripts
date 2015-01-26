@@ -297,3 +297,34 @@ Additions:
 Bugfixes:
 	- Fixed a problem where switching off (E) in lasthit still  would cause (E) to cast
 	- Fixed a problem where the new added Items didn't casted (Entropy, Blackfire Torch, Odyns Veil)
+-- v1.43 --
+Additions:
+- Added our new AQ-Windwallmanager(beta)
+- Added a check to the script to prevent using an outdated AQLib
+- Added new and faster servers
+- Added a new hwid-system
+
+Improvements:
+- Improved the script for faster authenticating
+- Improved the combosystem
+- Improved the harasssystem
+- Improved itemcasts with more logic
+- Improved logic for gapclosing
+
+Bugfixes: 
+- Fixed a bug where the delayed (R) wasn't working anymore
+- Fixed a bug where (Q) was casted even if the target wasn't in range
+- Fixed a bug where the script didn't registered (Q2)
+- Fixed a bug where the script caused a bugsplat while killstealing with (Q2)
+- Fixed a bug where the script registered incorrect damagevalues for killstealing
+- Fixed a bug where autoignite didn't cast while killstealing
+- Fixed a bug where the script caused an errorspam
+- Fixed a bug where the script didn't registered the correct (E) damage
+- Fixed a bug where the automatic libdownloader didn't downloaded 'AQLib.lua' correctly and got stuck in the process
+- Fixed some spellingmistakes in the autoupdating process
+
+Removals:
+- Removed the old windwalldetectionsystem
+- Removed Prodiction since completly outdated
+- Removed Skinhack
+- Removed Extramenu
