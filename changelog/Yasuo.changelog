@@ -328,7 +328,24 @@ Removals:
 - Removed Prodiction since completly outdated
 - Removed Skinhack
 - Removed Extramenu
-
 -- 1.44 --
 Bugfixes:
 - Fixed a bug that caused multiple errorspams with isQemp()
+
+-- 1.45 --
+Additions
+- Added a new loadingsystem for the authentificationsystem
+- Added a menuinfo that will tell you if windwall detected no supported spells
+- Added the possibility to activate/deactivate targeted skillshots
+
+Bugfixes:
+- Fixed a problem with the authentificationsystem sending wrong messages
+- Fixed Auto Q not working
+- Fixed a lot of unblockable targeted spells(e.g. Master Yi Q, Poppy E,R and a lot more)
+- Fixed a problem where windwall got casted on allies spells (e.g. Ally heals (Soraka, Taric), Ally skillshots)
+- Fixed a problem where windwall was casted for different untargeted spells like Kennen ultimate
+- Fixed a problem where windwall didn't registered the deactivation of skillshots
+- Fixed a problem where Lasthitting spammed a Prodiction error
+- Fixed a problem where deactivating (E) in laneclearing prevented (Q)-casts
+- Fixed a bug that prevented that prevented the hp damage drawings to be drawn
+- Fixed a problem where move to mouse while escaping didn't always registered
