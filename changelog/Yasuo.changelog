@@ -349,3 +349,8 @@ Bugfixes:
 - Fixed a problem where deactivating (E) in laneclearing prevented (Q)-casts
 - Fixed a bug that prevented that prevented the hp damage drawings to be drawn
 - Fixed a problem where move to mouse while escaping didn't always registered
+-- 1.46 --
+Bugfixes:
+- Fixed a bug where (Q) casted above his range causing him to miss the target quite often
+- Fixed some more spells (Ashe W, Ziggs W)
+
