@@ -360,3 +360,5 @@ Bugfixes:
 - Fixed a problem that caused Harass Q2 to not work correctly
 - Fixed a problem that caused Harass E to not work correctly
 - Fixed some more unblockable spells (e.g. Brand W, Galio R)
+-- 1.48 --
+- Removed Autolevelskills until bol is fixed
