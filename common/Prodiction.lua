@@ -1,5 +1,4 @@
 --Prodiction 1.6
-
 _G.SHOW_MENU = true
 _G.AUTO_UPDATE = false
 
