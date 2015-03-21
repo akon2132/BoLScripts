@@ -460,3 +460,17 @@ Removals:
 - Removed the standard Targetselector of Bot of Legends
 - Removed the old gapclosing
 - Removed the old escape + menu since not needed
+
+-- 1.51 --
+Additons
+- Added a healthcheck for towerdiving
+
+Bugfixes and changes:
+- Fixed a problem where (E) caused an errorspam while comboing
+- Fixed a problem where (Q) and (Q2) got casted with incorrect rangechecks
+- Fixed a problem where the return to unit cast didn't got detected (Ahri Q return/Sivir Q return)
+- We adjusted the towerrange slightly for more accuracy
+- Fixed an annoying vector spam (lets hope it is the only reason why it spammed)
+
+Removals:
+- We removed the possiblity to disable single spelldrawings since it caused some problems. It will be available again in a future version (Spelldrawings still work - its just all or nothing now)
