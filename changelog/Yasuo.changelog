@@ -376,7 +376,6 @@ Additions:
     - Way faster and more accurate then the normal Targetselector
     - Supports click target selection and targets this unit as priority over your normal settings
     - Automatic target arrangement
- 
 Changes, Improvements and Bugfixes:
 - Changes to the Authsystem:
     - Added some serverimprovements
@@ -385,22 +384,18 @@ Changes, Improvements and Bugfixes:
     - Added a new and improved encryption
     - Added improved crack and bypass detections
     - Improved the loadingtimes
- 
 - Changes to the Autoupdater:
     - We added a new and improved autoupdater for Yasuo - The Windwalker
     - We added a new and improved autoupdater for AQLib
     - Added a visual indicator for the updater to see the current downloadstatus
-  
 - Changes to the menu:
     - Moved some settings around
     - Fixed some spelling mistakes in the whole menu
     - Added new menus (Targetselector, Turrets, Windwall)
     - Added the possibility to choose your own rangecolors
-
 - Changes to the messages:
     - We reworked the general colors of the messages a bit to make them look better
     - We now highlighted the most important informations
-
 - Changes to the Windwall:
     - Now supports Evadeee again
     - Now blocks spells if you run into them
@@ -411,13 +406,11 @@ Changes, Improvements and Bugfixes:
     - Fixed a lot of spells (e.g. Leblanc Mimic(R) Q & E, Velkoz splitted (Q), Jinx (R)...)
     - Improved the speed of the detectionalgorithm for the windwall
     - Improved the accuracy of the detectionalgorithm for the windwall - even better now then the previous!
-    
 - Changes to the Windwall - Humanizer:
     - Now you can see spelldrawings!
     - Improved the humanizer - now has advanced algorithms that takes into account the spellspeed, range and much more
     - Targeted spells & skillshots now both have their own optimized humanizer instead of their own to make sure everything has a good logic
     - Now has 2 modes (1) - Normal Humanizer & (2) - Faker Humanizer (read the forumpost!)
-
 - Changes to the Combo:
     - The combo is now highly dynamic and changes based on the situation you are in to provide you the best options possible
     - The combo can now detect patterns of your enemies and learns from it to provide a better decisionmaking
@@ -426,7 +419,6 @@ Changes, Improvements and Bugfixes:
     - The combo is now more humanlike and looks less like a script (irrational decision making/stupid focus)
     - The combo now can handle multiple targets at the same time (e.g. your AA target doesn´t need to be your spellstarget)
     - Improved the (E) casting in the combo so you better stick to the target instead of gapclosing away accidentally
-    
 - Changes to gapclosing:
     - The gapclosing algorithm now detects minions and gapclosing possibilities way faster then before
     - Improvements to the minion decision - you get better minions for a better gapclosing
@@ -434,17 +426,14 @@ Changes, Improvements and Bugfixes:
     - The gapclosing can now calculate multiple paths
     - You can now set the range you want to gapclose in
     - Prevention of stupid backslides, so you doesn´t get away from your target accidentally if it wouldn´t help you get your target
-
 - Changes to Escape:
     - Removed auto Q since it caused to much problems with the current predictions
     - Added a new gapclose to mousepos algorithm
-
 - Changes to the Turretlogic:
     - We now use a advanced logic for turretdiving
     - Added 3 different towerdivemodes
     - Added specific towerdiving settings
     - Added visual indicators for towerdiving that turn green if it is safe and are red if it is unsafe (based on your settings)
-
 - Reenabled Levelspells
 - Changed the SxOrbwalkercheck to version 2.24 - you need 2.24 or higher now
 - Changed some messages from the auth for certain people - if you are manually and not automatically banned you get a personalized message with the reason
@@ -455,7 +444,6 @@ Changes, Improvements and Bugfixes:
 - Fixed a problem where (E) didn´t got casted correctly in harass
 - Fixed a problem where harass caused an errorspam
 - Fixed a problem where a distancecheck caused an errorspam
-
 Removals:
 - Removed the standard Targetselector of Bot of Legends
 - Removed the old gapclosing
@@ -464,13 +452,27 @@ Removals:
 -- 1.51 --
 Additons
 - Added a healthcheck for towerdiving
-
 Bugfixes and changes:
 - Fixed a problem where (E) caused an errorspam while comboing
 - Fixed a problem where (Q) and (Q2) got casted with incorrect rangechecks
 - Fixed a problem where the return to unit cast didn't got detected (Ahri Q return/Sivir Q return)
 - We adjusted the towerrange slightly for more accuracy
 - Fixed an annoying vector spam (lets hope it is the only reason why it spammed)
-
 Removals:
 - We removed the possiblity to disable single spelldrawings since it caused some problems. It will be available again in a future version (Spelldrawings still work - its just all or nothing now)
+
+-- 1.52 --
+Additions:
+- Added itemcasts (tiamat/hydra) to the laneclearmode
+- Added itemcasts (tiamat/hydra) to the jungleclearmode
+Improvements:
+- Improved the detectiontime of the empowered (Q) which causes faster (Q2) casts
+Bugfixes:
+- Fixed a problem with the autoupdater
+- Fixed a problem where the Harassmenu didn't registered the disable of a spell
+- Fixed a problem where circular spellcasts caused an annoying vectorspam
+- Fixed a problem where in certain circumstances (Q) was recognized as (Q2)
+- Fixed a problem where the towerrangecircle was shorter then the realtowerrange
+- Fixed a problem where no spells got drawn
+- Fixed a problem where after a Q2 dashspin the range was wrong calculated
+- Renamed a wrong menuitem in the gapclosing menu
