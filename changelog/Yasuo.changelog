@@ -467,6 +467,8 @@ Additions:
 - Added itemcasts (tiamat/hydra) to the jungleclearmode
 Improvements:
 - Improved the detectiontime of the empowered (Q) which causes faster (Q2) casts
+Changes:
+- Changed the libdownloader for vprediction to sidas github (ralphlols version)
 Bugfixes:
 - Fixed a problem with the autoupdater
 - Fixed a problem where the Harassmenu didn't registered the disable of a spell
