@@ -471,6 +471,7 @@ Changes:
 - Changed the libdownloader for vprediction to sidas github (ralphlols version)
 Bugfixes:
 - Fixed a problem with the autoupdater
+- Fixed a problem where the autoupdater didn't draw the downloadstatus
 - Fixed a problem where the Harassmenu didn't registered the disable of a spell
 - Fixed a problem where circular spellcasts caused an annoying vectorspam
 - Fixed a problem where in certain circumstances (Q) was recognized as (Q2)
