@@ -479,3 +479,12 @@ Bugfixes:
 - Fixed a problem where no spells got drawn
 - Fixed a problem where after a Q2 dashspin the range was wrong calculated
 - Renamed a wrong menuitem in the gapclosing menu
+
+-- 1.53 --
+Changes:
+- Updated the script and the lib for the latest patchnotes 5.6 (Elise/Veigar)
+- Changed and tweaked divine prediction
+- More tweaks to the towerrange
+- Small spelltweaks
+Removed:
+- Hitchanceslider for DivinePrediction - it is automatically set now!
