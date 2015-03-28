@@ -488,3 +488,11 @@ Changes:
 - Small spelltweaks
 Removed:
 - Hitchanceslider for DivinePrediction - it is automatically set now!
+
+-- 1.54 --
+Bugfixes & changes:
+- Fixed Windwallspell Darius E
+- Minor improvements to the combo algorithm
+- Minor improvements to the eq combo
+Removed
+- Removed DivinePrediction (will come back very soon!)
