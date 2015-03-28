@@ -496,3 +496,12 @@ Bugfixes & changes:
 - Minor improvements to the eq combo
 Removed
 - Removed DivinePrediction (will come back very soon!)
+
+-- 1.55 --
+Additions:
+- Readded DivinePrediction
+- Added calculationtime sliders (if you experience crashes/freezes lower the max calculationtime
+- Added two different laneclearmodes (1. only (E) if a minion can die from it - 2. always (E))
+Bugfixes:
+- Fixed a bug where Yasuo casted his Windwall on (Q) from an allied Rek'Sai
+- Fixed a debugprint
