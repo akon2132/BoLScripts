@@ -505,3 +505,6 @@ Additions:
 Bugfixes:
 - Fixed a bug where Yasuo casted his Windwall on (Q) from an allied Rek'Sai
 - Fixed a debugprint
+
+-- 1.56 --
+- Fixed a problem with the encryption
