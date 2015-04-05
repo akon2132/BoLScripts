@@ -508,3 +508,24 @@ Bugfixes:
 
 -- 1.56 --
 - Fixed a problem with the encryption
+
+-- 1.57 --
+Added:
+- Added Nocturne (Q) to the blockable spells
+- Added a new (E)function which will check the distance of your target and the endpos of your (E) cast. If the distance is greater then the distance from the slider it will disallow the cast
+Its disabled by default to prevent confusion. This will prevent dashes far away dashes from your enemy.
+
+Changed:
+- Improved the performance of DivinePrediction for champions & minions (especially against minions - on my testsystem we had about ~50-70% better performance with the MAXIMUM calctime!)
+- Improved Minion detection (improved the order in which minions will get killed)
+- Improved the killstealdetection for (Q1) and (Q2)
+- Changed the minimum requiredment for SxOrbWalk to 1.40 or higher
+- Changed the autoupdater to not break the script if the autoupdateserver is down
+- Changed some authentificationrelated errormessages for a better understanding
+- Fixed some errorspams in the beginning of the game
+- Disabled Heimerdingers (W) for now.
+
+Removed:
+- Removed Swains (Q) and (W) since not blockable (The errorspam of it is gone with this removal!)
+
+
