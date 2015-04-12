@@ -528,4 +528,15 @@ Changed:
 Removed:
 - Removed Swains (Q) and (W) since not blockable (The errorspam of it is gone with this removal!)
 
+-- 1.58 --
+Added:
+- Added support for patch 5.7
+Changed:
+- Changed the encryption for more security (Thanks to Aroc)
+- Minimized the filesize from 1MB to 200kb (Thanks to Aroc)
+Fixed:
+- A small spamming error
+Removed:
+- Prodiction (caused huge freezes on gamestart)
+
 
