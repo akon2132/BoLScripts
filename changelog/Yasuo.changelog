@@ -539,4 +539,9 @@ Fixed:
 Removed:
 - Prodiction (caused huge freezes on gamestart)
 
-
+-- 1.59 --
+Added:
+- Some requested Permashows (Prediction, Togglekeys)
+Changed:
+- Changed the encryption for compatibility (Thanks to Aroc)
+- Changed some small calculationtimings
