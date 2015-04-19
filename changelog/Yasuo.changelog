@@ -545,3 +545,7 @@ Added:
 Changed:
 - Changed the encryption for compatibility (Thanks to Aroc)
 - Changed some small calculationtimings
+
+-- 1.60 --
+Changed:
+- Greatly improved the frequency on how often (Q) and (Q2) casts with VPrediction
