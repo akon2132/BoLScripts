@@ -556,3 +556,7 @@ Added:
 Changed/Fixed:
 - A problem that caused the autoupdater to download corrupted files sometimes
 - A bug that caused random crashes while laneclearing
+
+-- 1.62 --
+Removed:
+- Removed a debugprint
