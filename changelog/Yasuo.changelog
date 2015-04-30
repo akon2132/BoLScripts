@@ -549,3 +549,10 @@ Changed:
 -- 1.60 --
 Changed:
 - Greatly improved the frequency on how often (Q) and (Q2) casts with VPrediction
+
+-- 1.61 --
+Added:
+- Support for Patch 5.8
+Changed/Fixed:
+- A problem that caused the autoupdater to download corrupted files sometimes
+- A bug that caused random crashes while laneclearing
