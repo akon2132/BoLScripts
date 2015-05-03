@@ -560,3 +560,14 @@ Changed/Fixed:
 -- 1.62 --
 Removed:
 - Removed a debugprint
+
+-- 1.63 --
+Added:
+- Support for HPrediction
+- Separate Hitchancesliders for both VPrediction and HPrediction
+
+Changed:
+- Reworded the advanced (E) setting for more clarity
+
+Removed:
+- QSpell Menu since it was not necessary (We now enabled the possible Q while ult permanently!)
