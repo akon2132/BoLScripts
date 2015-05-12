@@ -573,3 +573,7 @@ Removed:
 -- 1.64 --
 Changed:
 - Fixed the script for the new HPrediction update
+
+-- 1.65 --
+Changed:
+- Fixed multiple things that may could have caused crashes
