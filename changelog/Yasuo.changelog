@@ -577,3 +577,16 @@ Changed:
 -- 1.65 --
 Changed:
 - Fixed multiple things that may could have caused crashes
+
+-- 1.66 --
+Added:
+- Added support for patch 5.9
+Changed:
+- Adjusted Riven's Missile Speed 
+- Adjusted Ashes W count and width
+- Adjusted Q-Tornado Range slightly
+- Improved the hitrate of HPrediction
+- Improved stability of the script
+
+
+
