@@ -588,5 +588,12 @@ Changed:
 - Improved the hitrate of HPrediction
 - Improved stability of the script
 
+-- 1.67 --
+Changed:
+- Fixed the script for the new HPrediction update
+- Improved several stuff for stability
+- Improved some security parts to prevent more false positives
+- Adjusted spellvalues a bit
+
 
 
