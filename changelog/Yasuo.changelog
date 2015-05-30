@@ -595,5 +595,13 @@ Changed:
 - Improved some security parts to prevent more false positives
 - Adjusted spellvalues a bit
 
+-- 1.68 --
+Added:
+- Added EkkoQ
+- Added support for 5.10
+Change:
+- Changed current spellvalues for 5.10
+- Changed current itemvalues for 5.10
+- Changed the way on how HPrediction works on Lasthit & Laneclear to improve the spellusage
 
 
